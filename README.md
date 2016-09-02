@@ -13,17 +13,21 @@ Otherwise the program will record a new file there in it's place.
 
 ### Controls
 1. To playback already recorded TAS
-	* Left Shoulder + Right Shoulder + Right Stick Button
+	* Left Trigger + Right Trigger + Right Stick Button
 	* KB: B
 2. To record completely new TAS
-	* Left Shoulder + Right Shoulder + Left Stick Button
+	* Left Trigger + Right Trigger + Left Stick Button
 	* KB: N
 3. To stop playback/recording
-	* Left Shoulder + Right Shoulder + DPad Down
+	* Left Trigger + Right Trigger + DPad Down
 	* KB: J
+4. KB Only: To Slow the TAS down to 1 FPS use F (not the same as frame stepping)
+	* R to decrease speed
+	* T to increase speed
+	* Y to set back to normal speed
 4. While playing back:
-	* To frame step forward one frame - DPad Up (KB: F)
-	* While frame stepping hold Right Analog Stick to the right to frame step continuously (KB: R to decrease speed, T to increase speed)
+	* To frame step forward one frame - DPad Up
+	* While frame stepping hold Right Analog Stick to the right to frame step continuously
 	* To continue playback at normal speed from frame stepping - DPad Down
 	* When not frame stepping move Right Analog Stick to slowdown or speedup playback
 	* To reload TAS file (after you make edits) - Left Shoulder + Right Shoulder + DPad Up (KB: Shift + B)
@@ -49,3 +53,5 @@ Otherwise the program will record a new file there in it's place.
 17. XAxis,0.000: Specifcy X Axis directly (-1.000 to 1.000) (Left to Right)
 18. YAxis,0.000: Specify Y Axis directly (-1.000 to 1.000) (Down to Up)
 19. Mouse,0.000,0.000: Specify mouse position directly (-1.000 to 1.000)
+20. DLoad: Loads from the current save point (Same functionality as Load in Debug menu)
+21. DSave: Creates a new debug savepoint
