@@ -128,8 +128,8 @@ namespace OriTAS {
 		}
 		private static void FrameStepping() {
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftShoulder);
-			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightShoulder);
+			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
+			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
 
@@ -137,8 +137,8 @@ namespace OriTAS {
 				bool ap = dpU;
 				while (HasFlag(tasState, TASState.Enable)) {
 					rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftShoulder);
-					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightShoulder);
+					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
+					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
 
@@ -183,8 +183,8 @@ namespace OriTAS {
 		}
 		private static void CheckControls() {
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftShoulder);
-			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightShoulder);
+			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
+			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
 			bool kbPlay = MoonInput.GetKey(UnityEngine.KeyCode.B);
@@ -267,8 +267,15 @@ namespace OriTAS {
 				float height = 30f;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					msg += "\n" + (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "") + (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate ? "" : " Loading");
+					msg += "\n" + (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "");
 					height = 60f;
+				}
+				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
+					if (height < 59f) {
+						msg += "\n";
+						height = 60f;
+					}
+					msg += " Loading";
 				}
 
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
