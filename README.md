@@ -27,3 +27,25 @@ Otherwise the program will record a new file there in it's place.
 	* To continue playback at normal speed from frame stepping - DPad Down
 	* When not frame stepping move Right Analog Stick to slowdown or speedup playback
 	* To reload TAS file (after you make edits) - Left Shoulder + Right Shoulder + DPad Up (KB: Shift + B)
+
+### Valid inputs in Input File (Ori.tas)
+1. Jump
+2. Esc: Input to cancel options/menus
+3. Action: Input to accept options/menus
+4. Dash
+5. Grenade: Ori will shoot light grenade
+6. Save: Ori will start to save (Soul Link)
+7. Glide: Feather. Also same input for grabbing objects
+8. Fire: Sein will attack
+9. Bash
+10. Start: Input to pause the game
+11. Select: Input to pull up the Map
+12. CJump: Charge Jump
+13. UI: Will toggle the UI on/off (UI always starts on when you first start playback)
+13. Left: X Axis all the way the Left
+14. Right: X Axis all the way the Right
+15. Up: Y Axis all the way Up
+16. Down: Y Axis all the way Down
+17. XAxis,0.000: Specifcy X Axis directly (-1.000 to 1.000) (Left to Right)
+18. YAxis,0.000: Specify Y Axis directly (-1.000 to 1.000) (Down to Up)
+19. Mouse,0.000,0.000: Specify mouse position directly (-1.000 to 1.000)
