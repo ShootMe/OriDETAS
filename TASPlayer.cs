@@ -15,11 +15,11 @@ namespace OriTAS {
 		public int CurrentFrame { get { return currentFrame; } }
 		public override string ToString() {
 			if (frameToNext == 0 && lastInput != null) {
-				return lastInput.DisplayText() + "(" + currentFrame.ToString() + ")";
+				return lastInput.DisplayText() + " (" + currentFrame.ToString() + ")";
 			} else if (inputIndex < inputs.Count && lastInput != null) {
 				int inputFrames = lastInput.Frames;
 				int startFrame = frameToNext - inputFrames;
-				return lastInput.DisplayText() + "(" + (currentFrame - startFrame).ToString() + " / " + inputFrames + " : " + currentFrame + ")";
+				return lastInput.DisplayText() + " (" + (currentFrame - startFrame).ToString() + " / " + inputFrames + " : " + currentFrame + ")";
 			}
 			return string.Empty;
 		}

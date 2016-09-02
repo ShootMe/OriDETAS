@@ -51,7 +51,7 @@ namespace OriTAS {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
 				float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 				if (!HasFlag(tasStateNext, TASState.ChangeSpeed)) {
-					
+
 
 					tasStateNext |= TASState.ChangeSpeed;
 				} else if (!MoonInput.GetKey(UnityEngine.KeyCode.T) && !MoonInput.GetKey(UnityEngine.KeyCode.R) && !MoonInput.GetKey(UnityEngine.KeyCode.F)) {
@@ -299,13 +299,15 @@ namespace OriTAS {
 				}
 				msg += "   FPS: " + frameRate;
 				float height = 30f;
+				string extra = string.Empty;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					msg += (sein.IsOnGround ? " OnGround" : " InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "");
+					extra = (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "");
 				}
 				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
-					msg += " Loading";
+					extra += " Loading";
 				}
+				msg += extra.Length > 0 ? " (" + extra.Trim() + ")" : "";
 
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
 			}

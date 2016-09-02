@@ -195,7 +195,7 @@ namespace OriTAS {
 				(MouseX == 0 && MouseY == 0 ? "" : ",Mouse," + MouseX.ToString("0.00000") + "," + MouseY.ToString("0.00000"));
 		}
 		public string DisplayText() {
-			return "Line" + Line + " " + ToString();
+			return "Line" + Line + " (" + ToString().Trim() + ")";
 		}
 		public override bool Equals(object obj) {
 			return base.Equals(obj);
