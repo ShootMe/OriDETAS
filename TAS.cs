@@ -267,14 +267,9 @@ namespace OriTAS {
 				float height = 30f;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					msg += "\n" + (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "");
-					height = 60f;
+					msg += (sein.IsOnGround ? " OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "");
 				}
-				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
-					if (height < 59f) {
-						msg += "\n";
-						height = 60f;
-					}
+				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) { 
 					msg += " Loading";
 				}
 
