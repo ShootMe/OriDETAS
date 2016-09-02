@@ -52,6 +52,6 @@ Otherwise the program will record a new file there in it's place.
 16. Down: Y Axis all the way Down
 17. XAxis,0.000: Specifcy X Axis directly (-1.000 to 1.000) (Left to Right)
 18. YAxis,0.000: Specify Y Axis directly (-1.000 to 1.000) (Down to Up)
-19. Mouse,0.000,0.000: Specify mouse position directly (-1.000 to 1.000)
+19. Mouse,0.000,0.000: Specify mouse position directly (0.000 to 1.000) (0,0 being Top Left and 1,1 being Bottom Right)
 20. DLoad: Loads from the current save point (Same functionality as Load in Debug menu)
 21. DSave: Creates a new debug savepoint
