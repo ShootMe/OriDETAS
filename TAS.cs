@@ -64,6 +64,9 @@ namespace OriTAS {
 				if (currentSpeed != 0) {
 					rsX += (float)currentSpeed / 10f;
 				}
+				if (MoonInput.GetKey(UnityEngine.KeyCode.Y)) {
+					rsX = 0;
+				}
 
 				if (rsX <= -1.3) {
 					SetFrameRate(1);
