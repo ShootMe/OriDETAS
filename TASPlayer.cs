@@ -67,7 +67,7 @@ namespace OriTAS {
 		public void PlaybackPlayer() {
 			if (inputIndex < inputs.Count) {
 				bool changed = false;
-				if (!GameController.Instance.IsLoadingGame) {
+				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate) {
 					if (currentFrame == 0) {
 						FixedRandom.SetFixedUpdateIndex(fixedRandom);
 						SeinUI.DebugHideUI = false;

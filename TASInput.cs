@@ -49,7 +49,7 @@ namespace OriTAS {
 			this.YAxis = dp < -0.1f ? -1 : (ana < -0.04f ? ana : (dp > 0.1f ? 1 : (ana > 0.04f ? ana : 0)));
 			this.UI = (MoonInput.GetKey(UnityEngine.KeyCode.LeftAlt) || MoonInput.GetKey(UnityEngine.KeyCode.RightAlt)) && MoonInput.GetKeyDown(UnityEngine.KeyCode.U);
 			if (Core.Input.CursorMoved) {
-				UnityEngine.Vector2 vector = Game.UI.Cameras.Current.Camera.ScreenToViewportPoint(Core.Input.CursorPosition);
+				UnityEngine.Vector2 vector = Core.Input.CursorPosition;
 				this.MouseX = vector.x;
 				this.MouseY = vector.y;
 			}
@@ -125,7 +125,7 @@ namespace OriTAS {
 			Core.Input.AnyStart.Update(Jump || Start);
 			Core.Input.ZoomIn.Update(Glide);
 			Core.Input.ZoomOut.Update(ChargeJump);
-			Core.Input.LeftClick.Update(false);
+			Core.Input.LeftClick.Update(Action);
 			Core.Input.RightClick.Update(false);
 
 			Core.Input.Jump.Update(Jump);

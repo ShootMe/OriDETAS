@@ -264,8 +264,14 @@ namespace OriTAS {
 					msg += "   Next: " + next;
 				}
 				msg += "   FPS: " + frameRate;
+				float height = 30f;
+				if (Game.Characters.Sein != null) {
+					SeinCharacter sein = Game.Characters.Sein;
+					msg += "\n" + (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "") + (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate ? "" : " Loading");
+					height = 60f;
+				}
 
-				GUI.Label(new Rect(0f, 0f, Screen.width, 30f), msg, style);
+				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
 			}
 		}
 	}
