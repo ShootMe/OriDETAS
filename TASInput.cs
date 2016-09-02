@@ -6,6 +6,8 @@ namespace OriTAS {
 		public int Frames { get; set; }
 		public bool Jump { get; set; }
 		public bool Save { get; set; }
+		public bool DSave { get; set; }
+		public bool DLoad { get; set; }
 		public bool Attack { get; set; }
 		public bool Action { get; set; }
 		public bool Bash { get; set; }
@@ -79,6 +81,8 @@ namespace OriTAS {
 						case "UP": YAxis = 1; break;
 						case "DOWN": YAxis = -1; break;
 						case "UI": UI = true; break;
+						case "DSAVE": DSave = true; break;
+						case "DLOAD": DLoad = true; break;
 						case "XAXIS":
 							if (float.TryParse(parameters[i + 1], out temp)) { this.XAxis = temp; }
 							i += 1;
@@ -98,6 +102,13 @@ namespace OriTAS {
 			} catch { }
 		}
 		public void UpdateInput(bool initial = false) {
+			if (DSave && initial && GameController.Instance != null) {
+				GameController.Instance.CreateCheckpoint();
+				GameController.Instance.SaveGameController.PerformSave();
+			}
+			if (DLoad && initial && GameController.Instance != null) {
+				GameController.Instance.SaveGameController.PerformLoad();
+			}
 			UnityEngine.Vector2 vector = new UnityEngine.Vector2(MouseX, MouseY);
 			Core.Input.CursorMoved = (UnityEngine.Vector2.Distance(vector, Core.Input.CursorPosition) > 0.0001f);
 			Core.Input.CursorPosition = vector;

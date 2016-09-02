@@ -123,8 +123,7 @@ namespace OriTAS {
 			UnityEngine.Time.timeScale = timeScale;
 			UnityEngine.Time.captureFramerate = frameRate;
 			Application.targetFrameRate = frameRate;
-			UnityEngine.Time.fixedDeltaTime = deltaTime;
-			UnityEngine.Time.maximumDeltaTime = deltaTime;
+			UnityEngine.Time.maximumDeltaTime = UnityEngine.Time.fixedDeltaTime;
 			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {

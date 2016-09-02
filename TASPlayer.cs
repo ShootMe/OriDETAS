@@ -66,23 +66,26 @@ namespace OriTAS {
 		}
 		public void PlaybackPlayer() {
 			if (inputIndex < inputs.Count) {
-				if (currentFrame == 0) {
-					FixedRandom.SetFixedUpdateIndex(fixedRandom);
-					SeinUI.DebugHideUI = false;
-				}
 				bool changed = false;
-				if (currentFrame >= frameToNext) {
-					if (inputIndex + 1 >= inputs.Count) {
-						inputIndex++;
-						return;
+				if (!GameController.Instance.IsLoadingGame) {
+					if (currentFrame == 0) {
+						FixedRandom.SetFixedUpdateIndex(fixedRandom);
+						SeinUI.DebugHideUI = false;
 					}
-					lastInput = inputs[++inputIndex];
-					frameToNext += lastInput.Frames;
-					changed = true;
-				}
+					changed = currentFrame == 0;
+					if (currentFrame >= frameToNext) {
+						if (inputIndex + 1 >= inputs.Count) {
+							inputIndex++;
+							return;
+						}
+						lastInput = inputs[++inputIndex];
+						frameToNext += lastInput.Frames;
+						changed = true;
+					}
 
+					currentFrame++;
+				}
 				lastInput.UpdateInput(changed);
-				currentFrame++;
 			}
 		}
 		public void RecordPlayer() {
