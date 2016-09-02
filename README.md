@@ -13,13 +13,13 @@ Otherwise the program will record a new file there in it's place.
 
 ### Controls
 1. To playback already recorded TAS
-	* Left Trigger + Right Trigger + Right Stick Button
+	* Left Shoulder + Right Shoulder + Right Stick Button
 	* KB: B
 2. To record completely new TAS
-	* Left Trigger + Right Trigger + Left Stick Button
+	* Left Shoulder + Right Shoulder + Left Stick Button
 	* KB: N
 3. To stop playback/recording
-	* Left Trigger + Right Trigger + DPad Down
+	* Left Shoulder + Right Shoulder + DPad Down
 	* KB: J
 4. KB Only: To Slow the TAS down to 1 FPS use F (not the same as frame stepping)
 	* R to decrease speed
