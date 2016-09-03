@@ -309,6 +309,7 @@ namespace OriTAS {
 				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
 					extra += " Loading";
 				}
+				msg += " RNG: " + FixedRandom.FixedUpdateIndex;
 				msg += extra.Length > 0 ? " (" + extra.Trim() + ")" : "";
 
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
