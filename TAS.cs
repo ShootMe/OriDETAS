@@ -303,6 +303,8 @@ namespace OriTAS {
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
 					extra = (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "") + (GameController.Instance.InputLocked ? " InputLocked" : "");
+					int seinsTime = GetSeinsTime();
+					extra += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 				}
 				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
 					extra += " Loading";
@@ -311,6 +313,15 @@ namespace OriTAS {
 
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
 			}
+		}
+		private static int GetCurrentTime() {
+			return GameController.Instance.Timer.Hours * 3600 + GameController.Instance.Timer.Minutes * 60 + GameController.Instance.Timer.Seconds;
+		}
+		private static int GetSeinsTime() {
+			if (GameStateMachine.Instance.CurrentState == GameStateMachine.State.Game && Game.Characters.Sein != null) {
+				return SaveSlotsManager.CurrentSaveSlot.Hours * 3600 + SaveSlotsManager.CurrentSaveSlot.Minutes * 60 + SaveSlotsManager.CurrentSaveSlot.Seconds;
+			}
+			return -1;
 		}
 	}
 }
