@@ -155,8 +155,9 @@ namespace OriTAS {
 			frameRate = newFrameRate;
 			timeScale = (float)newFrameRate / 60f;
 			UnityEngine.Time.timeScale = timeScale;
-			UnityEngine.Time.captureFramerate = frameRate;
-			Application.targetFrameRate = frameRate;
+			UnityEngine.Time.captureFramerate = 60;
+			Application.targetFrameRate = 60;
+			UnityEngine.Time.fixedDeltaTime = 1f / 60f;
 			UnityEngine.Time.maximumDeltaTime = UnityEngine.Time.fixedDeltaTime;
 			QualitySettings.vSyncCount = 0;
 		}

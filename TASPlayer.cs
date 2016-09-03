@@ -69,7 +69,6 @@ namespace OriTAS {
 				bool changed = false;
 				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate) {
 					if (currentFrame == 0) {
-						FixedRandom.SetFixedUpdateIndex(fixedRandom);
 						SeinUI.DebugHideUI = false;
 					}
 					changed = currentFrame == 0;
@@ -85,6 +84,7 @@ namespace OriTAS {
 
 					currentFrame++;
 				}
+				FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 				lastInput.UpdateInput(changed);
 			}
 		}
