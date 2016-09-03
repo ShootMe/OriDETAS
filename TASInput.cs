@@ -14,6 +14,8 @@ namespace OriTAS {
 		public bool Start { get; set; }
 		public bool Select { get; set; }
 		public bool Cancel { get; set; }
+		public bool LeftClick { get; set; }
+		public bool RightClick { get; set; }
 		public float XAxis { get; set; }
 		public float YAxis { get; set; }
 		public float MouseX { get; set; }
@@ -75,6 +77,8 @@ namespace OriTAS {
 						case "BASH": Bash = true; break;
 						case "START": Start = true; break;
 						case "SELECT": Select = true; break;
+						case "LCLICK": LeftClick = true; break;
+						case "RCLICK": RightClick = true; break;
 						case "CJUMP": ChargeJump = true; break;
 						case "LEFT": XAxis = -1; break;
 						case "RIGHT": XAxis = 1; break;
@@ -125,8 +129,8 @@ namespace OriTAS {
 			Core.Input.AnyStart.Update(Jump || Start);
 			Core.Input.ZoomIn.Update(Glide);
 			Core.Input.ZoomOut.Update(ChargeJump);
-			Core.Input.LeftClick.Update(Action);
-			Core.Input.RightClick.Update(false);
+			Core.Input.LeftClick.Update(LeftClick);
+			Core.Input.RightClick.Update(RightClick);
 
 			Core.Input.Jump.Update(Jump);
 			Core.Input.SpiritFlame.Update(Attack);
