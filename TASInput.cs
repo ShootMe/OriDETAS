@@ -193,7 +193,7 @@ namespace OriTAS {
 		public override string ToString() {
 			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Attack ? ",Fire" : "") + (Bash ? ",Bash" : "") +
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
-				(Action ? ",Action" : "") + (Cancel ? ",Cancel" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
+				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
 				(XAxis == 0 ? "" : (XAxis <= -1 ? ",Left" : (XAxis >= 1 ? ",Right" : ",XAxis," + XAxis.ToString("0.00000")))) +
 				(YAxis == 0 ? "" : (YAxis <= -1 ? ",Down" : (YAxis >= 1 ? ",Up" : ",YAxis," + YAxis.ToString("0.00000")))) +
 				(MouseX == 0 && MouseY == 0 ? "" : ",Mouse," + MouseX.ToString("0.00000") + "," + MouseY.ToString("0.00000"));
