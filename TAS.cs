@@ -21,8 +21,6 @@ namespace OriTAS {
 		public static float deltaTime = 0.016666667f, timeScale = 1f;
 		public static int frameRate = 0;
 		private static GUIStyle style;
-		private static float currentSpeed = 0;
-		private static bool slowDownFromKB = false, isSuspended = false;
 		private static HashSet<ISuspendable> suspendables = new HashSet<ISuspendable>();
 
 		static TAS() {
@@ -33,7 +31,7 @@ namespace OriTAS {
 			CheckControls();
 			FrameStepping();
 
-			if (HasFlag(tasState, TASState.Enable) && !isSuspended) {
+			if (HasFlag(tasState, TASState.Enable)) {
 				if (HasFlag(tasState, TASState.Record)) {
 					player.RecordPlayer();
 				} else {
@@ -50,100 +48,47 @@ namespace OriTAS {
 		private static void HandleFrameRates() {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
 				float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-				if (!HasFlag(tasStateNext, TASState.ChangeSpeed)) {
 
-
-					tasStateNext |= TASState.ChangeSpeed;
-				} else if (!MoonInput.GetKey(UnityEngine.KeyCode.T) && !MoonInput.GetKey(UnityEngine.KeyCode.R) && !MoonInput.GetKey(UnityEngine.KeyCode.F)) {
-					tasStateNext &= ~TASState.ChangeSpeed;
-				}
-
-				if (MoonInput.GetKey(UnityEngine.KeyCode.T)) {
-					currentSpeed = 0.65f;
-					if (isSuspended) {
-						SuspensionManager.ResumeExcluding(suspendables);
-						suspendables.Clear();
-						slowDownFromKB = false;
-						isSuspended = false;
-					}
-				} else if (MoonInput.GetKey(UnityEngine.KeyCode.R)) {
-					currentSpeed = -0.75f;
-					if (isSuspended) {
-						SuspensionManager.ResumeExcluding(suspendables);
-						suspendables.Clear();
-						slowDownFromKB = false;
-						isSuspended = false;
-					}
-				} else if (MoonInput.GetKey(UnityEngine.KeyCode.G)) {
-					currentSpeed = 0;
-					if (isSuspended) {
-						SuspensionManager.ResumeExcluding(suspendables);
-						suspendables.Clear();
-						slowDownFromKB = false;
-						isSuspended = false;
-					}
-				} else if (MoonInput.GetKey(UnityEngine.KeyCode.F)) {
-					slowDownFromKB = true;
-				}
-
-				if (slowDownFromKB) {
-					if (isSuspended) {
-						SuspensionManager.ResumeExcluding(suspendables);
-						suspendables.Clear();
-					} else {
-						SuspensionManager.GetSuspendables(suspendables, Game.UI.Cameras.Current.GameObject);
-						SuspensionManager.SuspendExcluding(suspendables);
-						slowDownFromKB = false;
-					}
-					isSuspended = !isSuspended;
-				}
-
-				if (!isSuspended) {
-					if (currentSpeed != 0) {
-						rsX += currentSpeed;
-					}
-
-					if (rsX <= -1.2) {
-						SetFrameRate(1);
-					} else if (rsX <= -1.1) {
-						SetFrameRate(2);
-					} else if (rsX <= -1.0) {
-						SetFrameRate(3);
-					} else if (rsX <= -0.9) {
-						SetFrameRate(4);
-					} else if (rsX <= -0.8) {
-						SetFrameRate(6);
-					} else if (rsX <= -0.7) {
-						SetFrameRate(12);
-					} else if (rsX <= -0.6) {
-						SetFrameRate(16);
-					} else if (rsX <= -0.5) {
-						SetFrameRate(20);
-					} else if (rsX <= -0.4) {
-						SetFrameRate(28);
-					} else if (rsX <= -0.3) {
-						SetFrameRate(36);
-					} else if (rsX <= -0.2) {
-						SetFrameRate(44);
-					} else if (rsX <= 0.2) {
-						SetFrameRate();
-					} else if (rsX <= 0.3) {
-						SetFrameRate(75);
-					} else if (rsX <= 0.4) {
-						SetFrameRate(90);
-					} else if (rsX <= 0.5) {
-						SetFrameRate(105);
-					} else if (rsX <= 0.6) {
-						SetFrameRate(120);
-					} else if (rsX <= 0.7) {
-						SetFrameRate(135);
-					} else if (rsX <= 0.8) {
-						SetFrameRate(150);
-					} else if (rsX <= 0.9) {
-						SetFrameRate(165);
-					} else {
-						SetFrameRate(180);
-					}
+				if (rsX <= -1.2) {
+					SetFrameRate(1);
+				} else if (rsX <= -1.1) {
+					SetFrameRate(2);
+				} else if (rsX <= -1.0) {
+					SetFrameRate(3);
+				} else if (rsX <= -0.9) {
+					SetFrameRate(4);
+				} else if (rsX <= -0.8) {
+					SetFrameRate(6);
+				} else if (rsX <= -0.7) {
+					SetFrameRate(12);
+				} else if (rsX <= -0.6) {
+					SetFrameRate(16);
+				} else if (rsX <= -0.5) {
+					SetFrameRate(20);
+				} else if (rsX <= -0.4) {
+					SetFrameRate(28);
+				} else if (rsX <= -0.3) {
+					SetFrameRate(36);
+				} else if (rsX <= -0.2) {
+					SetFrameRate(44);
+				} else if (rsX <= 0.2) {
+					SetFrameRate();
+				} else if (rsX <= 0.3) {
+					SetFrameRate(75);
+				} else if (rsX <= 0.4) {
+					SetFrameRate(90);
+				} else if (rsX <= 0.5) {
+					SetFrameRate(105);
+				} else if (rsX <= 0.6) {
+					SetFrameRate(120);
+				} else if (rsX <= 0.7) {
+					SetFrameRate(135);
+				} else if (rsX <= 0.8) {
+					SetFrameRate(150);
+				} else if (rsX <= 0.9) {
+					SetFrameRate(165);
+				} else {
+					SetFrameRate(180);
 				}
 			} else {
 				SetFrameRate();
@@ -214,7 +159,6 @@ namespace OriTAS {
 			tasState &= ~TASState.Enable;
 			tasState &= ~TASState.FrameStep;
 			tasState &= ~TASState.Record;
-			currentSpeed = 0;
 		}
 		private static void CheckControls() {
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);

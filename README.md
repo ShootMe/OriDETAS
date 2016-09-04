@@ -22,12 +22,8 @@ Otherwise the program will record a new file there in it's place.
 	* Left Trigger + Right Trigger + DPad Down
 	* KB: J
 4. KB Only
-	* R to decrease speed
-	* T to increase speed
-	* G to set back to normal speed
-	* F to frame step
-	* Shift + B to reload tas file
-4. While playing back:
+	* Shift + B to reload tas file (During playback)
+4. While playing back (Not recording):
 	* To frame step forward one frame - DPad Up
 	* While frame stepping hold Right Analog Stick to the right to frame step continuously
 	* To continue playback at normal speed from frame stepping - DPad Down
