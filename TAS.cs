@@ -126,7 +126,7 @@ namespace OriTAS {
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
-			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'J';
+			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'G';
 
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !lftShd && !rhtShd)) {
 				bool ap = dpU;
@@ -136,7 +136,7 @@ namespace OriTAS {
 					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
-					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'J';
+					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'G';
 
 					CheckControls();
 					if (!ap && ((dpU && !lftShd && !rhtShd))) {
@@ -194,7 +194,7 @@ namespace OriTAS {
 			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug || kbReload) {
 				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
-				} else if (HasFlag(tasState, TASState.Enable) && (dpD || (kbStop && HasFlag(tasState, TASState.FrameStep)))) {
+				} else if (HasFlag(tasState, TASState.Enable) && (dpD || kbStop)) {
 					DisableRun();
 				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || kbReload)) {
 					tasStateNext |= TASState.Reload;
