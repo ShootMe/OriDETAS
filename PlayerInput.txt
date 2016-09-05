@@ -1,0 +1,179 @@
+using Core;
+using Game;
+using SmartInput;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+class PlayerInput
+{
+	// Limited support!
+	// You can only reference methods or fields defined in the class (not in ancestors classes)
+	// Fields and methods stubs are needed for compilation purposes only.
+	// Reflexil will automaticaly map current type, fields or methods to original references.
+	void FixedUpdate()
+	{
+	if (!this.Active)
+	{
+		return;
+	}
+this.m_lastPressedButtonInput = -1;
+	if(!OriTAS.TAS.UpdateTAS()) {
+	Vector2 vector = UI.Cameras.Current.Camera.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
+	Core.Input.CursorMoved = (Vector2.Distance(vector, Core.Input.CursorPosition) > 0.0001f);
+	Core.Input.CursorPosition = vector;
+	Core.Input.HorizontalAnalogLeft = this.SimplifyAxis(this.HorizontalAnalogLeft.AxisValue());
+	Core.Input.VerticalAnalogLeft = this.SimplifyAxis(this.VerticalAnalogLeft.AxisValue());
+	this.ApplyDeadzone(ref Core.Input.HorizontalAnalogLeft, ref Core.Input.VerticalAnalogLeft);
+	Core.Input.HorizontalAnalogRight = this.SimplifyAxis(this.HorizontalAnalogRight.AxisValue());
+	Core.Input.VerticalAnalogRight = this.SimplifyAxis(this.VerticalAnalogRight.AxisValue());
+	this.ApplyDeadzone(ref Core.Input.HorizontalAnalogRight, ref Core.Input.VerticalAnalogRight);
+	Core.Input.HorizontalDigiPad = Mathf.RoundToInt(this.HorizontalDigiPad.AxisValue());
+	Core.Input.VerticalDigiPad = Mathf.RoundToInt(this.VerticalDigiPad.AxisValue());
+	Core.Input.AnyStart.Update(this.IsAnyStartPressed());
+	Core.Input.ZoomIn.Update(this.ZoomIn.GetButton());
+	Core.Input.ZoomOut.Update(this.ZoomOut.GetButton());
+	Core.Input.LeftClick.Update(this.LeftClick.GetButton());
+	Core.Input.RightClick.Update(this.RightClick.GetButton());
+
+	
+
+	for (int i = 0; i < this.m_allButtonInput.Count; i++)
+	{
+		bool button = this.m_allButtonInput[i].GetButton();
+		if (button)
+		{
+			this.m_lastPressedButtonInput = i;
+		}
+		this.m_allButtonProcessor[i].Update(button);
+	}
+	}
+	
+	this.RefreshControls();
+	if (!ControlsScreen.IsVisible && this.m_lastPressedButtonInput != -1)
+	{
+		bool flag = this.WasKeyboardUsedLast;
+		if (this.m_lastPressedButtonInput != -1)
+		{
+			flag = this.KeyboardUsedLast(this.m_allButtonInput[this.m_lastPressedButtonInput]);
+		}
+		if (flag != this.WasKeyboardUsedLast)
+		{
+			GameSettings.Instance.CurrentControlScheme = ((!flag) ? ControlScheme.Controller : GameSettings.Instance.KeyboardScheme);
+		}
+	}
+
+	}
+	void ClearControls()
+	{
+	}
+	public bool WasKeyboardUsedLast
+	{
+		get
+		{
+			return GameSettings.Instance.CurrentControlScheme != ControlScheme.Controller;
+		}
+	}
+	void AddXboxOneControls()
+	{
+	}
+	
+	void AddControllerControls()
+	{
+	}
+	
+	void AddKeyboardLayoutQwertyControls()
+	{
+	}
+	
+	void AddKeyboardLayoutAzertyControls()
+	{
+	}
+	
+	void AddKeyboardLayoutCommonControls()
+	{
+	}
+	
+	void Awake()
+	{
+	}
+	
+	float SimplifyAxis(float x)
+	{
+		return default(float);
+	}
+	
+	void ApplyDeadzone(ref float x, ref float y)
+	{
+	}
+	
+	void RefreshControls()
+	{
+	}
+	
+	void RefreshControlScheme()
+	{
+	}
+	
+	void RefreshLastPressedButton()
+	{
+	}
+	
+	bool KeyboardUsedLast(SmartInput.IButtonInput iButtonInput)
+	{
+		return default(bool);
+	}
+	
+	bool KeyboardUsedLast(SmartInput.IAxisInput iAxisInput)
+	{
+		return default(bool);
+	}
+	
+	bool IsAnyStartPressed()
+	{
+		return default(bool);
+	}
+	
+	bool Active;
+	SmartInput.CompoundAxisInput HorizontalAnalogLeft;
+	SmartInput.CompoundAxisInput VerticalAnalogLeft;
+	SmartInput.CompoundAxisInput HorizontalAnalogRight;
+	SmartInput.CompoundAxisInput VerticalAnalogRight;
+	SmartInput.CompoundAxisInput HorizontalDigiPad;
+	SmartInput.CompoundAxisInput VerticalDigiPad;
+	SmartInput.CompoundButtonInput Jump;
+	SmartInput.CompoundButtonInput SpiritFlame;
+	SmartInput.CompoundButtonInput SoulFlame;
+	SmartInput.CompoundButtonInput Bash;
+	SmartInput.CompoundButtonInput ChargeJump;
+	SmartInput.CompoundButtonInput Glide;
+	SmartInput.CompoundButtonInput Grab;
+	SmartInput.CompoundButtonInput ZoomIn;
+	SmartInput.CompoundButtonInput ZoomOut;
+	SmartInput.CompoundButtonInput LeftShoulder;
+	SmartInput.CompoundButtonInput RightShoulder;
+	SmartInput.CompoundButtonInput Select;
+	SmartInput.CompoundButtonInput Start;
+	SmartInput.CompoundButtonInput LeftStick;
+	SmartInput.CompoundButtonInput RightStick;
+	SmartInput.CompoundButtonInput MenuDown;
+	SmartInput.CompoundButtonInput MenuUp;
+	SmartInput.CompoundButtonInput MenuLeft;
+	SmartInput.CompoundButtonInput MenuRight;
+	SmartInput.CompoundButtonInput MenuPageLeft;
+	SmartInput.CompoundButtonInput MenuPageRight;
+	SmartInput.CompoundButtonInput ActionButtonA;
+	SmartInput.CompoundButtonInput Cancel;
+	SmartInput.CompoundButtonInput Copy;
+	SmartInput.CompoundButtonInput Delete;
+	SmartInput.CompoundButtonInput Focus;
+	SmartInput.CompoundButtonInput Filter;
+	SmartInput.CompoundButtonInput Legend;
+	SmartInput.IButtonInput LeftClick;
+	SmartInput.IButtonInput RightClick;
+	System.Collections.Generic.List<SmartInput.IButtonInput> m_allButtonInput;
+	System.Collections.Generic.List<Core.Input.InputButtonProcessor> m_allButtonProcessor;
+	System.Collections.Generic.List<SmartInput.IAxisInput> m_allAxisInput;
+	int m_lastPressedButtonInput;
+	int m_lastPressedAxisInput;
+}

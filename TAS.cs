@@ -97,14 +97,14 @@ namespace OriTAS {
 			}
 		}
 		private static char ReadKeyPress() {
-			if (HasFlag(tasState, TASState.FrameStep) && File.Exists("Keypress.dat")) {
+			if (HasFlag(tasState, TASState.Enable) && File.Exists("Keypress.dat")) {
 				byte[] data = File.ReadAllBytes("Keypress.dat");
 				return (char)data[0];
 			}
 			return '\0';
 		}
-		private static void ClearKeyPress() {
-			if (HasFlag(tasState, TASState.FrameStep) && File.Exists("Keypress.dat")) {
+		private static void ClearKeyPress(bool ignoreCheck = false) {
+			if (ignoreCheck || (HasFlag(tasState, TASState.Enable)) && File.Exists("Keypress.dat")) {
 				File.Delete("Keypress.dat");
 			}
 		}
@@ -167,6 +167,7 @@ namespace OriTAS {
 						break;
 					}
 					ap = dpU;
+					ClearKeyPress();
 					Thread.Sleep(1);
 				}
 			}
@@ -193,19 +194,20 @@ namespace OriTAS {
 			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug || kbReload) {
 				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
-				} else if (HasFlag(tasState, TASState.Enable) && (dpD || kbStop)) {
+				} else if (HasFlag(tasState, TASState.Enable) && (dpD || (kbStop && HasFlag(tasState, TASState.FrameStep)))) {
 					DisableRun();
 				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || kbReload)) {
 					tasStateNext |= TASState.Reload;
-				} else if (!HasFlag(tasState, TASState.Record) && (XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick) || kbRec)) {
+				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick) || kbRec)) {
 					tasStateNext |= TASState.Record;
-				} else if (!HasFlag(tasState, TASState.Record) && kbDebug) {
+				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && kbDebug) {
 					tasStateNext |= TASState.OpenDebug;
 				}
 			}
 
 			if (!lftShd && !rhtShd && !kbPlay && !kbRec && !kbDebug && !kbReload) {
 				if (HasFlag(tasStateNext, TASState.Enable)) {
+					ClearKeyPress(true);
 					EnableRun();
 				} else if (HasFlag(tasStateNext, TASState.Record)) {
 					RecordRun();
@@ -285,7 +287,6 @@ namespace OriTAS {
 					height = 55f;
 					msg += "\n(" + extra.Trim() + ")";
 				}
-
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
 			}
 		}
