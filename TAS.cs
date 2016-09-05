@@ -119,8 +119,8 @@ namespace OriTAS {
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
-			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
-			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'G';
+			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == '[';
+			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == ']';
 
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !lftShd && !rhtShd)) {
 				bool ap = dpU;
@@ -129,8 +129,8 @@ namespace OriTAS {
 					rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
-					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
-					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'G';
+					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == '[';
+					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == ']';
 
 					CheckControls();
 					if (!ap && ((dpU && !lftShd && !rhtShd))) {
@@ -181,9 +181,9 @@ namespace OriTAS {
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
 			bool kbPlay = MoonInput.GetKey(KeyCode.B) || kp == 'B';
 			bool kbRec = MoonInput.GetKey(KeyCode.N) || kp == 'N';
-			bool kbStop = MoonInput.GetKey(KeyCode.J) || kp == 'J';
+			bool kbStop = MoonInput.GetKey(KeyCode.Backslash) || kp == '\\';
 			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
-			bool kbReload = MoonInput.GetKey(KeyCode.M) || kp == 'M';
+			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
 
 			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug || kbReload) {
 				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || kbPlay)) {
