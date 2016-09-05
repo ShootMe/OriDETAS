@@ -202,9 +202,29 @@ namespace OriTAS {
 			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Attack ? ",Fire" : "") + (Bash ? ",Bash" : "") +
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
 				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
-				(XAxis == 0 ? "" : (XAxis <= -1 ? ",Left" : (XAxis >= 1 ? ",Right" : ",XAxis," + XAxis.ToString("0.00000")))) +
-				(YAxis == 0 ? "" : (YAxis <= -1 ? ",Down" : (YAxis >= 1 ? ",Up" : ",YAxis," + YAxis.ToString("0.00000")))) +
-				(MouseX == 0 && MouseY == 0 ? "" : ",Mouse," + MouseX.ToString("0.00000") + "," + MouseY.ToString("0.00000"));
+				Axis() +
+				(MouseX == 0 && MouseY == 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
+		}
+		public string Axis() {
+			bool hasX = XAxis > 0.001f || XAxis < -0.001f;
+			bool hasY = YAxis > 0.001f || YAxis < -0.001f;
+			if (hasX && !hasY) {
+				return XAxis <= -0.99f ? ",Left" : XAxis >= 0.99f ? ",Right" : ",XAxis," + XAxis.ToString("0.####");
+			} else if(hasY && !hasX) {
+				return YAxis <= -0.99f ? ",Down" : YAxis >= 0.99f ? ",Up" : ",YAxis," + YAxis.ToString("0.####");
+			} else if(hasX && hasY) {
+				double magnitude = Math.Sqrt(XAxis * XAxis + YAxis * YAxis);
+				if(magnitude < 0.9) {
+					return ",XAxis," + XAxis.ToString("0.####") + ",YAxis," + YAxis.ToString("0.####");
+				} else {
+					double angle = Math.Atan2(XAxis, YAxis) * 180 / Math.PI;
+					if (angle < 0) {
+						angle += 360;
+					}
+					return ",Angle," + angle.ToString("0.##");
+				}
+			}
+			return "";
 		}
 		public string DisplayText() {
 			return "Line" + Line + " (" + ToString().Trim() + ")";
