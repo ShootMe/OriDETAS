@@ -24,6 +24,7 @@ namespace OriTAS {
 		public static int frameRate = 0;
 		private static GUIStyle style;
 		private static HashSet<ISuspendable> suspendables = new HashSet<ISuspendable>();
+		private static char currentKeyPress;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
@@ -33,7 +34,7 @@ namespace OriTAS {
 			CheckControls();
 			FrameStepping();
 
-			if (HasFlag(tasState, TASState.Enable)) {
+			if (HasFlag(tasState, TASState.Enable) && !GameController.FreezeFixedUpdate) {
 				if (HasFlag(tasState, TASState.Record)) {
 					player.RecordPlayer();
 				} else {
@@ -96,16 +97,9 @@ namespace OriTAS {
 				SetFrameRate();
 			}
 		}
-		private static char ReadKeyPress() {
-			if (HasFlag(tasState, TASState.Enable) && File.Exists("Keypress.dat")) {
-				byte[] data = File.ReadAllBytes("Keypress.dat");
-				return (char)data[0];
-			}
-			return '\0';
-		}
 		private static void ClearKeyPress(bool ignoreCheck = false) {
-			if (ignoreCheck || (HasFlag(tasState, TASState.Enable)) && File.Exists("Keypress.dat")) {
-				File.Delete("Keypress.dat");
+			if (ignoreCheck || (HasFlag(tasState, TASState.Enable))) {
+				currentKeyPress = '\0';
 			}
 		}
 		private static void SetFrameRate(int newFrameRate = 60) {
@@ -121,7 +115,7 @@ namespace OriTAS {
 			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {
-			char kp = ReadKeyPress();
+			char kp = currentKeyPress;
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
@@ -131,7 +125,7 @@ namespace OriTAS {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !lftShd && !rhtShd)) {
 				bool ap = dpU;
 				while (HasFlag(tasState, TASState.Enable)) {
-					kp = ReadKeyPress();
+					kp = currentKeyPress;
 					rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
@@ -179,7 +173,7 @@ namespace OriTAS {
 			tasState &= ~TASState.Record;
 		}
 		private static void CheckControls() {
-			char kp = ReadKeyPress();
+			char kp = currentKeyPress;
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
