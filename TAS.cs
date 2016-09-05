@@ -3,6 +3,8 @@ using SmartInput;
 using System.Threading;
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
+
 namespace OriTAS {
 	[Flags]
 	public enum TASState {
@@ -94,6 +96,18 @@ namespace OriTAS {
 				SetFrameRate();
 			}
 		}
+		private static char ReadKeyPress() {
+			if (HasFlag(tasState, TASState.FrameStep) && File.Exists("Keypress.dat")) {
+				byte[] data = File.ReadAllBytes("Keypress.dat");
+				return (char)data[0];
+			}
+			return '\0';
+		}
+		private static void ClearKeyPress() {
+			if (HasFlag(tasState, TASState.FrameStep) && File.Exists("Keypress.dat")) {
+				File.Delete("Keypress.dat");
+			}
+		}
 		private static void SetFrameRate(int newFrameRate = 60) {
 			if (frameRate == newFrameRate) { return; }
 
@@ -107,20 +121,22 @@ namespace OriTAS {
 			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {
+			char kp = ReadKeyPress();
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
-			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
-			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
+			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
+			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'J';
 
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !lftShd && !rhtShd)) {
 				bool ap = dpU;
 				while (HasFlag(tasState, TASState.Enable)) {
+					kp = ReadKeyPress();
 					rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
-					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
-					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
+					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == 'F';
+					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == 'J';
 
 					CheckControls();
 					if (!ap && ((dpU && !lftShd && !rhtShd))) {
@@ -154,6 +170,7 @@ namespace OriTAS {
 					Thread.Sleep(1);
 				}
 			}
+			ClearKeyPress();
 		}
 		private static void DisableRun() {
 			tasState &= ~TASState.Enable;
@@ -161,23 +178,24 @@ namespace OriTAS {
 			tasState &= ~TASState.Record;
 		}
 		private static void CheckControls() {
+			char kp = ReadKeyPress();
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
 			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
-			bool kbPlay = MoonInput.GetKey(UnityEngine.KeyCode.B);
-			bool kbRec = MoonInput.GetKey(UnityEngine.KeyCode.N);
-			bool kbStop = MoonInput.GetKey(UnityEngine.KeyCode.J);
-			bool kbDebug = MoonInput.GetKey(UnityEngine.KeyCode.F8);
-			bool shift = MoonInput.GetKey(UnityEngine.KeyCode.LeftShift) || MoonInput.GetKey(UnityEngine.KeyCode.RightShift);
+			bool kbPlay = MoonInput.GetKey(KeyCode.B) || kp == 'B';
+			bool kbRec = MoonInput.GetKey(KeyCode.N) || kp == 'N';
+			bool kbStop = MoonInput.GetKey(KeyCode.J) || kp == 'J';
+			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
+			bool kbReload = MoonInput.GetKey(KeyCode.M) || kp == 'M';
 
-			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug) {
-				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || (kbPlay && !shift))) {
+			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug || kbReload) {
+				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
 				} else if (HasFlag(tasState, TASState.Enable) && (dpD || kbStop)) {
 					DisableRun();
-				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || (kbPlay && shift))) {
+				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || kbReload)) {
 					tasStateNext |= TASState.Reload;
 				} else if (!HasFlag(tasState, TASState.Record) && (XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick) || kbRec)) {
 					tasStateNext |= TASState.Record;
@@ -186,7 +204,7 @@ namespace OriTAS {
 				}
 			}
 
-			if (!lftShd && !rhtShd && !kbPlay && !kbRec && !kbDebug) {
+			if (!lftShd && !rhtShd && !kbPlay && !kbRec && !kbDebug && !kbReload) {
 				if (HasFlag(tasStateNext, TASState.Enable)) {
 					EnableRun();
 				} else if (HasFlag(tasStateNext, TASState.Record)) {
@@ -247,7 +265,15 @@ namespace OriTAS {
 				string extra = string.Empty;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					extra = (sein.IsOnGround ? "OnGround" : "InAir") + (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") + (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") + (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") + (sein.Abilities.Jump.CanJump ? " CanJump" : "") + (GameController.Instance.InputLocked ? " InputLocked" : "");
+					extra = (sein.IsOnGround ? "OnGround" : "InAir") +
+						(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") +
+						(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") +
+						(sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") +
+						(sein.Abilities.Jump.CanJump ? " CanJump" : "") +
+						(sein.Abilities.Bash.CanBash ? " CanBash" : "") +
+						(sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTarget" : "") +
+						(sein.Abilities.SpiritFlameTargetting?.ClosestAttackables?.Count > 0 ? " AttackTarget" : "") +
+						(GameController.Instance.InputLocked ? " InputLocked" : "");
 					int seinsTime = GetSeinsTime();
 					extra += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 				}
@@ -255,7 +281,10 @@ namespace OriTAS {
 					extra += " Loading";
 				}
 				msg += " RNG: " + FixedRandom.FixedUpdateIndex;
-				msg += extra.Length > 0 ? " (" + extra.Trim() + ")" : "";
+				if (extra.Length > 0) {
+					height = 55f;
+					msg += "\n(" + extra.Trim() + ")";
+				}
 
 				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
 			}

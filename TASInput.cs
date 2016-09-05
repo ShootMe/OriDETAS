@@ -1,5 +1,6 @@
 ﻿using Game;
 using SmartInput;
+using System;
 
 namespace OriTAS {
 	public class TASInput {
@@ -87,6 +88,13 @@ namespace OriTAS {
 						case "UI": UI = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
+						case "ANGLE":
+							if (float.TryParse(parameters[i + 1], out temp)) {
+								this.XAxis = (float)Math.Sin(temp * Math.PI / 180.0);
+								this.YAxis = (float)Math.Cos(temp * Math.PI / 180.0);
+							}
+							i += 1;
+							break;
 						case "XAXIS":
 							if (float.TryParse(parameters[i + 1], out temp)) { this.XAxis = temp; }
 							i += 1;
