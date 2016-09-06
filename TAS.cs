@@ -175,6 +175,7 @@ namespace OriTAS {
 					ClearKeyPress();
 					Thread.Sleep(1);
 				}
+				ReloadRun();
 			}
 			ClearKeyPress();
 		}
@@ -199,9 +200,6 @@ namespace OriTAS {
 			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
 			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace);
 
-			if(HasFlag(tasState, TASState.FrameStep)) {
-				ReloadRun();
-			}
 			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
 				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {
 					tasStateNext |= TASState.Enable;

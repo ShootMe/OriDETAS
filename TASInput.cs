@@ -28,7 +28,13 @@ namespace OriTAS {
 		public bool UI { get; set; }
 		public int Line { get; set; }
 		public bool Position { get; set; }
+		public float PositionX { get; set; }
+		public float PositionY { get; set; }
+		public bool Speed { get; set; }
+		public float SpeedX { get; set; }
+		public float SpeedY { get; set; }
 		public int SaveSlot { get; set; }
+
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -127,8 +133,14 @@ namespace OriTAS {
 							break;
 						case "POS":
 							Position = true;
-							if (float.TryParse(parameters[i + 1], out temp)) { this.MouseX = temp; }
-							if (float.TryParse(parameters[i + 2], out temp)) { this.MouseY = temp; }
+							if (float.TryParse(parameters[i + 1], out temp)) { this.PositionX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.PositionY = temp; }
+							i += 2;
+							break;
+						case "SPEED":
+							Speed = true;
+							if (float.TryParse(parameters[i + 1], out temp)) { this.SpeedX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.SpeedY = temp; }
 							i += 2;
 							break;
 					}
@@ -152,7 +164,11 @@ namespace OriTAS {
 
 			if (Position && initial) {
 				SeinCharacter sein = Game.Characters.Sein;
-				sein.Position = new UnityEngine.Vector3(MouseX, MouseY);
+				sein.Position = new UnityEngine.Vector3(PositionX, PositionY);
+			}
+			if (Speed && initial) {
+				SeinCharacter sein = Game.Characters.Sein;
+				sein.Speed = new UnityEngine.Vector3(SpeedX, SpeedY);
 			}
 
 			if (!Position && MouseX > -0.1 && MouseY > -0.1) {
