@@ -25,6 +25,7 @@ namespace OriTAS {
 		private static GUIStyle style;
 		private static HashSet<ISuspendable> suspendables = new HashSet<ISuspendable>();
 		private static char currentKeyPress;
+		private static string currentInputLine, nextInputLine, extraInfo;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
@@ -34,6 +35,7 @@ namespace OriTAS {
 			CheckControls();
 			FrameStepping();
 
+			bool returnValue = false;
 			if (HasFlag(tasState, TASState.Enable) && !GameController.FreezeFixedUpdate) {
 				if (HasFlag(tasState, TASState.Record)) {
 					player.RecordPlayer();
@@ -43,10 +45,11 @@ namespace OriTAS {
 					if (!player.CanPlayback) {
 						DisableRun();
 					}
-					return true;
+					returnValue = true;
 				}
 			}
-			return false;
+			UpdateText();
+			return returnValue;
 		}
 		private static void HandleFrameRates() {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
@@ -250,18 +253,18 @@ namespace OriTAS {
 				style.normal.textColor = Color.white;
 			}
 			if (HasFlag(tasState, TASState.Enable)) {
-				style.fontSize = (int)Mathf.Round(22f);
-				string msg = player.ToString();
-				string next = player.NextInput();
-				if (next.Trim() != string.Empty) {
-					msg += "   Next: " + next;
-				}
-				msg += "   FPS: " + frameRate;
-				float height = 30f;
-				string extra = string.Empty;
+				style.fontSize = (int)Mathf.Round(14f);
+				GUI.Label(new Rect(0f, 0f, 32, 18), "TAS", style);
+			}
+		}
+		public static void UpdateText() {
+			if (HasFlag(tasState, TASState.Enable)) {
+				currentInputLine = player.ToString();
+				nextInputLine = player.NextInput();
+
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					extra = (sein.IsOnGround ? "OnGround" : "InAir") +
+					extraInfo = (sein.IsOnGround ? "OnGround" : "InAir") +
 						(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") +
 						(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") +
 						(sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") +
@@ -271,17 +274,17 @@ namespace OriTAS {
 						(sein.Abilities.SpiritFlameTargetting?.ClosestAttackables?.Count > 0 ? " AttackTarget" : "") +
 						(GameController.Instance.InputLocked ? " InputLocked" : "");
 					int seinsTime = GetSeinsTime();
-					extra += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
+					extraInfo += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 				}
 				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
-					extra += " Loading";
+					extraInfo += " Loading";
 				}
-				msg += " RNG: " + FixedRandom.FixedUpdateIndex;
-				if (extra.Length > 0) {
-					height = 55f;
-					msg += "\n(" + extra.Trim() + ")";
-				}
-				GUI.Label(new Rect(0f, 0f, Screen.width, height), msg, style);
+				extraInfo += " RNG(" + FixedRandom.FixedUpdateIndex + ")";
+				extraInfo = extraInfo.Trim();
+			} else {
+				currentInputLine = string.Empty;
+				nextInputLine = string.Empty;
+				extraInfo = string.Empty;
 			}
 		}
 		private static int GetCurrentTime() {

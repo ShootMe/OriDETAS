@@ -227,7 +227,7 @@ namespace OriTAS {
 			return "";
 		}
 		public string DisplayText() {
-			return "Line" + Line + " (" + ToString().Trim() + ")";
+			return "Line " + Line + " (" + ToString().Trim() + ")";
 		}
 		public override bool Equals(object obj) {
 			return base.Equals(obj);
