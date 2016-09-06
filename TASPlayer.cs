@@ -141,6 +141,8 @@ namespace OriTAS {
 					string line = sr.ReadLine();
 
 					if (!firstLine) {
+						if (line.IndexOf("Stop", System.StringComparison.OrdinalIgnoreCase) == 0) { return; }
+
 						TASInput input = new TASInput(line, ++lines);
 						if (input.Frames != 0) {
 							inputs.Add(input);
