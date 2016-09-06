@@ -20,9 +20,11 @@ Otherwise the program will record a new file there in it's place.
 	* KB: N
 3. To stop playback/recording
 	* Left Trigger + Right Trigger + DPad Down
-	* KB: J
+	* KB: \
 4. KB Only
-	* Shift + B to reload tas file (During playback)
+	* [ to start frame stepping
+	* ' (SingleQuote) to reload tas file (During playback)
+	* ] to resume normal playback from frame stepping
 4. While playing back (Not recording):
 	* To frame step forward one frame - DPad Up
 	* While frame stepping hold Right Analog Stick to the right to frame step continuously
