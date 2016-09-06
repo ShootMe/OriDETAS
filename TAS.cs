@@ -262,6 +262,7 @@ namespace OriTAS {
 				currentInputLine = player.ToString();
 				nextInputLine = player.NextInput();
 
+				extraInfo = string.Empty;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
 					extraInfo = (sein.IsOnGround ? "OnGround" : "InAir") +
