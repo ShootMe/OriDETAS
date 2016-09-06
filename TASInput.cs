@@ -28,10 +28,12 @@ namespace OriTAS {
 		public bool UI { get; set; }
 		public int Line { get; set; }
 		public bool Position { get; set; }
+		public int SaveSlot { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
 			this.MouseY = -1;
+			this.SaveSlot = -1;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
@@ -63,6 +65,7 @@ namespace OriTAS {
 				this.MouseX = -1;
 				this.MouseY = -1;
 			}
+			this.SaveSlot = -1;
 		}
 		public TASInput(string line, int lineNum) {
 			try {
@@ -71,6 +74,7 @@ namespace OriTAS {
 				this.MouseX = -1;
 				this.MouseY = -1;
 				this.Line = lineNum;
+				this.SaveSlot = -1;
 				int frames = 0;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
@@ -97,6 +101,10 @@ namespace OriTAS {
 						case "UI": UI = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
+						case "SLOT":
+							int saveSlot = 0;
+							if (int.TryParse(parameters[i + 1], out saveSlot)) { this.SaveSlot = saveSlot - 1; }
+							break;
 						case "ANGLE":
 							if (float.TryParse(parameters[i + 1], out temp)) {
 								this.XAxis = (float)Math.Sin(temp * Math.PI / 180.0);
@@ -129,6 +137,10 @@ namespace OriTAS {
 			} catch { }
 		}
 		public void UpdateInput(bool initial = false) {
+			if (SaveSlot >= 0) {
+				SaveSlotsManager.CurrentSlotIndex = SaveSlot;
+				SaveSlotsManager.BackupIndex = -1;
+			}
 			if (DSave && initial && GameController.Instance != null) {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
@@ -232,7 +244,7 @@ namespace OriTAS {
 			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Attack ? ",Fire" : "") + (Bash ? ",Bash" : "") +
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
 				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
-				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") +
+				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") + (SaveSlot >= 0 ? ",Slot," + (SaveSlot + 1) : "") +
 				(!Position && MouseX < 0 && MouseY < 0 ? "" : (Position ? ",Pos," : ",Mouse,") + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
