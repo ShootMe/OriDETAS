@@ -196,9 +196,12 @@ namespace OriTAS {
 			bool kbRec = MoonInput.GetKey(KeyCode.N) || kp == 'N';
 			bool kbStop = MoonInput.GetKey(KeyCode.Backslash) || kp == '\\';
 			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
-			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'' || HasFlag(tasState, TASState.FrameStep);
+			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
 			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace);
 
+			if(HasFlag(tasState, TASState.FrameStep)) {
+				ReloadRun();
+			}
 			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
 				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
