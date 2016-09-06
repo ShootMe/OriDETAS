@@ -31,6 +31,7 @@ namespace OriTAS {
 			DebugMenuB.MakeDebugMenuExist();
 		}
 		public static bool UpdateTAS() {
+			UpdateText();
 			HandleFrameRates();
 			CheckControls();
 			FrameStepping();
@@ -48,7 +49,6 @@ namespace OriTAS {
 					returnValue = true;
 				}
 			}
-			UpdateText();
 			return returnValue;
 		}
 		private static void HandleFrameRates() {
