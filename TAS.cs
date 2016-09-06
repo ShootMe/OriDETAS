@@ -164,22 +164,8 @@ namespace OriTAS {
 
 						if (savedExtraInfo == null) {
 							savedExtraInfo = extraInfo;
-							int rngIndex = savedExtraInfo.IndexOf("RNG(");
-							if (rngIndex > 0) {
-								savedExtraInfo = savedExtraInfo.Substring(0, rngIndex).Trim();
-							} else {
-								savedExtraInfo = string.Empty;
-							}
 						} else {
-							string currentExtraInfo = extraInfo;
-							int rngIndex = currentExtraInfo.IndexOf("RNG(");
-							if (rngIndex > 0) {
-								currentExtraInfo = currentExtraInfo.Substring(0, rngIndex).Trim();
-							} else {
-								currentExtraInfo = string.Empty;
-							}
-
-							if(currentExtraInfo == savedExtraInfo) {
+							if (extraInfo == savedExtraInfo) {
 								break;
 							}
 							savedExtraInfo = null;
@@ -296,26 +282,30 @@ namespace OriTAS {
 			if (HasFlag(tasState, TASState.Enable)) {
 				currentInputLine = player.ToString();
 				nextInputLine = player.NextInput();
-
 				extraInfo = string.Empty;
 				if (Game.Characters.Sein != null) {
 					SeinCharacter sein = Game.Characters.Sein;
-					extraInfo = (sein.IsOnGround ? "OnGround" : "InAir") +
-						(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : "") +
-						(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : "") +
-						(sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") +
-						(sein.Abilities.Jump.CanJump ? " CanJump" : "") +
-						(sein.Abilities.Bash.CanBash ? " CanBash" : "") +
-						(sein.Abilities.Dash?.FindClosestAttackable != null ? " CDashTarget" : "") +
-						(sein.Abilities.SpiritFlameTargetting?.ClosestAttackables?.Count > 0 ? " AttackTarget" : "") +
-						(GameController.Instance.InputLocked ? " InputLocked" : "");
+					extraInfo = string.Concat((sein.IsOnGround ? "OnGround" : "InAir"),
+						(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : ""),
+						(sein.PlatformBehaviour.PlatformMovement.IsOnCeiling ? " OnCeiling" : ""),
+						(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : ""),
+						(sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : ""),
+						((sein.Mortality.DamageReciever?.IsInvinsible).GetValueOrDefault(false) ? " Invincible" : ""),
+						(CharacterState.IsActive(sein.Abilities.DoubleJump) && sein.Abilities.DoubleJump.CanDoubleJump ? " CanDoubleJump" : ""),
+						(CharacterState.IsActive(sein.Abilities.Jump) && sein.Abilities.Jump.CanJump ? " CanJump" : ""),
+						(CharacterState.IsActive(sein.Abilities.Bash) && sein.Abilities.Bash.CanBash ? " CanBash" : ""),
+						(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " GrenadeTarget" : ""),
+						(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
+						(CharacterState.IsActive(sein.Abilities.Dash) && sein.PlayerAbilities.ChargeDash.HasAbility && sein.Abilities.Dash.HasEnoughEnergy && sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTarget" : ""),
+						(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.SpiritFlameTargetting.ClosestAttackables?.Count > 0 ? " AttackTarget" : ""),
+						(!sein.Controller.CanMove ? " InputLocked" : ""));
 					int seinsTime = GetSeinsTime();
 					extraInfo += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 				}
 				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading) {
 					extraInfo += " Loading";
 				}
-				extraInfo += " RNG(" + FixedRandom.FixedUpdateIndex + ")";
+				currentInputLine += " RNG(" + FixedRandom.FixedUpdateIndex + ")";
 				extraInfo = extraInfo.Trim();
 			} else {
 				currentInputLine = string.Empty;
