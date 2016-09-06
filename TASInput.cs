@@ -28,7 +28,10 @@ namespace OriTAS {
 		public bool UI { get; set; }
 		public int Line { get; set; }
 
-		public TASInput() { }
+		public TASInput() {
+			this.MouseX = -1;
+			this.MouseY = -1;
+		}
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.Cancel = Core.Input.Cancel.IsPressed;
@@ -55,12 +58,17 @@ namespace OriTAS {
 				UnityEngine.Vector2 vector = Core.Input.CursorPosition;
 				this.MouseX = vector.x;
 				this.MouseY = vector.y;
+			} else {
+				this.MouseX = -1;
+				this.MouseY = -1;
 			}
 		}
 		public TASInput(string line, int lineNum) {
 			try {
 				string[] parameters = line.Split(',');
 
+				this.MouseX = -1;
+				this.MouseY = -1;
 				this.Line = lineNum;
 				int frames = 0;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
@@ -121,9 +129,16 @@ namespace OriTAS {
 			if (DLoad && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
-			UnityEngine.Vector2 vector = new UnityEngine.Vector2(MouseX, MouseY);
-			Core.Input.CursorMoved = (UnityEngine.Vector2.Distance(vector, Core.Input.CursorPosition) > 0.0001f);
-			Core.Input.CursorPosition = vector;
+			if (MouseX > -0.1 && MouseY > -0.1) {
+				UnityEngine.Vector2 vector = new UnityEngine.Vector2(MouseX, MouseY);
+				Core.Input.CursorMoved = (UnityEngine.Vector2.Distance(vector, Core.Input.CursorPosition) > 0.0001f);
+				Core.Input.CursorPosition = vector;
+				TASPlayer.LastMouseX = MouseX;
+				TASPlayer.LastMouseY = MouseY;
+			} else {
+				Core.Input.CursorPosition = new UnityEngine.Vector2(TASPlayer.LastMouseX, TASPlayer.LastMouseY);
+				Core.Input.CursorMoved = false;
+			}
 			Core.Input.HorizontalAnalogLeft = XAxis;
 			Core.Input.Horizontal = XAxis;
 			Core.Input.VerticalAnalogLeft = YAxis;
@@ -202,7 +217,7 @@ namespace OriTAS {
 			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Attack ? ",Fire" : "") + (Bash ? ",Bash" : "") +
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
 				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
-				Axis() +
+				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") +
 				(MouseX == 0 && MouseY == 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
@@ -210,11 +225,11 @@ namespace OriTAS {
 			bool hasY = YAxis > 0.001f || YAxis < -0.001f;
 			if (hasX && !hasY) {
 				return XAxis <= -0.99f ? ",Left" : XAxis >= 0.99f ? ",Right" : ",XAxis," + XAxis.ToString("0.####");
-			} else if(hasY && !hasX) {
+			} else if (hasY && !hasX) {
 				return YAxis <= -0.99f ? ",Down" : YAxis >= 0.99f ? ",Up" : ",YAxis," + YAxis.ToString("0.####");
-			} else if(hasX && hasY) {
+			} else if (hasX && hasY) {
 				double magnitude = Math.Sqrt(XAxis * XAxis + YAxis * YAxis);
-				if(magnitude < 0.9) {
+				if (magnitude < 0.9) {
 					return ",XAxis," + XAxis.ToString("0.####") + ",YAxis," + YAxis.ToString("0.####");
 				} else {
 					double angle = Math.Atan2(XAxis, YAxis) * 180 / Math.PI;

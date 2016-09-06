@@ -271,7 +271,7 @@ namespace OriTAS {
 						(sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : "") +
 						(sein.Abilities.Jump.CanJump ? " CanJump" : "") +
 						(sein.Abilities.Bash.CanBash ? " CanBash" : "") +
-						(sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTarget" : "") +
+						(sein.Abilities.Dash?.FindClosestAttackable != null ? " CDashTarget" : "") +
 						(sein.Abilities.SpiritFlameTargetting?.ClosestAttackables?.Count > 0 ? " AttackTarget" : "") +
 						(GameController.Instance.InputLocked ? " InputLocked" : "");
 					int seinsTime = GetSeinsTime();

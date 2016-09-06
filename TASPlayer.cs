@@ -2,6 +2,7 @@
 using System.IO;
 namespace OriTAS {
 	public class TASPlayer {
+		public static float LastMouseX, LastMouseY;
 		private List<TASInput> inputs = new List<TASInput>();
 		private TASInput lastInput;
 		private int currentFrame, inputIndex, frameToNext, fixedRandom;
@@ -69,6 +70,8 @@ namespace OriTAS {
 				bool changed = false;
 				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate) {
 					if (currentFrame == 0) {
+						LastMouseX = 0;
+						LastMouseY = 0;
 						SeinUI.DebugHideUI = false;
 					}
 					changed = currentFrame == 0;
