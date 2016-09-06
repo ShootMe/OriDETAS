@@ -21,7 +21,7 @@ Otherwise the program will record a new file there in it's place.
 3. To stop playback/recording
 	* Left Trigger + Right Trigger + DPad Down
 	* KB: \
-4. KB Only
+4. KB Only (These require Ori Manager to be running to work. Can be found in the LiveSplit.OriDE autosplitter repository)
 	* [ to start frame stepping
 	* ' (SingleQuote) to reload tas file (During playback)
 	* ] to resume normal playback from frame stepping
