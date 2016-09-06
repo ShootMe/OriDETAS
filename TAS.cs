@@ -36,7 +36,7 @@ namespace OriTAS {
 			FrameStepping();
 
 			bool returnValue = false;
-			if (HasFlag(tasState, TASState.Enable) && !GameController.FreezeFixedUpdate) {
+			if (HasFlag(tasState, TASState.Enable)) {
 				if (HasFlag(tasState, TASState.Record)) {
 					player.RecordPlayer();
 				} else {
@@ -277,7 +277,7 @@ namespace OriTAS {
 					int seinsTime = GetSeinsTime();
 					extraInfo += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 				}
-				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading || GameController.FreezeFixedUpdate) {
+				if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading) {
 					extraInfo += " Loading";
 				}
 				extraInfo += " RNG(" + FixedRandom.FixedUpdateIndex + ")";

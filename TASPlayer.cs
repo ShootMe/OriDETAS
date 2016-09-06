@@ -68,7 +68,7 @@ namespace OriTAS {
 		public void PlaybackPlayer() {
 			if (inputIndex < inputs.Count) {
 				bool changed = false;
-				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && !GameController.FreezeFixedUpdate) {
+				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading) {
 					if (currentFrame == 0) {
 						LastMouseX = 0;
 						LastMouseY = 0;
