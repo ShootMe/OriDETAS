@@ -27,6 +27,7 @@ namespace OriTAS {
 		public bool Grenade { get; set; }
 		public bool UI { get; set; }
 		public int Line { get; set; }
+		public bool Position { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -116,6 +117,12 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.MouseY = temp; }
 							i += 2;
 							break;
+						case "POS":
+							Position = true;
+							if (float.TryParse(parameters[i + 1], out temp)) { this.MouseX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.MouseY = temp; }
+							i += 2;
+							break;
 					}
 				}
 				Frames = frames;
@@ -126,10 +133,17 @@ namespace OriTAS {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
 			}
+
 			if (DLoad && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
-			if (MouseX > -0.1 && MouseY > -0.1) {
+
+			if (Position && initial) {
+				SeinCharacter sein = Game.Characters.Sein;
+				sein.Position = new UnityEngine.Vector3(MouseX, MouseY);
+			}
+
+			if (!Position && MouseX > -0.1 && MouseY > -0.1) {
 				UnityEngine.Vector2 vector = new UnityEngine.Vector2(MouseX, MouseY);
 				Core.Input.CursorMoved = (UnityEngine.Vector2.Distance(vector, Core.Input.CursorPosition) > 0.0001f);
 				Core.Input.CursorPosition = vector;
@@ -139,6 +153,11 @@ namespace OriTAS {
 				Core.Input.CursorPosition = new UnityEngine.Vector2(TASPlayer.LastMouseX, TASPlayer.LastMouseY);
 				Core.Input.CursorMoved = false;
 			}
+
+			if (UI && initial) {
+				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
+			}
+
 			Core.Input.HorizontalAnalogLeft = XAxis;
 			Core.Input.Horizontal = XAxis;
 			Core.Input.VerticalAnalogLeft = YAxis;
@@ -182,10 +201,6 @@ namespace OriTAS {
 			Core.Input.Focus.Update(Attack);
 			Core.Input.Filter.Update(Attack);
 			Core.Input.Legend.Update(Bash);
-
-			if (UI && initial) {
-				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
-			}
 		}
 		public static bool operator ==(TASInput one, TASInput two) {
 			if ((object)one == null && (object)two != null) {
@@ -218,7 +233,7 @@ namespace OriTAS {
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
 				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
 				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") +
-				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
+				(!Position && MouseX < 0 && MouseY < 0 ? "" : (Position ? ",Pos," : ",Mouse,") + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
 			bool hasX = XAxis > 0.001f || XAxis < -0.001f;

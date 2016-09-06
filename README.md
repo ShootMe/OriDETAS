@@ -13,24 +13,27 @@ Otherwise the program will record a new file there in it's place.
 
 ### Controls
 1. To playback already recorded TAS
-	* Left Trigger + Right Trigger + Right Stick Button
+	* Right Trigger + Left Stick Button
 	* KB: B
 2. To record completely new TAS
-	* Left Trigger + Right Trigger + Left Stick Button
+	* Left Trigger + Left Stick Button
 	* KB: N
 3. To stop playback/recording
-	* Left Trigger + Right Trigger + DPad Down
+	* Right Trigger + DPad Down
 	* KB: \
-4. KB Only (These require Ori Manager to be running to work. Can be found in the LiveSplit.OriDE autosplitter repository)
+4. KB Only (Not recording) (These require Ori Manager to be running to work. Can be found in the LiveSplit.OriDE autosplitter repository)
 	* [ to start frame stepping
 	* ' (SingleQuote) to reload tas file (During playback)
 	* ] to resume normal playback from frame stepping
-4. While playing back (Not recording):
+	* ; to frame step to next status change
+5. Re record
+   * Backspace
+6. While playing back (Not recording):
 	* To frame step forward one frame - DPad Up
 	* While frame stepping hold Right Analog Stick to the right to frame step continuously
 	* To continue playback at normal speed from frame stepping - DPad Down
 	* When not frame stepping move Right Analog Stick to slowdown or speedup playback
-	* To reload TAS file (after you make edits) - Left Trigger + Right Trigger + DPad Up
+	* To reload TAS file (after you make edits) - Right Trigger + DPad Up
 
 ### Valid inputs in Input File (Ori.tas)
 1. Jump

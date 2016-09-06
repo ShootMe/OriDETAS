@@ -65,6 +65,23 @@ namespace OriTAS {
 			inputs.Clear();
 			File.Delete(filePath);
 		}
+		public void InitializeRerecording() {
+			inputs = inputs.GetRange(0, inputIndex + 1);
+			string oldFile = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), ".tas");
+			string oldFile2 = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), "2.tas");
+			File.Delete(oldFile2);
+			File.Move(oldFile, oldFile2);
+			File.Move(filePath, oldFile);
+			inputs[inputs.Count - 1].Frames = currentFrame + lastInput.Frames - frameToNext;
+
+			File.AppendAllText(filePath, fixedRandom.ToString() + "\r\n");
+
+			foreach (TASInput input in inputs) {
+				File.AppendAllText(filePath, input.ToString() + "\r\n");
+			}
+			File.AppendAllText(filePath, "// ");
+			lastInput.Frames = 0;
+		}
 		public void PlaybackPlayer() {
 			if (inputIndex < inputs.Count) {
 				bool changed = false;
@@ -95,18 +112,23 @@ namespace OriTAS {
 			TASInput input = new TASInput(currentFrame);
 			if (currentFrame == 0 && input == lastInput) {
 				return;
-			} else if (input != lastInput) {
-				if (currentFrame == 0) {
-					fixedRandom = FixedRandom.FixedUpdateIndex;
-					File.AppendAllText(filePath, fixedRandom.ToString() + "\r\n");
+			} else {
+				if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading) {
+					if (input != lastInput) {
+						if (currentFrame == 0) {
+							fixedRandom = FixedRandom.FixedUpdateIndex;
+							File.AppendAllText(filePath, fixedRandom.ToString() + "\r\n");
+						}
+						lastInput.Frames = currentFrame - lastInput.Frames;
+						if (lastInput.Frames != 0) {
+							File.AppendAllText(filePath, lastInput.ToString() + "\r\n");
+						}
+						lastInput = input;
+					}
+					currentFrame++;
 				}
-				lastInput.Frames = currentFrame - lastInput.Frames;
-				if (lastInput.Frames != 0) {
-					File.AppendAllText(filePath, lastInput.ToString() + "\r\n");
-				}
-				lastInput = input;
+				FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 			}
-			currentFrame++;
 		}
 		private void ReadFile() {
 			inputs.Clear();

@@ -3,8 +3,6 @@ using SmartInput;
 using System.Threading;
 using UnityEngine;
 using System.Collections.Generic;
-using System.IO;
-
 namespace OriTAS {
 	[Flags]
 	public enum TASState {
@@ -14,7 +12,8 @@ namespace OriTAS {
 		Reload = 4,
 		FrameStep = 8,
 		ChangeSpeed = 16,
-		OpenDebug = 32
+		OpenDebug = 32,
+		Rerecord = 64
 	}
 	public class TAS {
 		private static TASState tasStateNext, tasState;
@@ -23,9 +22,8 @@ namespace OriTAS {
 		public static float deltaTime = 0.016666667f, timeScale = 1f;
 		public static int frameRate = 0;
 		private static GUIStyle style;
-		private static HashSet<ISuspendable> suspendables = new HashSet<ISuspendable>();
 		private static char currentKeyPress;
-		private static string currentInputLine, nextInputLine, extraInfo;
+		private static string currentInputLine, nextInputLine, extraInfo, savedExtraInfo;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
@@ -36,9 +34,8 @@ namespace OriTAS {
 			CheckControls();
 			FrameStepping();
 
-			bool returnValue = false;
 			if (HasFlag(tasState, TASState.Enable)) {
-				if (HasFlag(tasState, TASState.Record)) {
+				if (HasFlag(tasState, TASState.Record) || HasFlag(tasState, TASState.Rerecord)) {
 					player.RecordPlayer();
 				} else {
 					player.PlaybackPlayer();
@@ -46,10 +43,10 @@ namespace OriTAS {
 					if (!player.CanPlayback) {
 						DisableRun();
 					}
-					returnValue = true;
+					return true;
 				}
 			}
-			return returnValue;
+			return false;
 		}
 		private static void HandleFrameRates() {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
@@ -120,26 +117,24 @@ namespace OriTAS {
 		private static void FrameStepping() {
 			char kp = currentKeyPress;
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
-			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
+			bool rhtTrg = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == '[';
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == ']';
 
-			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !lftShd && !rhtShd)) {
+			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (HasFlag(tasState, TASState.FrameStep) || dpU && !rhtTrg)) {
 				bool ap = dpU;
 				while (HasFlag(tasState, TASState.Enable)) {
 					kp = currentKeyPress;
 					rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-					lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
-					rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
+					rhtTrg = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
 					dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f || kp == '[';
 					dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f || kp == ']';
 
 					CheckControls();
-					if (!ap && ((dpU && !lftShd && !rhtShd))) {
+					if (!ap && ((dpU && !rhtTrg))) {
 						tasState |= TASState.FrameStep;
 						break;
-					} else if ((dpD && !lftShd && !rhtShd)) {
+					} else if (dpD && !rhtTrg) {
 						tasState &= ~TASState.FrameStep;
 						break;
 					} else if (rsX >= 0.2) {
@@ -162,6 +157,33 @@ namespace OriTAS {
 						}
 						Thread.Sleep(sleepTime);
 						break;
+					} else if (kp == ':' || savedExtraInfo != null) {
+						tasState |= TASState.FrameStep;
+
+						ClearKeyPress();
+
+						if (savedExtraInfo == null) {
+							savedExtraInfo = extraInfo;
+							int rngIndex = savedExtraInfo.IndexOf("RNG(");
+							if (rngIndex > 0) {
+								savedExtraInfo = savedExtraInfo.Substring(0, rngIndex).Trim();
+							} else {
+								savedExtraInfo = string.Empty;
+							}
+						} else {
+							string currentExtraInfo = extraInfo;
+							int rngIndex = currentExtraInfo.IndexOf("RNG(");
+							if (rngIndex > 0) {
+								currentExtraInfo = currentExtraInfo.Substring(0, rngIndex).Trim();
+							} else {
+								currentExtraInfo = string.Empty;
+							}
+
+							if(currentExtraInfo == savedExtraInfo) {
+								break;
+							}
+							savedExtraInfo = null;
+						}
 					}
 					ap = dpU;
 					ClearKeyPress();
@@ -174,12 +196,14 @@ namespace OriTAS {
 			tasState &= ~TASState.Enable;
 			tasState &= ~TASState.FrameStep;
 			tasState &= ~TASState.Record;
+			tasState &= ~TASState.Rerecord;
 		}
 		private static void CheckControls() {
 			char kp = currentKeyPress;
 			float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
-			bool lftShd = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
-			bool rhtShd = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
+			bool rhtTrg = XboxControllerInput.GetButton(XboxControllerInput.Button.RightTrigger);
+			bool lftTrg = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftTrigger);
+			bool lftStick = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
 			bool kbPlay = MoonInput.GetKey(KeyCode.B) || kp == 'B';
@@ -187,27 +211,32 @@ namespace OriTAS {
 			bool kbStop = MoonInput.GetKey(KeyCode.Backslash) || kp == '\\';
 			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
 			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
+			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace);
 
-			if ((lftShd && rhtShd) || kbPlay || kbRec || kbStop || kbDebug || kbReload) {
-				if (!HasFlag(tasState, TASState.Enable) && (XboxControllerInput.GetButton(XboxControllerInput.Button.RightStick) || kbPlay)) {
+			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
+				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
+				} else if (!HasFlag(tasState, TASState.Rerecord) && kbRerec) {
+					tasStateNext |= TASState.Rerecord;
 				} else if (HasFlag(tasState, TASState.Enable) && (dpD || kbStop)) {
 					DisableRun();
 				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || kbReload)) {
 					tasStateNext |= TASState.Reload;
-				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick) || kbRec)) {
+				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && ((lftStick && lftTrg) || kbRec)) {
 					tasStateNext |= TASState.Record;
 				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && kbDebug) {
 					tasStateNext |= TASState.OpenDebug;
 				}
 			}
 
-			if (!lftShd && !rhtShd && !kbPlay && !kbRec && !kbDebug && !kbReload) {
+			if (!rhtTrg && !kbPlay && !kbRec && !kbDebug && !kbReload && !kbRerec) {
 				if (HasFlag(tasStateNext, TASState.Enable)) {
 					ClearKeyPress(true);
 					EnableRun();
 				} else if (HasFlag(tasStateNext, TASState.Record)) {
 					RecordRun();
+				} else if (HasFlag(tasStateNext, TASState.Rerecord)) {
+					RerecordRun();
 				} else if (HasFlag(tasStateNext, TASState.Reload)) {
 					ReloadRun();
 				} else if (HasFlag(tasStateNext, TASState.OpenDebug)) {
@@ -225,6 +254,12 @@ namespace OriTAS {
 			tasStateNext &= ~TASState.Record;
 
 			UpdateVariables(true);
+		}
+		private static void RerecordRun() {
+			tasStateNext &= ~TASState.Rerecord;
+			tasState |= TASState.Enable;
+			tasState |= TASState.Rerecord;
+			player.InitializeRerecording();
 		}
 		private static void UpdateVariables(bool recording) {
 			tasState |= TASState.Enable;
