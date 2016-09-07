@@ -155,6 +155,8 @@ namespace OriTAS {
 
 			bool firstLine = true;
 			int lines = 0;
+			FastForward = false;
+			Break = 0;
 			using (StreamReader sr = new StreamReader(filePath)) {
 				while (!sr.EndOfStream) {
 					string line = sr.ReadLine();
