@@ -302,6 +302,8 @@ namespace OriTAS {
 						(CharacterState.IsActive(sein.Abilities.Jump) && sein.Abilities.Jump.CanJump ? " CanJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.WallJump) && sein.Abilities.WallJump.CanPerformWallJump ? " CanWallJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.Bash) && sein.Abilities.Bash.CanBash ? " CanBash" : ""),
+						(CanPickup(sein) ? " CanPickup" : ""),
+						(!sein.Abilities.Carry.LockDroppingObject && sein.Abilities.Carry.IsCarrying && sein.PlatformBehaviour.PlatformMovement.IsOnGround && sein.Controller.CanMove ? " CanDrop" : ""),
 						(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " GrenadeTarget" : ""),
 						(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
 						(CharacterState.IsActive(sein.Abilities.Dash) && sein.PlayerAbilities.ChargeDash.HasAbility && sein.Abilities.Dash.HasEnoughEnergy && sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTarget" : ""),
@@ -320,6 +322,17 @@ namespace OriTAS {
 				nextInputLine = string.Empty;
 				extraInfo = string.Empty;
 			}
+		}
+		public static bool CanPickup(SeinCharacter sein) {
+			if (sein.Controller.CanMove && sein.PlatformBehaviour.PlatformMovement.IsOnGround) {
+				for (int i = 0; i < Game.Items.Carryables.Count; i++) {
+					ICarryable carryable = Game.Items.Carryables[i];
+					if (Vector3.Distance(((Component)carryable).transform.position, sein.Position) < sein.Abilities.Carry.CarryRange && carryable != null && carryable.CanBeCarried()) {
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 		private static int GetCurrentTime() {
 			return GameController.Instance.Timer.Hours * 3600 + GameController.Instance.Timer.Minutes * 60 + GameController.Instance.Timer.Seconds;
