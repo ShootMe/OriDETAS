@@ -1,7 +1,4 @@
-﻿using Game;
-using SmartInput;
-using System;
-
+﻿using System;
 namespace OriTAS {
 	public class TASInput {
 		public int Frames { get; set; }
@@ -34,15 +31,17 @@ namespace OriTAS {
 		public float SpeedX { get; set; }
 		public float SpeedY { get; set; }
 		public int SaveSlot { get; set; }
-
+		public int XP { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
 			this.MouseY = -1;
 			this.SaveSlot = -1;
+			this.XP = -1;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
+			this.XP = -1;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -79,6 +78,7 @@ namespace OriTAS {
 
 				this.MouseX = -1;
 				this.MouseY = -1;
+				this.XP = -1;
 				this.Line = lineNum;
 				this.SaveSlot = -1;
 				int frames = 0;
@@ -107,9 +107,15 @@ namespace OriTAS {
 						case "UI": UI = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
+						case "XP":
+							int xpAmount = 0;
+							if (int.TryParse(parameters[i + 1], out xpAmount)) { this.XP = xpAmount; }
+							i += 1;
+							break;
 						case "SLOT":
 							int saveSlot = 0;
 							if (int.TryParse(parameters[i + 1], out saveSlot)) { this.SaveSlot = saveSlot - 1; }
+							i += 1;
 							break;
 						case "ANGLE":
 							if (float.TryParse(parameters[i + 1], out temp)) {
@@ -157,11 +163,9 @@ namespace OriTAS {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
 			}
-
 			if (DLoad && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
-
 			if (Position && initial) {
 				SeinCharacter sein = Game.Characters.Sein;
 				sein.Position = new UnityEngine.Vector3(PositionX, PositionY);
@@ -169,6 +173,13 @@ namespace OriTAS {
 			if (Speed && initial) {
 				SeinCharacter sein = Game.Characters.Sein;
 				sein.Speed = new UnityEngine.Vector3(SpeedX, SpeedY);
+			}
+			if (XP >= 0 && initial) {
+				SeinCharacter sein = Game.Characters.Sein;
+				sein.Level.Experience = XP;
+			}
+			if (UI && initial) {
+				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
 			}
 
 			if (!Position && MouseX > -0.1 && MouseY > -0.1) {
@@ -180,10 +191,6 @@ namespace OriTAS {
 			} else {
 				Core.Input.CursorPosition = new UnityEngine.Vector2(TASPlayer.LastMouseX, TASPlayer.LastMouseY);
 				Core.Input.CursorMoved = false;
-			}
-
-			if (UI && initial) {
-				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
 			}
 
 			Core.Input.HorizontalAnalogLeft = XAxis;
