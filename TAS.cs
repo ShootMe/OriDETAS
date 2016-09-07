@@ -43,6 +43,10 @@ namespace OriTAS {
 					if (!player.CanPlayback) {
 						DisableRun();
 					}
+					if (player.Break < 0) {
+						tasState |= TASState.FrameStep;
+						player.Break = 0;
+					}
 					return true;
 				}
 			}
@@ -52,7 +56,9 @@ namespace OriTAS {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
 				float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 
-				if (rsX <= -1.2) {
+				if (player.FastForward) {
+					SetFrameRate(180);
+				} else if (rsX <= -1.2) {
 					SetFrameRate(1);
 				} else if (rsX <= -1.1) {
 					SetFrameRate(2);

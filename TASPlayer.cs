@@ -3,6 +3,8 @@ using System.IO;
 namespace OriTAS {
 	public class TASPlayer {
 		public static float LastMouseX, LastMouseY;
+		public bool FastForward { get; set; }
+		public int Break { get; set; }
 		private List<TASInput> inputs = new List<TASInput>();
 		private TASInput lastInput;
 		private int currentFrame, inputIndex, frameToNext, fixedRandom;
@@ -53,8 +55,17 @@ namespace OriTAS {
 					inputIndex++;
 					return;
 				}
+
 				lastInput = inputs[++inputIndex];
 				frameToNext += lastInput.Frames;
+
+				TASInput nextInput = inputs[inputIndex + 1 < inputs.Count ? inputIndex + 1 : inputIndex];
+				if (nextInput.Line > Break && Break > 0) {
+					Break = -Break;
+					FastForward = false;
+				} else if (Break < 0) {
+					Break = 0;
+				}
 			}
 		}
 		public void InitializeRecording() {
@@ -103,6 +114,14 @@ namespace OriTAS {
 					}
 
 					currentFrame++;
+
+					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {
+						TASInput nextInput = inputs[inputIndex + 1];
+						if (nextInput.Line > Break && Break > 0) {
+							Break = -Break;
+							FastForward = false;
+						}
+					}
 				}
 				FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 				lastInput.UpdateInput(changed);
@@ -142,8 +161,16 @@ namespace OriTAS {
 
 					if (!firstLine) {
 						if (line.IndexOf("Stop", System.StringComparison.OrdinalIgnoreCase) == 0) { return; }
+						lines++;
+						if (line.IndexOf("BreakQuick", System.StringComparison.OrdinalIgnoreCase) == 0) {
+							FastForward = true;
+						}
+						if (line.IndexOf("Break", System.StringComparison.OrdinalIgnoreCase) == 0) {
+							Break = lines;
+							continue;
+						}
 
-						TASInput input = new TASInput(line, ++lines);
+						TASInput input = new TASInput(line, lines);
 						if (input.Frames != 0) {
 							inputs.Add(input);
 						}
