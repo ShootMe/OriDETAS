@@ -113,11 +113,11 @@ namespace OriTAS {
 
 			frameRate = newFrameRate;
 			timeScale = (float)newFrameRate / 60f;
-			UnityEngine.Time.timeScale = timeScale;
-			UnityEngine.Time.captureFramerate = 60;
+			Time.timeScale = timeScale;
+			Time.captureFramerate = 60;
 			Application.targetFrameRate = 60;
-			UnityEngine.Time.fixedDeltaTime = 1f / 60f;
-			UnityEngine.Time.maximumDeltaTime = UnityEngine.Time.fixedDeltaTime;
+			Time.fixedDeltaTime = 1f / 60f;
+			Time.maximumDeltaTime = Time.fixedDeltaTime;
 			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {
@@ -300,6 +300,7 @@ namespace OriTAS {
 						((sein.Mortality.DamageReciever?.IsInvinsible).GetValueOrDefault(false) ? " Invincible" : ""),
 						(CharacterState.IsActive(sein.Abilities.DoubleJump) && sein.Abilities.DoubleJump.CanDoubleJump ? " CanDoubleJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.Jump) && sein.Abilities.Jump.CanJump ? " CanJump" : ""),
+						(CharacterState.IsActive(sein.Abilities.WallJump) && sein.Abilities.WallJump.CanPerformWallJump ? " CanWallJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.Bash) && sein.Abilities.Bash.CanBash ? " CanBash" : ""),
 						(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " GrenadeTarget" : ""),
 						(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
