@@ -302,7 +302,7 @@ namespace OriTAS {
 						(CharacterState.IsActive(sein.Abilities.Jump) && sein.Abilities.Jump.CanJump ? " CanJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.WallJump) && sein.Abilities.WallJump.CanPerformWallJump ? " CanWallJump" : ""),
 						(CharacterState.IsActive(sein.Abilities.Bash) && sein.Abilities.Bash.CanBash ? " CanBash" : ""),
-						(CanPickup(sein) ? " CanPickup" : ""),
+						(CanPickup(sein) && !sein.Abilities.Carry.IsCarrying ? " CanPickup" : ""),
 						(!sein.Abilities.Carry.LockDroppingObject && sein.Abilities.Carry.IsCarrying && sein.PlatformBehaviour.PlatformMovement.IsOnGround && sein.Controller.CanMove ? " CanDrop" : ""),
 						(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " GrenadeTarget" : ""),
 						(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
