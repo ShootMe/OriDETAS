@@ -158,6 +158,7 @@ namespace OriTAS {
 			if (SaveSlot >= 0) {
 				SaveSlotsManager.CurrentSlotIndex = SaveSlot;
 				SaveSlotsManager.BackupIndex = -1;
+				SaveSlotsUI.Instance.ItemsUI.SetScrollFromIndex(SaveSlot);
 			}
 			if (DSave && initial && GameController.Instance != null) {
 				GameController.Instance.CreateCheckpoint();
@@ -268,7 +269,10 @@ namespace OriTAS {
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
 				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
 				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") + (SaveSlot >= 0 ? ",Slot," + (SaveSlot + 1) : "") +
-				(!Position && MouseX < 0 && MouseY < 0 ? "" : (Position ? ",Pos," : ",Mouse,") + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
+				(!Position ? "" : ",Pos," + PositionX.ToString("0.####") + "," + PositionY.ToString("0.####")) +
+				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
+				(XP >= 0 ? ",XP," + XP : "") +
+				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
 			bool hasX = XAxis > 0.001f || XAxis < -0.001f;

@@ -176,10 +176,10 @@ namespace OriTAS {
 					if (!firstLine) {
 						if (line.IndexOf("Stop", System.StringComparison.OrdinalIgnoreCase) == 0) { return; }
 						lines++;
-						if (line.IndexOf("BreakQuick", System.StringComparison.OrdinalIgnoreCase) == 0) {
+						if (Break == 0 && line.IndexOf("BreakQuick", System.StringComparison.OrdinalIgnoreCase) == 0) {
 							FastForward = true;
 						}
-						if (line.IndexOf("Break", System.StringComparison.OrdinalIgnoreCase) == 0) {
+						if (Break == 0 && line.IndexOf("Break", System.StringComparison.OrdinalIgnoreCase) == 0) {
 							Break = lines;
 							continue;
 						}

@@ -43,7 +43,7 @@ namespace OriTAS {
 					if (!player.CanPlayback) {
 						DisableRun();
 					}
-					if (player.Break < 0) {
+					if (!GameController.Instance.IsLoadingGame && !InstantLoadScenesController.Instance.IsLoading && player.Break < 0) {
 						tasState |= TASState.FrameStep;
 						player.Break = 0;
 					}
