@@ -118,7 +118,6 @@ namespace OriTAS {
 			Application.targetFrameRate = 60;
 			Time.fixedDeltaTime = 1f / 60f;
 			Time.maximumDeltaTime = Time.fixedDeltaTime;
-			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {
 			char kp = currentKeyPress;
@@ -199,12 +198,12 @@ namespace OriTAS {
 			bool lftStick = XboxControllerInput.GetButton(XboxControllerInput.Button.LeftStick);
 			bool dpU = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) > 0.1f;
 			bool dpD = XboxControllerInput.GetAxis(XboxControllerInput.Axis.DpadY) < -0.1f;
-			bool kbPlay = MoonInput.GetKey(KeyCode.B) || kp == 'B';
-			bool kbRec = MoonInput.GetKey(KeyCode.N) || kp == 'N';
+			bool kbPlay = MoonInput.GetKey(KeyCode.LeftBracket);
+			bool kbRec = MoonInput.GetKey(KeyCode.Backspace) && (MoonInput.GetKey(KeyCode.LeftShift) || MoonInput.GetKey(KeyCode.RightShift));
 			bool kbStop = MoonInput.GetKey(KeyCode.Backslash) || kp == '\\';
 			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
 			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
-			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace);
+			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace) && (MoonInput.GetKey(KeyCode.RightControl) || MoonInput.GetKey(KeyCode.RightControl));
 
 			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
 				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {

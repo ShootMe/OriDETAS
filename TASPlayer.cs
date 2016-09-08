@@ -74,15 +74,27 @@ namespace OriTAS {
 			lastInput = new TASInput();
 			frameToNext = 0;
 			inputs.Clear();
-			File.Delete(filePath);
+			string oldFile = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), ".tas");
+			string oldFile2 = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), "2.tas");
+			if (File.Exists(oldFile)) {
+				File.Delete(oldFile2);
+				File.Move(oldFile, oldFile2);
+			}
+			if (File.Exists(filePath)) {
+				File.Move(filePath, oldFile);
+			}
 		}
 		public void InitializeRerecording() {
 			inputs = inputs.GetRange(0, inputIndex + 1);
 			string oldFile = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), ".tas");
 			string oldFile2 = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), "2.tas");
-			File.Delete(oldFile2);
-			File.Move(oldFile, oldFile2);
-			File.Move(filePath, oldFile);
+			if (File.Exists(oldFile)) {
+				File.Delete(oldFile2);
+				File.Move(oldFile, oldFile2);
+			}
+			if (File.Exists(filePath)) {
+				File.Move(filePath, oldFile);
+			}
 			inputs[inputs.Count - 1].Frames = currentFrame + lastInput.Frames - frameToNext;
 
 			File.AppendAllText(filePath, fixedRandom.ToString() + "\r\n");
