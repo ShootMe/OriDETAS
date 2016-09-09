@@ -114,10 +114,11 @@ namespace OriTAS {
 			frameRate = newFrameRate;
 			timeScale = (float)newFrameRate / 60f;
 			Time.timeScale = timeScale;
-			Time.captureFramerate = 60;
-			Application.targetFrameRate = 60;
+			Time.captureFramerate = newFrameRate;
+			Application.targetFrameRate = newFrameRate;
 			Time.fixedDeltaTime = 1f / 60f;
 			Time.maximumDeltaTime = Time.fixedDeltaTime;
+			QualitySettings.vSyncCount = 0;
 		}
 		private static void FrameStepping() {
 			char kp = currentKeyPress;
