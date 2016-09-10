@@ -27,6 +27,7 @@ namespace OriTAS {
 		public bool Position { get; set; }
 		public float PositionX { get; set; }
 		public float PositionY { get; set; }
+		public bool Color { get; set; }
 		public bool Speed { get; set; }
 		public float SpeedX { get; set; }
 		public float SpeedY { get; set; }
@@ -105,6 +106,7 @@ namespace OriTAS {
 						case "UP": YAxis = 1; break;
 						case "DOWN": YAxis = -1; break;
 						case "UI": UI = true; break;
+						case "COLOR": Color = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
 						case "XP":
@@ -165,6 +167,7 @@ namespace OriTAS {
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 			if (DLoad && initial && GameController.Instance != null) {
+				GameController.Instance.RestoreCheckpointImmediate();
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
 			if (Position && initial) {
@@ -181,6 +184,9 @@ namespace OriTAS {
 			}
 			if (UI && initial) {
 				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
+			}
+			if (Color && initial && Game.Characters.Sein != null) {
+				CheatsHandler.Instance.ChangeCharacterColor();
 			}
 
 			if (!Position && MouseX > -0.1 && MouseY > -0.1) {
@@ -271,7 +277,7 @@ namespace OriTAS {
 				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") + (SaveSlot >= 0 ? ",Slot," + (SaveSlot + 1) : "") +
 				(!Position ? "" : ",Pos," + PositionX.ToString("0.####") + "," + PositionY.ToString("0.####")) +
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
-				(XP >= 0 ? ",XP," + XP : "") +
+				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
