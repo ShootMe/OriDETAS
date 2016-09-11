@@ -190,6 +190,7 @@ namespace OriTAS {
 			tasState &= ~TASState.FrameStep;
 			tasState &= ~TASState.Record;
 			tasState &= ~TASState.Rerecord;
+			PlayerInput.Instance.Active = true;
 		}
 		private static void CheckControls() {
 			char kp = currentKeyPress;
@@ -240,7 +241,7 @@ namespace OriTAS {
 		}
 		private static void EnableRun() {
 			tasStateNext &= ~TASState.Enable;
-
+			PlayerInput.Instance.Active = false;
 			UpdateVariables(false);
 		}
 		private static void RecordRun() {

@@ -167,7 +167,9 @@ namespace OriTAS {
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 			if (DLoad && initial && GameController.Instance != null) {
+				GameController.Instance.IsLoadingGame = true;
 				GameController.Instance.RestoreCheckpointImmediate();
+				GameController.Instance.IsLoadingGame = true;
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
 			if (Position && initial) {

@@ -50,7 +50,7 @@ namespace OriTAS {
 			InitializePlayback();
 			currentFrame = playedBackFrames;
 
-			while (currentFrame >= frameToNext) {
+			while (currentFrame > frameToNext) {
 				if (inputIndex + 1 >= inputs.Count) {
 					inputIndex++;
 					return;
@@ -115,6 +115,7 @@ namespace OriTAS {
 						SeinUI.DebugHideUI = false;
 					}
 					changed = currentFrame == 0;
+
 					if (currentFrame >= frameToNext) {
 						if (inputIndex + 1 >= inputs.Count) {
 							inputIndex++;
@@ -127,6 +128,9 @@ namespace OriTAS {
 
 					currentFrame++;
 
+					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame + 1);
+					lastInput.UpdateInput(changed);
+
 					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {
 						TASInput nextInput = inputs[inputIndex + 1];
 						if (nextInput.Line > Break && Break > 0) {
@@ -135,8 +139,6 @@ namespace OriTAS {
 						}
 					}
 				}
-				FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
-				lastInput.UpdateInput(changed);
 			}
 		}
 		public void RecordPlayer() {
@@ -157,8 +159,8 @@ namespace OriTAS {
 						lastInput = input;
 					}
 					currentFrame++;
+					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 				}
-				FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 			}
 		}
 		private void ReadFile() {
