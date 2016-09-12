@@ -357,6 +357,14 @@ namespace OriTAS {
 						enemyType = "Slug";
 					} else if ((attackable.Entity as GroundEnemy) != null) {
 						enemyType = "Ground";
+					} else if ((attackable.Entity as PetrifiedPlant) != null) {
+						enemyType = "PetrifiedPlant";
+					} else if ((attackable.Entity as StompableFloor) != null) {
+						enemyType = "StompableFloor";
+					} else if ((attackable.Entity as ChargeFlameWall) != null) {
+						enemyType = "ChargeFlameWall";
+					} else if ((attackable.Entity as SpriteEntity) != null) {
+						enemyType = "Sprite";
 					}
 					Rigidbody rb = attackable.GetComponent<Rigidbody>();
 					if (lastTargetPosition.x < -9999990) {
