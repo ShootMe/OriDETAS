@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Game;
 using SmartInput;
+using System;
 using System.Threading;
 using UnityEngine;
-using System.Collections.Generic;
 namespace OriTAS {
 	[Flags]
 	public enum TASState {
@@ -24,6 +24,7 @@ namespace OriTAS {
 		private static GUIStyle style;
 		private static char currentKeyPress;
 		private static string currentInputLine, nextInputLine, extraInfo, savedExtraInfo;
+		private static Vector3 lastTargetPosition;
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
 		}
@@ -287,18 +288,90 @@ namespace OriTAS {
 			}
 		}
 		public static void UpdateText() {
+			string closest = ClosestTargetInfo();
 			if (HasFlag(tasState, TASState.Enable)) {
 				currentInputLine = player.ToString() + " RNG(" + FixedRandom.FixedUpdateIndex + ")";
-				nextInputLine = player.NextInput();
+				nextInputLine = player.NextInput() + (string.IsNullOrEmpty(closest) ? "" : "  [" + closest + "]");
 			} else {
 				currentInputLine = string.Empty;
-				nextInputLine = string.Empty;
+				nextInputLine = (string.IsNullOrEmpty(closest) ? "" : "[" + closest + "]");
 			}
+		}
+		public static string ClosestTargetInfo() {
+			SeinCharacter sein = Characters.Sein;
+			string info = string.Empty;
+			if (sein != null) {
+				float minDist = float.MaxValue;
+				int index = -1;
+				for (int i = 0; i < Targets.Attackables.Count; i++) {
+					EntityTargetting attackable = Targets.Attackables[i] as EntityTargetting;
+					if (attackable != null && attackable.IsOnScreen && attackable.Activated) {
+						float dist = Vector3.Distance(attackable.Position, sein.Position);
+						if (dist < minDist) {
+							index = i;
+							minDist = dist;
+						}
+					}
+				}
+
+				if (index >= 0) {
+					EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
+					string enemyType = "Unknown";
+					if ((attackable.Entity as AcidSlugEnemy) != null) {
+						enemyType = "AcidSlug";
+					} else if ((attackable.Entity as FishEnemy) != null) {
+						enemyType = "Fish";
+					} else if ((attackable.Entity as FloatingRockLaserEnemy) != null) {
+						enemyType = "RockLaser";
+					} else if ((attackable.Entity as FloatingRockTurretEnemy) != null) {
+						enemyType = "RockTurret";
+					} else if ((attackable.Entity as DropSlugEnemy) != null) {
+						enemyType = "DropSlug";
+					} else if ((attackable.Entity as ArmouredRammingEnemy) != null) {
+						enemyType = "ArmouredRamming";
+					} else if ((attackable.Entity as DashOwlEnemy) != null) {
+						enemyType = "DashOwl";
+					} else if ((attackable.Entity as JumperEnemy) != null) {
+						enemyType = "Jumper";
+					} else if ((attackable.Entity as GroundEnemy) != null) {
+						enemyType = "Ground";
+					} else if ((attackable.Entity as KamikazeSootEnemy) != null) {
+						enemyType = "KamikazeSoot";
+					} else if ((attackable.Entity as MortarWormEnemy) != null) {
+						enemyType = "MortarWorm";
+					} else if ((attackable.Entity as OwlEnemy) != null) {
+						enemyType = "Owl";
+					} else if ((attackable.Entity as RammingEnemy) != null) {
+						enemyType = "Ramming";
+					} else if ((attackable.Entity as StarSlugEnemy) != null) {
+						enemyType = "StarSlug";
+					} else if ((attackable.Entity as SlugEnemy) != null) {
+						enemyType = "Slug";
+					} else if ((attackable.Entity as SpitterEnemy) != null) {
+						enemyType = "Spitter";
+					} else if ((attackable.Entity as SwarmEnemy) != null) {
+						enemyType = "Swarm";
+					} else if ((attackable.Entity as WormEnemy) != null) {
+						enemyType = "Worm";
+					}
+					Rigidbody rb = attackable.GetComponent<Rigidbody>();
+					if (lastTargetPosition.x < -9999990) {
+						lastTargetPosition = attackable.Position;
+					}
+					info = enemyType + " (" + attackable.Position.x.ToString("0.000") + ", " + attackable.Position.y.ToString("0.000") + ") (" + ((attackable.Position.x - lastTargetPosition.x) * 60).ToString("0.000") + ", " + ((attackable.Position.y - lastTargetPosition.y) * 60).ToString("0.000") + ")";
+					lastTargetPosition = attackable.Position;
+				} else {
+					lastTargetPosition = new Vector3(-9999999, -9999999);
+				}
+			} else {
+				lastTargetPosition = new Vector3(-9999999, -9999999);
+			}
+			return info;
 		}
 		public static void UpdateExtraInfo() {
 			string temp = string.Empty;
-			if (Game.Characters.Sein != null) {
-				SeinCharacter sein = Game.Characters.Sein;
+			if (Characters.Sein != null) {
+				SeinCharacter sein = Characters.Sein;
 
 				temp = string.Concat((sein.IsOnGround ? "OnGround" : "InAir"),
 					(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : ""),
@@ -330,8 +403,8 @@ namespace OriTAS {
 		}
 		public static bool CanPickup(SeinCharacter sein) {
 			if (sein.Controller.CanMove && sein.PlatformBehaviour.PlatformMovement.IsOnGround) {
-				for (int i = 0; i < Game.Items.Carryables.Count; i++) {
-					ICarryable carryable = Game.Items.Carryables[i];
+				for (int i = 0; i < Items.Carryables.Count; i++) {
+					ICarryable carryable = Items.Carryables[i];
 					if (Vector3.Distance(((Component)carryable).transform.position, sein.Position) < sein.Abilities.Carry.CarryRange && carryable != null && carryable.CanBeCarried()) {
 						return true;
 					}
