@@ -316,61 +316,15 @@ namespace OriTAS {
 
 				if (index >= 0) {
 					EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
-					string enemyType = "Unknown";
-					if ((attackable.Entity as AcidSlugEnemy) != null) {
-						enemyType = "AcidSlug";
-					} else if ((attackable.Entity as FishEnemy) != null) {
-						enemyType = "Fish";
-					} else if ((attackable.Entity as FloatingRockLaserEnemy) != null) {
-						enemyType = "RockLaser";
-					} else if ((attackable.Entity as FloatingRockTurretEnemy) != null) {
-						enemyType = "RockTurret";
-					} else if ((attackable.Entity as DropSlugEnemy) != null) {
-						enemyType = "DropSlug";
-					} else if ((attackable.Entity as ArmouredRammingEnemy) != null) {
-						enemyType = "ArmouredRamming";
-					} else if ((attackable.Entity as DashOwlEnemy) != null) {
-						enemyType = "DashOwl";
-					} else if ((attackable.Entity as JumperEnemy) != null) {
-						enemyType = "Jumper";
-					} else if ((attackable.Entity as KamikazeSootEnemy) != null) {
-						enemyType = "KamikazeSoot";
-					} else if ((attackable.Entity as MortarWormEnemy) != null) {
-						enemyType = "MortarWorm";
-					} else if ((attackable.Entity as ShootingSpider) != null) {
-						enemyType = "ShootingSpider";
-					} else if ((attackable.Entity as JumpShootShark) != null) {
-						enemyType = "JumpShootShark";
-					} else if ((attackable.Entity as OwlEnemy) != null) {
-						enemyType = "Owl";
-					} else if ((attackable.Entity as RammingEnemy) != null) {
-						enemyType = "Ramming";
-					} else if ((attackable.Entity as StarSlugEnemy) != null) {
-						enemyType = "StarSlug";
-					} else if ((attackable.Entity as SpitterEnemy) != null) {
-						enemyType = "Spitter";
-					} else if ((attackable.Entity as SwarmEnemy) != null) {
-						enemyType = "Swarm";
-					} else if ((attackable.Entity as WormEnemy) != null) {
-						enemyType = "Worm";
-					} else if ((attackable.Entity as SlugEnemy) != null) {
-						enemyType = "Slug";
-					} else if ((attackable.Entity as GroundEnemy) != null) {
-						enemyType = "Ground";
-					} else if ((attackable.Entity as PetrifiedPlant) != null) {
-						enemyType = "PetrifiedPlant";
-					} else if ((attackable.Entity as StompableFloor) != null) {
-						enemyType = "StompableFloor";
-					} else if ((attackable.Entity as ChargeFlameWall) != null) {
-						enemyType = "ChargeFlameWall";
-					} else if ((attackable.Entity as SpriteEntity) != null) {
-						enemyType = "Sprite";
+					string enemyType = enemyType = attackable.Entity.GetType().Name;
+					if (enemyType.LastIndexOf("Enemy") >= 0) {
+						enemyType = enemyType.Substring(0, enemyType.LastIndexOf("Enemy"));
 					}
 					Rigidbody rb = attackable.GetComponent<Rigidbody>();
 					if (lastTargetPosition.x < -9999990) {
 						lastTargetPosition = attackable.Position;
 					}
-					info = enemyType + " (" + attackable.Position.x.ToString("0.000") + ", " + attackable.Position.y.ToString("0.000") + ") (" + ((attackable.Position.x - lastTargetPosition.x) * 60).ToString("0.000") + ", " + ((attackable.Position.y - lastTargetPosition.y) * 60).ToString("0.000") + ")";
+					info = enemyType + " (" + attackable.Position.x.ToString("0.00") + ", " + attackable.Position.y.ToString("0.00") + ") (" + ((attackable.Position.x - lastTargetPosition.x) * 60).ToString("0.00") + ", " + ((attackable.Position.y - lastTargetPosition.y) * 60).ToString("0.00") + ")";
 					lastTargetPosition = attackable.Position;
 				} else {
 					lastTargetPosition = new Vector3(-9999999, -9999999);
@@ -385,7 +339,7 @@ namespace OriTAS {
 			if (Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
 
-				temp = string.Concat((sein.IsOnGround ? "OnGround" : "InAir"),
+				temp = string.Concat((sein.IsOnGround ? "OnGround" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.IsOnCeiling ? " OnCeiling" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : ""),
