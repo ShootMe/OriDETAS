@@ -333,26 +333,30 @@ namespace OriTAS {
 						enemyType = "DashOwl";
 					} else if ((attackable.Entity as JumperEnemy) != null) {
 						enemyType = "Jumper";
-					} else if ((attackable.Entity as GroundEnemy) != null) {
-						enemyType = "Ground";
 					} else if ((attackable.Entity as KamikazeSootEnemy) != null) {
 						enemyType = "KamikazeSoot";
 					} else if ((attackable.Entity as MortarWormEnemy) != null) {
 						enemyType = "MortarWorm";
+					} else if ((attackable.Entity as ShootingSpider) != null) {
+						enemyType = "ShootingSpider";
+					} else if ((attackable.Entity as JumpShootShark) != null) {
+						enemyType = "JumpShootShark";
 					} else if ((attackable.Entity as OwlEnemy) != null) {
 						enemyType = "Owl";
 					} else if ((attackable.Entity as RammingEnemy) != null) {
 						enemyType = "Ramming";
 					} else if ((attackable.Entity as StarSlugEnemy) != null) {
 						enemyType = "StarSlug";
-					} else if ((attackable.Entity as SlugEnemy) != null) {
-						enemyType = "Slug";
 					} else if ((attackable.Entity as SpitterEnemy) != null) {
 						enemyType = "Spitter";
 					} else if ((attackable.Entity as SwarmEnemy) != null) {
 						enemyType = "Swarm";
 					} else if ((attackable.Entity as WormEnemy) != null) {
 						enemyType = "Worm";
+					} else if ((attackable.Entity as SlugEnemy) != null) {
+						enemyType = "Slug";
+					} else if ((attackable.Entity as GroundEnemy) != null) {
+						enemyType = "Ground";
 					}
 					Rigidbody rb = attackable.GetComponent<Rigidbody>();
 					if (lastTargetPosition.x < -9999990) {
