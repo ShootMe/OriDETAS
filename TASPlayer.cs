@@ -128,7 +128,10 @@ namespace OriTAS {
 
 					currentFrame++;
 
-					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame + 1);
+					if (lastInput.Random >= 0 && changed) {
+						fixedRandom = lastInput.Random - currentFrame + 1;
+					}
+					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 					lastInput.UpdateInput(changed);
 
 					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {

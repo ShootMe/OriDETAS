@@ -33,16 +33,19 @@ namespace OriTAS {
 		public float SpeedY { get; set; }
 		public int SaveSlot { get; set; }
 		public int XP { get; set; }
+		public int Random { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
 			this.MouseY = -1;
 			this.SaveSlot = -1;
 			this.XP = -1;
+			this.Random = -1;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.XP = -1;
+			this.Random = -1;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -80,6 +83,7 @@ namespace OriTAS {
 				this.MouseX = -1;
 				this.MouseY = -1;
 				this.XP = -1;
+				this.Random = -1;
 				this.Line = lineNum;
 				this.SaveSlot = -1;
 				int frames = 0;
@@ -109,6 +113,11 @@ namespace OriTAS {
 						case "COLOR": Color = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
+						case "RANDOM":
+							int rngAmount = 0;
+							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
+							i += 1;
+							break;
 						case "XP":
 							int xpAmount = 0;
 							if (int.TryParse(parameters[i + 1], out xpAmount)) { this.XP = xpAmount; }
