@@ -169,15 +169,12 @@ namespace OriTAS {
 			if (SaveSlot >= 0) {
 				SaveSlotsManager.CurrentSlotIndex = SaveSlot;
 				SaveSlotsManager.BackupIndex = -1;
-				SaveSlotsUI.Instance.ItemsUI.SetScrollFromIndex(SaveSlot);
 			}
 			if (DSave && initial && GameController.Instance != null) {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 			if (DLoad && initial && GameController.Instance != null) {
-				GameController.Instance.IsLoadingGame = true;
-				GameController.Instance.RestoreCheckpointImmediate();
 				GameController.Instance.IsLoadingGame = true;
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
