@@ -119,7 +119,7 @@ namespace OriTAS {
 			Application.targetFrameRate = newFrameRate;
 			Time.fixedDeltaTime = 1f / 60f;
 			Time.maximumDeltaTime = Time.fixedDeltaTime;
-			QualitySettings.vSyncCount = 0;
+			QualitySettings.vSyncCount = newFrameRate == 60 ? 1 : 0;
 		}
 		private static void FrameStepping() {
 			char kp = currentKeyPress;
@@ -206,7 +206,7 @@ namespace OriTAS {
 			bool kbStop = MoonInput.GetKey(KeyCode.Backslash) || kp == '\\';
 			bool kbDebug = MoonInput.GetKey(KeyCode.F8);
 			bool kbReload = MoonInput.GetKey(KeyCode.Quote) || kp == '\'';
-			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace) && (MoonInput.GetKey(KeyCode.RightControl) || MoonInput.GetKey(KeyCode.RightControl));
+			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace) && (MoonInput.GetKey(KeyCode.LeftControl) || MoonInput.GetKey(KeyCode.RightControl));
 
 			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
 				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {

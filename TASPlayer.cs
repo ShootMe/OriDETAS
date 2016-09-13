@@ -74,8 +74,8 @@ namespace OriTAS {
 			lastInput = new TASInput();
 			frameToNext = 0;
 			inputs.Clear();
-			string oldFile = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), ".tas");
-			string oldFile2 = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), "2.tas");
+			string oldFile = "Old" + Path.GetFileNameWithoutExtension(filePath) + ".tas";
+			string oldFile2 = "Old" + Path.GetFileNameWithoutExtension(filePath) + "2.tas";
 			if (File.Exists(oldFile)) {
 				File.Delete(oldFile2);
 				File.Move(oldFile, oldFile2);
@@ -83,11 +83,12 @@ namespace OriTAS {
 			if (File.Exists(filePath)) {
 				File.Move(filePath, oldFile);
 			}
+			File.Delete(filePath);
 		}
 		public void InitializeRerecording() {
 			inputs = inputs.GetRange(0, inputIndex + 1);
-			string oldFile = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), ".tas");
-			string oldFile2 = Path.Combine("Old", Path.GetFileNameWithoutExtension(filePath), "2.tas");
+			string oldFile = "Old" + Path.GetFileNameWithoutExtension(filePath) + ".tas";
+			string oldFile2 = "Old" + Path.GetFileNameWithoutExtension(filePath) + "2.tas";
 			if (File.Exists(oldFile)) {
 				File.Delete(oldFile2);
 				File.Move(oldFile, oldFile2);
