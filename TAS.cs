@@ -1,4 +1,5 @@
 ﻿using Game;
+using System.Reflection;
 using SmartInput;
 using System;
 using System.Threading;
@@ -351,17 +352,22 @@ namespace OriTAS {
 					(CharacterState.IsActive(sein.Abilities.Bash) && sein.Abilities.Bash.CanBash ? " CanBash" : ""),
 					(CanPickup(sein) && !sein.Abilities.Carry.IsCarrying ? " CanPickup" : ""),
 					(!sein.Abilities.Carry.LockDroppingObject && sein.Abilities.Carry.IsCarrying && sein.PlatformBehaviour.PlatformMovement.IsOnGround && sein.Controller.CanMove ? " CanDrop" : ""),
-					(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " GrenadeTrgt" : ""),
+					(CharacterState.IsActive(sein.Abilities.Grenade) && sein.Abilities.Grenade.FindAutoAttackable != null ? " NadeTrgt" : ""),
 					(CharacterState.IsActive(sein.Abilities.Stomp) && sein.Abilities.Stomp.CanStomp() ? " CanStomp" : ""),
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.PlayerAbilities.ChargeDash.HasAbility && sein.Abilities.Dash.HasEnoughEnergy && sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTrgt" : ""),
-					(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.SpiritFlameTargetting.ClosestAttackables?.Count > 0 ? " AttackTrgt" : ""),
+					(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.SpiritFlameTargetting.ClosestAttackables?.Count > 0 ? " AtkTrgt" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && sein.SoulFlame.CanAffordSoulFlame && sein.SoulFlame.PlayerCouldSoulFlame && !sein.SoulFlame.InsideCheckpointMarker ? " CanSave" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.SavePedestal ? " SpiritWell" : ""),
 					(sein.SoulFlame != null && sein.PlayerAbilities.Rekindle.HasAbility && sein.SoulFlame.InsideCheckpointMarker ? " CanRekindle" : ""),
 					(!sein.Controller.CanMove ? " InputLocked" : ""));
 				int seinsTime = GetSeinsTime();
 				temp += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
+			}
+			if (Core.Scenes.Manager != null && !Core.Scenes.Manager.IsInsideASceneBoundary(Core.Scenes.Manager.CurrentCameraTargetPosition)) {
+				FieldInfo fi = Core.Scenes.Manager.GetType().GetField("m_testDelayTime", BindingFlags.NonPublic | BindingFlags.Instance);
+				float timeLeft = (float)fi.GetValue(Core.Scenes.Manager);
+				temp += " OOB(" + (int)(timeLeft * 60) + ")";
 			}
 			if (GameController.Instance.IsLoadingGame || InstantLoadScenesController.Instance.IsLoading) {
 				temp += " Loading";
