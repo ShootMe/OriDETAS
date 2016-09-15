@@ -7,7 +7,7 @@ namespace OriTAS {
 		public int Break { get; set; }
 		private List<TASInput> inputs = new List<TASInput>();
 		private TASInput lastInput;
-		private int currentFrame, inputIndex, frameToNext, fixedRandom;
+		private int currentFrame, inputIndex, frameToNext, fixedRandom, gameFrame;
 		private string filePath;
 
 		public TASPlayer(string filePath) {
@@ -16,13 +16,14 @@ namespace OriTAS {
 
 		public bool CanPlayback { get { return inputIndex < inputs.Count; } }
 		public int CurrentFrame { get { return currentFrame; } }
+		public int GameFrame { get { return gameFrame; } }
 		public override string ToString() {
 			if (frameToNext == 0 && lastInput != null) {
-				return lastInput.DisplayText() + " (" + currentFrame.ToString() + ")";
+				return lastInput.DisplayText() + " (" + currentFrame.ToString() + " | " + gameFrame.ToString() + ")";
 			} else if (inputIndex < inputs.Count && lastInput != null) {
 				int inputFrames = lastInput.Frames;
 				int startFrame = frameToNext - inputFrames;
-				return lastInput.DisplayText() + " (" + (currentFrame - startFrame).ToString() + " / " + inputFrames + " : " + currentFrame + ")";
+				return lastInput.DisplayText() + " (" + (currentFrame - startFrame).ToString() + " / " + inputFrames + " : " + currentFrame + " | " + gameFrame + ")";
 			}
 			return string.Empty;
 		}
@@ -32,10 +33,13 @@ namespace OriTAS {
 			}
 			return string.Empty;
 		}
-		public void InitializePlayback() {
+		public void InitializePlayback(bool resetGame = true) {
 			ReadFile();
 
 			currentFrame = 0;
+			if (resetGame) {
+				gameFrame = 0;
+			}
 			inputIndex = 0;
 			if (inputs.Count > 0) {
 				lastInput = inputs[0];
@@ -47,7 +51,7 @@ namespace OriTAS {
 		}
 		public void ReloadPlayback() {
 			int playedBackFrames = currentFrame;
-			InitializePlayback();
+			InitializePlayback(false);
 			currentFrame = playedBackFrames;
 
 			while (currentFrame > frameToNext) {
@@ -73,6 +77,7 @@ namespace OriTAS {
 			inputIndex = 0;
 			lastInput = new TASInput();
 			frameToNext = 0;
+			gameFrame = 0;
 			inputs.Clear();
 			string oldFile = "Old" + Path.GetFileNameWithoutExtension(filePath) + ".tas";
 			string oldFile2 = "Old" + Path.GetFileNameWithoutExtension(filePath) + "2.tas";
@@ -143,6 +148,7 @@ namespace OriTAS {
 						}
 					}
 				}
+				gameFrame++;
 			}
 		}
 		public void RecordPlayer() {
@@ -165,6 +171,7 @@ namespace OriTAS {
 					currentFrame++;
 					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 				}
+				gameFrame++;
 			}
 		}
 		private void ReadFile() {
