@@ -45,7 +45,7 @@ namespace OriTAS {
 					if (!player.CanPlayback) {
 						DisableRun();
 					}
-					if (!InstantLoadScenesController.Instance.IsLoading && player.Break < 0) {
+					if (!InstantLoadScenesController.Instance.IsLoading && !GameController.Instance.IsLoadingGame && player.Break < 0) {
 						tasState |= TASState.FrameStep;
 						player.Break = 0;
 					}
@@ -369,7 +369,7 @@ namespace OriTAS {
 				float timeLeft = (float)fi.GetValue(Core.Scenes.Manager);
 				temp += " OOB(" + (int)(timeLeft * 60) + ")";
 			}
-			if (InstantLoadScenesController.Instance.IsLoading) {
+			if (InstantLoadScenesController.Instance.IsLoading || GameController.Instance.IsLoadingGame) {
 				temp += " Loading";
 			}
 			extraInfo = temp.Trim();
