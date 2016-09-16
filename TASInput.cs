@@ -1,4 +1,7 @@
 ﻿using System;
+using Game;
+using UnityEngine;
+
 namespace OriTAS {
 	public class TASInput {
 		public int Frames { get; set; }
@@ -31,9 +34,13 @@ namespace OriTAS {
 		public bool Speed { get; set; }
 		public float SpeedX { get; set; }
 		public float SpeedY { get; set; }
+		public bool EntityPos { get; set; }
+		public float EntityPosX { get; set; }
+		public float EntityPosY { get; set; }
 		public int SaveSlot { get; set; }
 		public int XP { get; set; }
 		public int Random { get; set; }
+		public bool RestoreCheckpoint { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -113,6 +120,7 @@ namespace OriTAS {
 						case "COLOR": Color = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
+						case "RESTORE": RestoreCheckpoint = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
@@ -160,6 +168,12 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.SpeedY = temp; }
 							i += 2;
 							break;
+						case "ENTITYPOS":
+							EntityPos = true;
+							if (float.TryParse(parameters[i + 1], out temp)) { this.EntityPosX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.EntityPosY = temp; }
+							i += 2;
+							break;
 					}
 				}
 				Frames = frames;
@@ -175,25 +189,49 @@ namespace OriTAS {
 				GameController.Instance.SaveGameController.PerformSave();
 			}
 			if (DLoad && initial && GameController.Instance != null) {
-				GameController.Instance.IsLoadingGame = true;
 				GameController.Instance.SaveGameController.PerformLoad();
 			}
+			if (RestoreCheckpoint && initial && GameController.Instance != null) {
+				RestoreCheckpointController.LeaveCameraAlone = true;
+				GameController.Instance.SaveGameController.PerformLoad();
+			}
+			if (EntityPos && initial && Characters.Sein != null) {
+				SeinCharacter sein = Characters.Sein;
+				string info = string.Empty;
+				float minDist = float.MaxValue;
+				int index = -1;
+				for (int i = 0; i < Targets.Attackables.Count; i++) {
+					EntityTargetting attackable = Targets.Attackables[i] as EntityTargetting;
+					if (attackable != null && attackable.IsOnScreen && attackable.Activated) {
+						float dist = Vector3.Distance(attackable.Position, sein.Position);
+						if (dist < minDist) {
+							index = i;
+							minDist = dist;
+						}
+					}
+				}
+
+				if (index >= 0) {
+					EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
+					attackable.Entity.Position = new Vector3(EntityPosX, EntityPosY);
+				}
+			}
 			if (Position && initial) {
-				SeinCharacter sein = Game.Characters.Sein;
+				SeinCharacter sein = Characters.Sein;
 				sein.Position = new UnityEngine.Vector3(PositionX, PositionY);
 			}
 			if (Speed && initial) {
-				SeinCharacter sein = Game.Characters.Sein;
+				SeinCharacter sein = Characters.Sein;
 				sein.Speed = new UnityEngine.Vector3(SpeedX, SpeedY);
 			}
 			if (XP >= 0 && initial) {
-				SeinCharacter sein = Game.Characters.Sein;
+				SeinCharacter sein = Characters.Sein;
 				sein.Level.Experience = XP;
 			}
 			if (UI && initial) {
 				SeinUI.DebugHideUI = !SeinUI.DebugHideUI;
 			}
-			if (Color && initial && Game.Characters.Sein != null) {
+			if (Color && initial && Characters.Sein != null) {
 				CheatsHandler.Instance.ChangeCharacterColor();
 			}
 
@@ -285,7 +323,8 @@ namespace OriTAS {
 				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") + (SaveSlot >= 0 ? ",Slot," + (SaveSlot + 1) : "") +
 				(!Position ? "" : ",Pos," + PositionX.ToString("0.####") + "," + PositionY.ToString("0.####")) +
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
-				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") +
+				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
+				(!EntityPos ? "" : ",Speed," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
