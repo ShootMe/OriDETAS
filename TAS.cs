@@ -26,10 +26,17 @@ namespace OriTAS {
 		private static char currentKeyPress;
 		private static string currentInputLine, nextInputLine, extraInfo, savedExtraInfo;
 		private static Vector3 lastTargetPosition;
+		private static Vector3 oriPostion;
+
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
 		}
 		public static bool UpdateTAS() {
+			if (Characters.Sein != null) {
+				oriPostion = Characters.Sein.Position;
+			} else {
+				oriPostion = Vector3.zero;
+			}
 			UpdateText();
 			UpdateExtraInfo();
 			HandleFrameRates();
