@@ -138,7 +138,9 @@ namespace OriTAS {
 						fixedRandom = lastInput.Random - currentFrame + 1;
 					}
 					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
-					lastInput.UpdateInput(changed);
+					if (lastInput.UpdateInput(changed)) {
+						frameToNext++;
+					}
 
 					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {
 						TASInput nextInput = inputs[inputIndex + 1];
