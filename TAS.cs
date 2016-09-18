@@ -371,12 +371,13 @@ namespace OriTAS {
 				int seinsTime = GetSeinsTime();
 				temp += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 			}
-			if (Core.Scenes.Manager != null && !Core.Scenes.Manager.IsInsideASceneBoundary(Core.Scenes.Manager.CurrentCameraTargetPosition)) {
+			Vector2 currentPos = Characters.Sein == null ? Core.Scenes.Manager.CurrentCameraTargetPosition : new Vector2(Characters.Sein.Position.x, Characters.Sein.Position.y);
+			if (Core.Scenes.Manager != null && !Core.Scenes.Manager.IsInsideASceneBoundary(currentPos)) {
 				FieldInfo fi = Core.Scenes.Manager.GetType().GetField("m_testDelayTime", BindingFlags.NonPublic | BindingFlags.Instance);
 				float timeLeft = (float)fi.GetValue(Core.Scenes.Manager);
 				temp += " OOB(" + (int)(timeLeft * 60) + ")";
 			}
-			if (InstantLoadScenesController.Instance.IsLoading || GameController.Instance.IsLoadingGame) {
+			if (InstantLoadScenesController.Instance.IsLoading || GameController.Instance.IsLoadingGame || Core.Scenes.Manager.PositionInsideSceneStillLoading(currentPos)) {
 				temp += " Loading";
 			}
 			extraInfo = temp.Trim();

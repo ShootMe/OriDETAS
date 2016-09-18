@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Game;
+using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 namespace OriTAS {
 	public class TASPlayer {
 		public static float LastMouseX, LastMouseY;
@@ -116,7 +118,8 @@ namespace OriTAS {
 		public void PlaybackPlayer() {
 			if (inputIndex < inputs.Count) {
 				bool changed = false;
-				if (!InstantLoadScenesController.Instance.IsLoading && !GameController.Instance.IsLoadingGame) {
+				Vector2 currentPos = Characters.Sein == null ? Core.Scenes.Manager.CurrentCameraTargetPosition : new Vector2(Characters.Sein.Position.x, Characters.Sein.Position.y);
+				if (!InstantLoadScenesController.Instance.IsLoading && !GameController.Instance.IsLoadingGame && !Core.Scenes.Manager.PositionInsideSceneStillLoading(currentPos)) {
 					if (currentFrame == 0) {
 						LastMouseX = 0;
 						LastMouseY = 0;
@@ -140,9 +143,7 @@ namespace OriTAS {
 						fixedRandom = lastInput.Random - currentFrame + 1;
 					}
 					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
-					if (lastInput.UpdateInput(changed)) {
-						frameToNext++;
-					}
+					lastInput.UpdateInput(changed);
 
 					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {
 						TASInput nextInput = inputs[inputIndex + 1];

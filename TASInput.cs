@@ -1,7 +1,6 @@
 ﻿using System;
 using Game;
 using UnityEngine;
-
 namespace OriTAS {
 	public class TASInput {
 		public int Frames { get; set; }
@@ -41,7 +40,6 @@ namespace OriTAS {
 		public int XP { get; set; }
 		public int Random { get; set; }
 		public bool RestoreCheckpoint { get; set; }
-		public float PushTill { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -49,13 +47,11 @@ namespace OriTAS {
 			this.SaveSlot = -1;
 			this.XP = -1;
 			this.Random = -1;
-			this.PushTill = 999999;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.XP = -1;
 			this.Random = -1;
-			this.PushTill = 999999;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -96,7 +92,6 @@ namespace OriTAS {
 				this.Random = -1;
 				this.Line = lineNum;
 				this.SaveSlot = -1;
-				this.PushTill = 999999;
 				int frames = 0;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
@@ -178,16 +173,12 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.EntityPosY = temp; }
 							i += 2;
 							break;
-						case "PUSHTILL":
-							if (float.TryParse(parameters[i + 1], out temp)) { this.PushTill = temp; }
-							i += 1;
-							break;
 					}
 				}
 				Frames = frames;
 			} catch { }
 		}
-		public bool UpdateInput(bool initial = false) {
+		public void UpdateInput(bool initial = false) {
 			if (SaveSlot >= 0) {
 				SaveSlotsManager.CurrentSlotIndex = SaveSlot;
 				SaveSlotsManager.BackupIndex = -1;
@@ -254,16 +245,6 @@ namespace OriTAS {
 				Core.Input.CursorMoved = false;
 			}
 
-			if (PushTill < 999990) {
-				if (Characters.Sein.FaceLeft) {
-					if (Characters.Sein.Position.x > PushTill) {
-						XAxis = -1;
-					}
-				} else if (Characters.Sein.Position.x < PushTill) {
-					XAxis = 1;
-				}
-			}
-
 			Core.Input.HorizontalAnalogLeft = XAxis;
 			Core.Input.Horizontal = XAxis;
 			Core.Input.VerticalAnalogLeft = YAxis;
@@ -274,19 +255,6 @@ namespace OriTAS {
 			PlayerInput.Instance.ApplyDeadzone(ref Core.Input.HorizontalAnalogRight, ref Core.Input.VerticalAnalogRight);
 			Core.Input.HorizontalDigiPad = (int)XAxis;
 			Core.Input.VerticalDigiPad = (int)YAxis;
-
-			if (PushTill < 999990) {
-				Core.Input.Glide.Update(true);
-
-				if (Characters.Sein.FaceLeft) {
-					if (Characters.Sein.Position.x <= PushTill) {
-						return false;
-					}
-				} else if (Characters.Sein.Position.x >= PushTill) {
-					return false;
-				}
-				return true;
-			}
 
 			Core.Input.AnyStart.Update(Jump || Start);
 			Core.Input.ZoomIn.Update(Glide);
@@ -321,8 +289,6 @@ namespace OriTAS {
 			Core.Input.Focus.Update(Attack);
 			Core.Input.Filter.Update(Attack);
 			Core.Input.Legend.Update(Bash);
-
-			return false;
 		}
 		public static bool operator ==(TASInput one, TASInput two) {
 			if ((object)one == null && (object)two != null) {
