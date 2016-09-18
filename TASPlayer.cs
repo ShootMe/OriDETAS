@@ -51,8 +51,10 @@ namespace OriTAS {
 		}
 		public void ReloadPlayback() {
 			int playedBackFrames = currentFrame;
+			int playedBackRNG = fixedRandom;
 			InitializePlayback(false);
 			currentFrame = playedBackFrames;
+			fixedRandom = playedBackRNG;
 
 			while (currentFrame > frameToNext) {
 				if (inputIndex + 1 >= inputs.Count) {
