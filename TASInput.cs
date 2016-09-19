@@ -1,5 +1,6 @@
-﻿using System;
-using Game;
+﻿using Game;
+using System;
+using System.Reflection;
 using UnityEngine;
 namespace OriTAS {
 	public class TASInput {
@@ -39,7 +40,7 @@ namespace OriTAS {
 		public int SaveSlot { get; set; }
 		public int XP { get; set; }
 		public int Random { get; set; }
-		public bool RestoreCheckpoint { get; set; }
+		public bool Restore { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -119,7 +120,7 @@ namespace OriTAS {
 						case "COLOR": Color = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
-						case "RESTORE": RestoreCheckpoint = true; break;
+						case "RESTORE": Restore = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
@@ -187,12 +188,12 @@ namespace OriTAS {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
 			}
-			if (DLoad && initial && GameController.Instance != null) {
+			if ((DLoad || Restore) && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
-			}
-			if (RestoreCheckpoint && initial && GameController.Instance != null) {
-				RestoreCheckpointController.LeaveCameraAlone = true;
-				GameController.Instance.SaveGameController.PerformLoad();
+				if (Core.Scenes.Manager != null) {
+					FieldInfo fi = Core.Scenes.Manager.GetType().GetField("m_testDelayTime", BindingFlags.NonPublic | BindingFlags.Instance);
+					fi.SetValue(Core.Scenes.Manager, 1f);
+				}
 			}
 			if (EntityPos && initial && Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
@@ -325,6 +326,7 @@ namespace OriTAS {
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
 				(!EntityPos ? "" : ",Speed," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
+				(Restore ? ",Restore" : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {

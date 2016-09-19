@@ -119,7 +119,7 @@ namespace OriTAS {
 			if (inputIndex < inputs.Count) {
 				bool changed = false;
 				Vector2 currentPos = Characters.Sein == null ? Core.Scenes.Manager.CurrentCameraTargetPosition : new Vector2(Characters.Sein.Position.x, Characters.Sein.Position.y);
-				if (!InstantLoadScenesController.Instance.IsLoading && !GameController.Instance.IsLoadingGame && !Core.Scenes.Manager.PositionInsideSceneStillLoading(currentPos)) {
+				if (!InstantLoadScenesController.Instance.IsLoading && (!GameController.Instance.IsLoadingGame || (lastInput != null && lastInput.Restore)) && !Core.Scenes.Manager.PositionInsideSceneStillLoading(currentPos)) {
 					if (currentFrame == 0) {
 						LastMouseX = 0;
 						LastMouseY = 0;
