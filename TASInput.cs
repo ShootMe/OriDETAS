@@ -41,11 +41,13 @@ namespace OriTAS {
 		public int XP { get; set; }
 		public int Random { get; set; }
 		public bool Restore { get; set; }
+		public int Copy { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
 			this.MouseY = -1;
 			this.SaveSlot = -1;
+			this.Copy = -1;
 			this.XP = -1;
 			this.Random = -1;
 		}
@@ -53,6 +55,7 @@ namespace OriTAS {
 			this.Frames = frames;
 			this.XP = -1;
 			this.Random = -1;
+			this.Copy = -1;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -94,6 +97,7 @@ namespace OriTAS {
 				this.Line = lineNum;
 				this.SaveSlot = -1;
 				int frames = 0;
+				this.Copy = -1;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
 					float temp;
@@ -134,6 +138,11 @@ namespace OriTAS {
 						case "SLOT":
 							int saveSlot = 0;
 							if (int.TryParse(parameters[i + 1], out saveSlot)) { this.SaveSlot = saveSlot - 1; }
+							i += 1;
+							break;
+						case "COPY":
+							int copySlot = 0;
+							if (int.TryParse(parameters[i + 1], out copySlot)) { this.Copy = copySlot - 1; }
 							i += 1;
 							break;
 						case "ANGLE":
@@ -187,6 +196,10 @@ namespace OriTAS {
 			if (DSave && initial && GameController.Instance != null) {
 				GameController.Instance.CreateCheckpoint();
 				GameController.Instance.SaveGameController.PerformSave();
+			}
+			if (Copy >= 0) {
+				SaveSlotsManager.CopySlot(Copy, SaveSlotsManager.CurrentSlotIndex);
+				SaveSlotsManager.BackupIndex = -1;
 			}
 			if ((DLoad || Restore) && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
@@ -326,7 +339,7 @@ namespace OriTAS {
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
 				(!EntityPos ? "" : ",Speed," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
-				(Restore ? ",Restore" : "") +
+				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {
