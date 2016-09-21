@@ -42,6 +42,7 @@ namespace OriTAS {
 		public int Random { get; set; }
 		public bool Restore { get; set; }
 		public int Copy { get; set; }
+		public int SkillTree { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -50,12 +51,14 @@ namespace OriTAS {
 			this.Copy = -1;
 			this.XP = -1;
 			this.Random = -1;
+			this.SkillTree = -1;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.XP = -1;
 			this.Random = -1;
 			this.Copy = -1;
+			this.SkillTree = -1;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -98,6 +101,7 @@ namespace OriTAS {
 				this.SaveSlot = -1;
 				int frames = 0;
 				this.Copy = -1;
+				this.SkillTree = -1;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
 					float temp;
@@ -143,6 +147,11 @@ namespace OriTAS {
 						case "COPY":
 							int copySlot = 0;
 							if (int.TryParse(parameters[i + 1], out copySlot)) { this.Copy = copySlot - 1; }
+							i += 1;
+							break;
+						case "SKILLTREE":
+							int treeAlpha = 0;
+							if (int.TryParse(parameters[i + 1], out treeAlpha)) { this.SkillTree = treeAlpha; }
 							i += 1;
 							break;
 						case "ANGLE":

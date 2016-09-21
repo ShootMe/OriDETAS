@@ -11,6 +11,15 @@ namespace OriTAS {
 		private TASInput lastInput;
 		private int currentFrame, inputIndex, frameToNext, fixedRandom, gameFrame;
 		private string filePath;
+		private int skillTreeAlpha = 100;
+		public int SkillTreeAlpha {
+			get { return skillTreeAlpha; }
+			set {
+				skillTreeAlpha = value;
+				HasChangedAlpha = false;
+			}
+		}
+		public bool HasChangedAlpha { get; set; } = true;
 
 		public TASPlayer(string filePath) {
 			this.filePath = filePath;
@@ -38,6 +47,7 @@ namespace OriTAS {
 		public void InitializePlayback(bool resetGame = true) {
 			ReadFile();
 
+			SkillTreeAlpha = 100;
 			currentFrame = 0;
 			if (resetGame) {
 				gameFrame = 0;
@@ -144,6 +154,10 @@ namespace OriTAS {
 					}
 					FixedRandom.SetFixedUpdateIndex(fixedRandom + currentFrame);
 					lastInput.UpdateInput(changed);
+
+					if (lastInput.SkillTree >= 0) {
+						SkillTreeAlpha = lastInput.SkillTree;
+					}
 
 					if (currentFrame >= frameToNext && inputIndex + 1 < inputs.Count) {
 						TASInput nextInput = inputs[inputIndex + 1];

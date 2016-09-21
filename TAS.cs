@@ -37,11 +37,20 @@ namespace OriTAS {
 			} else {
 				oriPostion = Vector3.zero;
 			}
+
 			UpdateText();
 			UpdateExtraInfo();
 			HandleFrameRates();
 			CheckControls();
 			FrameStepping();
+
+			if (SkillTreeManager.Instance != null && SkillTreeManager.Instance.NavigationManager.IsVisible) {
+				if (!player.HasChangedAlpha) {
+					SkillTreeManager.Instance.NavigationManager.FadeAnimator.SetParentOpacity((float)player.SkillTreeAlpha / 100f);
+					player.HasChangedAlpha = true;
+				}
+				UberPostProcess.Instance.SetDoBlur(player.SkillTreeAlpha == 100);
+			}
 
 			if (HasFlag(tasState, TASState.Enable)) {
 				if (HasFlag(tasState, TASState.Record) || HasFlag(tasState, TASState.Rerecord)) {
@@ -200,6 +209,7 @@ namespace OriTAS {
 			tasState &= ~TASState.Record;
 			tasState &= ~TASState.Rerecord;
 			PlayerInput.Instance.Active = true;
+			player.SkillTreeAlpha = 100;
 		}
 		private static void CheckControls() {
 			char kp = currentKeyPress;
