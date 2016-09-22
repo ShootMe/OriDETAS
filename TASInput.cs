@@ -347,7 +347,7 @@ namespace OriTAS {
 				(!Position ? "" : ",Pos," + PositionX.ToString("0.####") + "," + PositionY.ToString("0.####")) +
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
-				(!EntityPos ? "" : ",Speed," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
+				(!EntityPos ? "" : ",EntityPos," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
 				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
