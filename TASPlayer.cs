@@ -12,6 +12,7 @@ namespace OriTAS {
 		private int currentFrame, inputIndex, frameToNext, fixedRandom, gameFrame;
 		private string filePath;
 		private int skillTreeAlpha = 100;
+		public bool ShowTAS { get; set; } = true;
 		public int SkillTreeAlpha {
 			get { return skillTreeAlpha; }
 			set {
@@ -203,6 +204,7 @@ namespace OriTAS {
 			int lines = 0;
 			FastForward = false;
 			Break = 0;
+			ShowTAS = true;
 			using (StreamReader sr = new StreamReader(filePath)) {
 				while (!sr.EndOfStream) {
 					string line = sr.ReadLine();
@@ -221,6 +223,9 @@ namespace OriTAS {
 						TASInput input = new TASInput(line, lines);
 						if (input.Frames != 0) {
 							inputs.Add(input);
+							if (input.TAS) {
+								ShowTAS = false;
+							}
 						}
 					} else {
 						lines++;

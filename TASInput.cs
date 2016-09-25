@@ -44,6 +44,7 @@ namespace OriTAS {
 		public bool Restore { get; set; }
 		public int Copy { get; set; }
 		public int SkillTree { get; set; }
+		public bool TAS { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -131,6 +132,7 @@ namespace OriTAS {
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
 						case "RESTORE": Restore = true; break;
+						case "TAS": TAS = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }

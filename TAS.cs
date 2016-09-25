@@ -300,7 +300,7 @@ namespace OriTAS {
 				style.alignment = TextAnchor.MiddleLeft;
 				style.normal.textColor = Color.white;
 			}
-			if (HasFlag(tasState, TASState.Enable)) {
+			if (HasFlag(tasState, TASState.Enable) && player.ShowTAS) {
 				style.fontSize = (int)Mathf.Round(14f);
 				GUI.Label(new Rect(0f, 0f, 32, 18), "TAS", style);
 			}
