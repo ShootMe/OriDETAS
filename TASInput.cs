@@ -31,6 +31,7 @@ namespace OriTAS {
 		public float PositionX { get; set; }
 		public float PositionY { get; set; }
 		public bool Color { get; set; }
+		public bool NoColor { get; set; }
 		public bool Speed { get; set; }
 		public float SpeedX { get; set; }
 		public float SpeedY { get; set; }
@@ -126,6 +127,7 @@ namespace OriTAS {
 						case "DOWN": YAxis = -1; break;
 						case "UI": UI = true; break;
 						case "COLOR": Color = true; break;
+						case "NOCOLOR": NoColor = true; break;
 						case "DSAVE": DSave = true; break;
 						case "DLOAD": DLoad = true; break;
 						case "RESTORE": Restore = true; break;
@@ -255,6 +257,9 @@ namespace OriTAS {
 			}
 			if (Color && initial && Characters.Sein != null) {
 				CheatsHandler.Instance.ChangeCharacterColor();
+			}
+			if(NoColor && initial && Characters.Sein != null) {
+				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
 			}
 
 			if (!Position && MouseX > -0.1 && MouseY > -0.1) {
