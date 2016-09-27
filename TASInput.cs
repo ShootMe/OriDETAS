@@ -26,7 +26,8 @@ namespace OriTAS {
 		public bool Dash { get; set; }
 		public bool Grenade { get; set; }
 		public bool UI { get; set; }
-		public int Line { get; set; }
+		public int Line1 { get; set; }
+		public int Line2 { get; set; }
 		public bool Position { get; set; }
 		public float PositionX { get; set; }
 		public float PositionY { get; set; }
@@ -91,7 +92,7 @@ namespace OriTAS {
 			}
 			this.SaveSlot = -1;
 		}
-		public TASInput(string line, int lineNum) {
+		public TASInput(string line, int lineNum1, int lineNum2) {
 			try {
 				string[] parameters = line.Split(',');
 
@@ -99,7 +100,8 @@ namespace OriTAS {
 				this.MouseY = -1;
 				this.XP = -1;
 				this.Random = -1;
-				this.Line = lineNum;
+				this.Line1 = lineNum1;
+				this.Line2 = lineNum2;
 				this.SaveSlot = -1;
 				int frames = 0;
 				this.Copy = -1;
@@ -260,7 +262,7 @@ namespace OriTAS {
 			if (Color && initial && Characters.Sein != null) {
 				CheatsHandler.Instance.ChangeCharacterColor();
 			}
-			if(NoColor && initial && Characters.Sein != null) {
+			if (NoColor && initial && Characters.Sein != null) {
 				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
 			}
 
@@ -380,13 +382,16 @@ namespace OriTAS {
 			return "";
 		}
 		public string DisplayText() {
-			return "Line " + Line + " (" + ToString().Trim() + ")";
+			return "Line " + Line1 + (Line2 > 0 ? "-" + Line2 : "") + " (" + ToString().Trim() + ")";
 		}
 		public override bool Equals(object obj) {
 			return base.Equals(obj);
 		}
 		public override int GetHashCode() {
-			return Line | (Frames << 16);
+			return (Line1 + Line2) | (Frames << 16);
+		}
+		public int Line {
+			get { return Line1 + (Line2 > 0 ? Line2 - 1 : 0); }
 		}
 	}
 }

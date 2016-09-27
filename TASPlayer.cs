@@ -211,6 +211,7 @@ namespace OriTAS {
 
 					if (!firstLine) {
 						if (line.IndexOf("Stop", System.StringComparison.OrdinalIgnoreCase) == 0) { return; }
+
 						lines++;
 						if (Break == 0 && line.IndexOf("BreakQuick", System.StringComparison.OrdinalIgnoreCase) == 0) {
 							FastForward = true;
@@ -220,7 +221,13 @@ namespace OriTAS {
 							continue;
 						}
 
-						TASInput input = new TASInput(line, lines);
+						if (line.IndexOf("Read", System.StringComparison.OrdinalIgnoreCase) == 0 && line.Length > 5) {
+							if(!ReadFile(line.Substring(5), lines)) {
+								return;
+							}
+						}
+
+						TASInput input = new TASInput(line, lines, 0);
 						if (input.Frames != 0) {
 							inputs.Add(input);
 							if (input.TAS) {
@@ -234,6 +241,36 @@ namespace OriTAS {
 					}
 				}
 			}
+		}
+		private bool ReadFile(string extraFile, int lines) {
+			if (!File.Exists(extraFile)) { return true; }
+
+			int subLine = 0;
+			using (StreamReader sr = new StreamReader(extraFile)) {
+				while (!sr.EndOfStream) {
+					string line = sr.ReadLine();
+
+					if (line.IndexOf("Stop", System.StringComparison.OrdinalIgnoreCase) == 0) { return false; }
+
+					subLine++;
+					if (Break == 0 && line.IndexOf("BreakQuick", System.StringComparison.OrdinalIgnoreCase) == 0) {
+						FastForward = true;
+					}
+					if (Break == 0 && line.IndexOf("Break", System.StringComparison.OrdinalIgnoreCase) == 0) {
+						Break = lines + subLine - 1;
+						continue;
+					}
+
+					TASInput input = new TASInput(line, lines, subLine);
+					if (input.Frames != 0) {
+						inputs.Add(input);
+						if (input.TAS) {
+							ShowTAS = false;
+						}
+					}
+				}
+			}
+			return true;
 		}
 	}
 }
