@@ -1,7 +1,7 @@
 ### AUTHOR(S): TERRA21 ###
 
 ### EXIT AND RELOAD ###
-1,Start
+1,Start,Random,70
 2,Mouse,0.5,0.4
 1,Action
 2,Mouse,0.5,0.54
@@ -123,7 +123,7 @@
 17,Left
 
 ### ON TOP PLATFORM ###
-1,Dash,Left
+1,Dash,Left,Pos,516.2411,39.772007
 31,Left
 1,Dash,Left
 34,Left
@@ -131,7 +131,7 @@
 ### 2ND GINSO ROOM ###
 1,Dash,Left
 12
-12,Jump
+12,Jump,Pos,533.757,58.4262924
 1
 8,Jump
 1
@@ -251,14 +251,26 @@
 18,Jump,Left
 1,Left
 
+### KILL STUPID SPIDER ###
 1,Jump
-12,Jump,Left
+3,Jump,Left
+1,Jump,Left,Fire
+1,Jump,Left
+1,Jump,Left,Fire
+1,Jump,Left
+1,Jump,Left,Fire
+4,Jump,Left
 1
 2,Jump
 15,Left
 
-14,Jump,Left
-20,Left
+7,Jump,Left
+1,Jump,Left,Fire
+6,Jump,Left
+1,Left,Fire
+### GOOD RIDDANCE ###
+
+19,Left
 44,Jump,Left
 
 1,Dash,Left
@@ -298,7 +310,7 @@
 
 33
 2,Left
-1,Dash,Left
+1,Dash,Left,Pos,520.7528,217.983871
 7
 
 16,Jump,Right
@@ -350,7 +362,7 @@
 1,Action
 
 ### SOME OVERLAP ###
-25,Down
+32,Down
 8
 28,Left
 8,Jump,Left
