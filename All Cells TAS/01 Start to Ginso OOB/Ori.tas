@@ -1,0 +1,15 @@
+69
+
+### SLOT 2 CURRENT ###
+### SLOT 4 WALL JUMP ###
+### SLOT 5 DOUBLE JUMP ###
+
+Read,TAS\01 Start to Sein.tas
+Read,TAS\02 Sein to Wall Jump.tas
+Read,TAS\03 Wall Jump to BRB.tas
+Read,TAS\04 BRB to Laser Save.tas
+Read,TAS\05 Laser Save to Dash.tas
+Read,TAS\06 Dash to Double Jump.tas
+Read,TAS\07 Double Jump to Water Vein.tas
+Read,TAS\08 Water Vein to Ginso.tas
+Read,TAS\09 Ginso to Ginso OOB.tas
