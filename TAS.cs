@@ -377,7 +377,7 @@ namespace OriTAS {
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && sein.SoulFlame.CanAffordSoulFlame && sein.SoulFlame.PlayerCouldSoulFlame && !sein.SoulFlame.InsideCheckpointMarker ? " CanSave" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.SavePedestal ? " SpiritWell" : ""),
 					(sein.SoulFlame != null && sein.PlayerAbilities.Rekindle.HasAbility && sein.SoulFlame.InsideCheckpointMarker ? " CanRekindle" : ""),
-					(!sein.Controller.CanMove ? " InputLocked" : ""));
+					(!sein.Controller.CanMove || !sein.Active || sein.Controller.IgnoreControllerInput ? " InputLocked" : ""));
 				int seinsTime = GetSeinsTime();
 				temp += GetCurrentTime() == seinsTime && seinsTime > 0 ? " Saved" : "";
 			}
