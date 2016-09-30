@@ -599,4 +599,24 @@
 1,Glide
 23,Right
 
-180,Left
+### HEAD TO CJUMP OVERLAP ###
+64,Left
+6,Left,Jump
+1,Left
+
+36,Left,Jump
+11,Dash,Left
+2,Down
+1,Left,Fire
+1,Left
+1,Left,Fire
+1,Left
+1,Left,Fire
+61,Left
+
+11,CJump,Dash,Left
+21,Bash,Angle,-90
+1,Angle,-90
+4
+7,Dash
+1,Glide

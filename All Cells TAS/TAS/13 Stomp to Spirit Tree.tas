@@ -793,7 +793,7 @@
 5,Jump
 13
 1,Mouse,0.32,0.54,Action
-1,Esc
+1,Esc,UI
 
 ### EXIT AND RELOAD ###
 1,Start

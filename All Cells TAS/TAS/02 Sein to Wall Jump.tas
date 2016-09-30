@@ -252,8 +252,10 @@
 ### KILL SLIME ###
    1,Fire,Right
    1,Right
-   1,Fire,Right
-   3,Right
+   1,Fire,Right,EntityPos,-126.68,-229.13
+   1,Right,EntityPos,-126.65,-229.16
+   1,Right,EntityPos,-126.62,-229.19
+   1,Right
    1,Down
    1,Down,Jump
   25

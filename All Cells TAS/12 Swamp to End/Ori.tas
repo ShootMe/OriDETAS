@@ -1,0 +1,10 @@
+5258
+
+### SLOT 2 CURRENT ###
+### SLOT 20 SWAMP START ###
+### SLOT 21 GINSO SPIRIT WELL ###
+### SLOT 22 HORU MAIN ###
+
+Read,TAS\27 Swamp to Ginso.tas
+Read,TAS\28 Ginso to Horu.tas
+Read,TAS\29 Horu to End.tas

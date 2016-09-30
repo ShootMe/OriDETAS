@@ -1,6 +1,6 @@
 ### AUTHOR(S): SIGMASIN ###
 
-1,Slot,2,Copy,9
+1,Slot,2,Copy,9,Random,5
 
 ###EXIT AND RELOAD FOR SYNC ###
 1,Start
@@ -285,7 +285,9 @@
 1,Dash,Right,UI
 
 ### ABILITY CELL ###
-58,Right
+30,Right
+1,Pos,-293.197235,20.17185
+27,Right
 1,Left,UI
 
 ### BIRD JOURNEY BEGINS ###
@@ -418,7 +420,7 @@
 
 ### 2ND SEGMENT OVERLAP ###
 1,Left,Dash
-24,Left
+24,Left,UI
 7,Left,Dash
 1,Glide
 12,Left,CJump,Dash
@@ -430,3 +432,26 @@
 1,Glide
 53
 44,Down
+
+### BASH BEGINS ###
+24,Bash,Angle,-160
+1,Angle,130
+14,Jump,Right
+3,CJump,Dash
+2,Down
+21,Bash,Angle,-100
+1,Angle,45
+6
+12,Dash,Right
+20,Bash,Angle,-80
+1,Angle,1
+6
+5,CJump,Dash
+2,Down
+20,Bash,Angle,-130
+1,Angle,1
+1,Right
+1,Dash,Right
+5,Glide
+2,CJump,Dash
+2,Down

@@ -306,7 +306,7 @@
 ### SAVE ANYWHERE ###
 32,Left,Save
 1,Left
-1,Save
+1,Save,SkillTree,30
 1
 1,Mouse,0.520,0.220,Action
 7
@@ -349,14 +349,18 @@
 1,Glide
 11,Left
 1
+1,Pos,292.190521,-523.4131
 1,Dash,Left
-7
+11
 1,Glide
 1,CJump,Dash,Left
-22,Left
-2
-1,Dash,Left
-37,Left
+7,Left
+2,Down
+1,Jump
+1,CJump,Dash,Left
+7,Left
+2,Down
+38,Left
 
 ### TELEPORTER ###
 1,Bash
