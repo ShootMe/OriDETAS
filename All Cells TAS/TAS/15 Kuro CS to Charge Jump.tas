@@ -1,10 +1,8 @@
 ### AUTHOR(S): SIGMASIN ###
 
-1,Slot,2,Copy,10,DLoad,Random,34
-
 ### START OF SORROW ###
 ### -449.922,87.348 ###
-1,Left,Dash
+1,Left,Dash,UI
 24,Left
 7,Left,Dash
 1,Glide
@@ -49,26 +47,27 @@
 8,Glide
 2,CJump,Dash
 2,Down
-20,Bash,Angle,170
-1,Angle,45
-1
-2,Dash,Left
-1,Glide
+1,Bash
+20,Angle,177
+2
+1,Jump
 1,CJump,Dash
 1,Glide
 
 ### BASH ENDS ###
-65,Left
-10,CJump,Dash
+67
+8,CJump,Dash,Random,19718
 20,Bash,Angle,-90
 1,Angle,-90
-40
-12,CJump,Dash
+20
+28,Random,511
+1,Dash,Left
+11
 1,Glide
 
 ### SLIME ###
 ### SEEDED FOR ENERGY ###
-8,CJump,Dash
+10,CJump,Dash
 20,Bash,Angle,-135
 1,Angle,-135
 16
@@ -79,20 +78,18 @@
 ### FROG ###
 11,CJump,Dash
 21,Bash,Angle,0
-1,Angle,-135
+1,Angle,-130
 
 ### WAITING FOR FROG ###
 ### BASH IS FASTER THAN STOMP ###
-45,Jump,Left
-1,Fire
-1
-1,Fire
-1
-1,Fire
-
-25
+5,Left
+1,Dash,Left
+5,Left
+1,Down
+48,Left
+15,Pos,-601.808838,228.592545
 28,Jump,Right
-1
+1,Random,748
 24,Jump,Left
 
 20,Bash,Angle,180
@@ -370,8 +367,9 @@
 82,Left
 
 ### ENERGY CELL AREA ###
-5,Dash,Left
-45,Jump,Right
+5,Dash,Left,Pos,-620.748352,388.756226
+44,Jump,Right
+1,Jump,Right,Pos,-624.328369,391.9959
 7,CJump,Dash
 2,Down
 60,Right
@@ -529,7 +527,8 @@
 
 ### DOUBLE BASH ###
 20,Left,Jump
-11,CJump,Dash
+10,CJump,Dash
+1,CJump,Dash,Pos,-533.7799,427.416138,EntityPos,-536.14,425.77
 1,Bash
 19,Angle,28
 1,Angle,45
@@ -598,11 +597,10 @@
 2,Dash,Left,Save
 1,Glide
 23,Right
+60,Left
 
 ### HEAD TO CJUMP OVERLAP ###
-64,Left
-6,Left,Jump
-1,Left
+9,Left
 
 36,Left,Jump
 11,Dash,Left
@@ -620,3 +618,6 @@
 4
 7,Dash
 1,Glide
+
+12,CJump,Dash,UI
+153

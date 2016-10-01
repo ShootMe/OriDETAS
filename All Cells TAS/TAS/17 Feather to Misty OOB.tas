@@ -1,7 +1,7 @@
 ### AUTHOR(S): DEVILSQUIRREL / HYDRA ###
 
 ### FEATHER SEGMENT ###
-1,Slot,2,Copy,12,DLoad,Random,8169,SkillTree,50
+1,Slot,2,Copy,11,DLoad,Random,8169,SkillTree,50
 5,Jump,Right,UI
 1,CJump,Dash,Right
 5

@@ -1,7 +1,7 @@
 ### AUTHOR(S): SMASHFULLY ###
 
 ### LOST GROVE ###
-1,Slot,2,Copy,14,DLoad
+1,Slot,2,Copy,13,DLoad
 41
 13,Jump,Right
 1,CJump,Dash,Right

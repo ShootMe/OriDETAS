@@ -1,6 +1,6 @@
 ### AUTHOR(S): HETFIELD90 ###
 
-1,Slot,2,Copy,18,DLoad
+1,Slot,2,Copy,17,DLoad
 
 ### GROTTO ENTRANCE ###
 ### (283.286X,-206.348Y) ###
@@ -398,7 +398,7 @@
 65,Right,Glide
 1,Right,Glide,Fire,BlockPos,485.94,-415.06
 1,Right,Glide
-1,Right,Glide,Fire
+1,Right,Glide,Fire,Random,8769
 18,Right,Glide
 1,Right,Glide,Fire
 1,Right,Glide
@@ -849,7 +849,7 @@
 9,Right,Jump,CJump,Save
 1,Right,CJump,Save
 25,Right,CJump,Save
-1,Right,CJump
+1,Right,CJump,SkillTree,30
 
 ### SAVE ANYWHERE ###
 1,Right,Jump,Save

@@ -1,6 +1,6 @@
 ### AUTHOR(S): SIGMASIN ###
 
-1,Slot,2,Copy,11
+1,Slot,2,Copy,10
 
 ### HYPERSPEED TO EXIT ###
 1,Start
@@ -17,8 +17,7 @@
 1,Action
 
 ### HEAD TO CJUMP ###
-6,Left,Jump
-1,Left
+7,Left
 
 36,Left,Jump
 11,Dash,Left

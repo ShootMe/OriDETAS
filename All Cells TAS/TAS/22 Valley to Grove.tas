@@ -1,6 +1,6 @@
 ### AUTHOR(S): HETFIELD90 ###
 
-1,Slot,2,Copy,15
+1,Slot,2,Copy,14
 
 ### VALLEY REVISIT ###
 1,Start
@@ -363,7 +363,7 @@
 378,UI
 
 ### LAND ON DOOR ###
-1,Slot,2,Copy,16,DLoad
+1,Slot,2,Copy,15,DLoad
 
 1,Left,Dash
 8

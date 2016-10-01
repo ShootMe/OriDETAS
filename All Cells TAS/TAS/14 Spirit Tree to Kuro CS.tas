@@ -329,7 +329,7 @@
 
 3,Bash,Angle,170
 18,Bash,Angle,170,EntityPos,-343.56,29.67
-1,Angle,170
+1,Angle,170,Pos,-341.508636,28.90197
 20,Bash,Angle,-20
 1,Angle,-20
 18
@@ -416,42 +416,4 @@
 
 1,CJump,Dash,Left
 553,Left,UI
-1,Pos,-449.9231,87.34783
-
-### 2ND SEGMENT OVERLAP ###
-1,Left,Dash
-24,Left,UI
-7,Left,Dash
-1,Glide
-12,Left,CJump,Dash
-2,Down
-1,Jump
-
-### ROCKET JUMP ###
-1,CJump,Dash
-1,Glide
-53
-44,Down
-
-### BASH BEGINS ###
-24,Bash,Angle,-160
-1,Angle,130
-14,Jump,Right
-3,CJump,Dash
-2,Down
-21,Bash,Angle,-100
-1,Angle,45
-6
-12,Dash,Right
-20,Bash,Angle,-80
-1,Angle,1
-6
-5,CJump,Dash
-2,Down
-20,Bash,Angle,-130
-1,Angle,1
-1,Right
-1,Dash,Right
-5,Glide
-2,CJump,Dash
-2,Down
+1,Pos,-449.9231,87.34783,Random,34
