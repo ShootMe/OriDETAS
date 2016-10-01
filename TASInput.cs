@@ -46,6 +46,9 @@ namespace OriTAS {
 		public int Copy { get; set; }
 		public int SkillTree { get; set; }
 		public bool TAS { get; set; }
+		public bool BlockPos { get; set; }
+		public float BlockPosX { get; set; }
+		public float BlockPosY { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -198,6 +201,12 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.EntityPosY = temp; }
 							i += 2;
 							break;
+						case "BLOCKPOS":
+							BlockPos = true;
+							if (float.TryParse(parameters[i + 1], out temp)) { this.BlockPosX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.BlockPosY = temp; }
+							i += 2;
+							break;
 					}
 				}
 				Frames = frames;
@@ -219,8 +228,26 @@ namespace OriTAS {
 			if ((DLoad || Restore) && initial && GameController.Instance != null) {
 				GameController.Instance.SaveGameController.PerformLoad();
 				if (Core.Scenes.Manager != null) {
-					FieldInfo fi = Core.Scenes.Manager.GetType().GetField("m_testDelayTime", BindingFlags.NonPublic | BindingFlags.Instance);
-					fi.SetValue(Core.Scenes.Manager, 1f);
+					FieldInfo fieldDelayTime = typeof(ScenesManager).GetField("m_testDelayTime", BindingFlags.NonPublic | BindingFlags.Instance);
+					fieldDelayTime.SetValue(Core.Scenes.Manager, 1f);
+				}
+			}
+			if (BlockPos && initial && Characters.Sein != null && CharacterState.IsActive(Characters.Sein.Abilities.GrabBlock)) {
+				float minDist = 20;
+				int index = -1;
+				for (int i = 0; i < PushPullBlock.All.Count; i++) {
+					PushPullBlock pushPullBlock = PushPullBlock.All[i];
+					float dist = Vector3.Distance(pushPullBlock.Position, Characters.Sein.Position);
+					if (dist < minDist) {
+						index = i;
+						minDist = dist;
+					}
+				}
+
+				if(index >=0) {
+					FieldInfo fieldTransform = typeof(PushPullBlock).GetField("m_transform", BindingFlags.NonPublic | BindingFlags.Instance);
+					Transform transform = (Transform)fieldTransform.GetValue(PushPullBlock.All[index]);
+					transform.position = new Vector3(BlockPosX, BlockPosY);
 				}
 			}
 			if (EntityPos && initial && Characters.Sein != null) {
@@ -357,7 +384,8 @@ namespace OriTAS {
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
 				(!EntityPos ? "" : ",EntityPos," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
-				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") +
+				(!BlockPos ? "" : ",BlockPos," + BlockPosX.ToString("0.####") + "," + BlockPosY.ToString("0.####")) +
+				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") + (SkillTree >= 0 ? ",SkillTree," + SkillTree : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
 		public string Axis() {

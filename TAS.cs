@@ -332,24 +332,56 @@ namespace OriTAS {
 					}
 				}
 
-				if (index >= 0) {
-					EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
-					string enemyType = enemyType = attackable.Entity.GetType().Name;
-					if (enemyType.LastIndexOf("Enemy") >= 0) {
-						enemyType = enemyType.Substring(0, enemyType.LastIndexOf("Enemy"));
+				float blockMinDist = 20;
+				int blockIndex = -1;
+				for (int i = 0; i < PushPullBlock.All.Count; i++) {
+					PushPullBlock pushPullBlock = PushPullBlock.All[i];
+					float dist = Vector3.Distance(pushPullBlock.Position, sein.Position);
+					if (dist < blockMinDist) {
+						blockIndex = i;
+						blockMinDist = dist;
 					}
-					Rigidbody rb = attackable.GetComponent<Rigidbody>();
-					if (lastTargetPosition.x < -9999990) {
-						lastTargetPosition = attackable.Position;
+				}
+
+				if (blockIndex >= 0 && index >= 0) {
+					if (blockMinDist < minDist) {
+						info = UpdateBlockInfo(blockIndex);
+					} else {
+						info = UpdateEnemyInfo(index);
 					}
-					info = enemyType + " (" + attackable.Position.x.ToString("0.00") + ", " + attackable.Position.y.ToString("0.00") + ") (" + ((attackable.Position.x - lastTargetPosition.x) * 60).ToString("0.00") + ", " + ((attackable.Position.y - lastTargetPosition.y) * 60).ToString("0.00") + ")";
-					lastTargetPosition = attackable.Position;
+				} else if (blockIndex >= 0) {
+					info = UpdateBlockInfo(blockIndex);
+				} else if (index >= 0) {
+					info = UpdateEnemyInfo(index);
 				} else {
 					lastTargetPosition = new Vector3(-9999999, -9999999);
 				}
 			} else {
 				lastTargetPosition = new Vector3(-9999999, -9999999);
 			}
+			return info;
+		}
+		private static string UpdateBlockInfo(int index) {
+			PushPullBlock block = PushPullBlock.All[index];
+			if (lastTargetPosition.x < -9999990) {
+				lastTargetPosition = block.Position;
+			}
+			string info = "PushBlock (" + block.Position.x.ToString("0.00") + ", " + block.Position.y.ToString("0.00") + ") (" + ((block.Position.x - lastTargetPosition.x) * 60).ToString("0.00") + ", " + ((block.Position.y - lastTargetPosition.y) * 60).ToString("0.00") + ")";
+			lastTargetPosition = block.Position;
+			return info;
+		}
+		private static string UpdateEnemyInfo(int index) {
+			EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
+			string enemyType = enemyType = attackable.Entity.GetType().Name;
+			if (enemyType.LastIndexOf("Enemy") >= 0) {
+				enemyType = enemyType.Substring(0, enemyType.LastIndexOf("Enemy"));
+			}
+			Rigidbody rb = attackable.GetComponent<Rigidbody>();
+			if (lastTargetPosition.x < -9999990) {
+				lastTargetPosition = attackable.Position;
+			}
+			string info = enemyType + " (" + attackable.Position.x.ToString("0.00") + ", " + attackable.Position.y.ToString("0.00") + ") (" + ((attackable.Position.x - lastTargetPosition.x) * 60).ToString("0.00") + ", " + ((attackable.Position.y - lastTargetPosition.y) * 60).ToString("0.00") + ")";
+			lastTargetPosition = attackable.Position;
 			return info;
 		}
 		public static void UpdateExtraInfo() {
