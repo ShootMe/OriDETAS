@@ -50,6 +50,7 @@ namespace OriTAS {
 		public float BlockPosX { get; set; }
 		public float BlockPosY { get; set; }
 		public float EntityHP { get; set; }
+		public bool Spawn { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -142,6 +143,7 @@ namespace OriTAS {
 						case "DLOAD": DLoad = true; break;
 						case "RESTORE": Restore = true; break;
 						case "TAS": TAS = true; break;
+						case "SPAWN": Spawn = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
@@ -256,6 +258,21 @@ namespace OriTAS {
 					FieldInfo fieldTransform = typeof(PushPullBlock).GetField("m_transform", BindingFlags.NonPublic | BindingFlags.Instance);
 					Transform transform = (Transform)fieldTransform.GetValue(PushPullBlock.All[index]);
 					transform.position = new Vector3(BlockPosX, BlockPosY);
+				}
+			}
+			if (Spawn && Characters.Sein != null) {
+				int index = -1;
+				float dist = float.MaxValue;
+				for (int i = 0; i < RespawningPlaceholder.All.Count; i++) {
+					float fdist = Vector3.Distance(RespawningPlaceholder.All[i].Position, Characters.Sein.Position);
+					if (fdist < dist) {
+						dist = fdist;
+						index = i;
+					}
+				}
+
+				if (index >= 0 && dist < 20) {
+					RespawningPlaceholder.All[index].Instantiate();
 				}
 			}
 			if ((EntityPos || EntityHP >= 0) && initial && Characters.Sein != null) {
