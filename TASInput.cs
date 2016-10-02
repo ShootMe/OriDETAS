@@ -49,6 +49,7 @@ namespace OriTAS {
 		public bool BlockPos { get; set; }
 		public float BlockPosX { get; set; }
 		public float BlockPosY { get; set; }
+		public float EntityHP { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -58,6 +59,7 @@ namespace OriTAS {
 			this.XP = -1;
 			this.Random = -1;
 			this.SkillTree = -1;
+			this.EntityHP = -1;
 		}
 		public TASInput(int frames) {
 			this.Frames = frames;
@@ -65,6 +67,7 @@ namespace OriTAS {
 			this.Random = -1;
 			this.Copy = -1;
 			this.SkillTree = -1;
+			this.EntityHP = -1;
 			this.Cancel = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
@@ -109,6 +112,7 @@ namespace OriTAS {
 				int frames = 0;
 				this.Copy = -1;
 				this.SkillTree = -1;
+				this.EntityHP = -1;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
 					float temp;
@@ -146,6 +150,10 @@ namespace OriTAS {
 						case "XP":
 							int xpAmount = 0;
 							if (int.TryParse(parameters[i + 1], out xpAmount)) { this.XP = xpAmount; }
+							i += 1;
+							break;
+						case "ENTITYHP":
+							if (float.TryParse(parameters[i + 1], out temp)) { this.EntityHP = temp; }
 							i += 1;
 							break;
 						case "SLOT":
@@ -244,13 +252,13 @@ namespace OriTAS {
 					}
 				}
 
-				if(index >=0) {
+				if (index >= 0) {
 					FieldInfo fieldTransform = typeof(PushPullBlock).GetField("m_transform", BindingFlags.NonPublic | BindingFlags.Instance);
 					Transform transform = (Transform)fieldTransform.GetValue(PushPullBlock.All[index]);
 					transform.position = new Vector3(BlockPosX, BlockPosY);
 				}
 			}
-			if (EntityPos && initial && Characters.Sein != null) {
+			if ((EntityPos || EntityHP >= 0) && initial && Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
 				string info = string.Empty;
 				float minDist = float.MaxValue;
@@ -268,7 +276,15 @@ namespace OriTAS {
 
 				if (index >= 0) {
 					EntityTargetting attackable = Targets.Attackables[index] as EntityTargetting;
-					attackable.Entity.Position = new Vector3(EntityPosX, EntityPosY);
+					if (EntityPos) {
+						attackable.Entity.Position = new Vector3(EntityPosX, EntityPosY);
+					}
+					if (EntityHP >= 0) {
+						if (attackable.Entity.DamageReciever.MaxHealth < EntityHP) {
+							attackable.Entity.DamageReciever.MaxHealth = EntityHP;
+						}
+						attackable.Entity.DamageReciever.Health = EntityHP;
+					}
 				}
 			}
 			if (Position && initial) {
@@ -385,6 +401,7 @@ namespace OriTAS {
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
 				(!EntityPos ? "" : ",EntityPos," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
 				(!BlockPos ? "" : ",BlockPos," + BlockPosX.ToString("0.####") + "," + BlockPosY.ToString("0.####")) +
+				(EntityHP < 0 ? "" : ",EntityHP," + EntityHP.ToString("0.##")) +
 				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") + (SkillTree >= 0 ? ",SkillTree," + SkillTree : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}
