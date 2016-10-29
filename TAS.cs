@@ -235,7 +235,7 @@ namespace OriTAS {
 					DisableRun();
 				} else if (!HasFlag(tasState, TASState.Reload) && HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && (dpU || kbReload)) {
 					tasStateNext |= TASState.Reload;
-				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && ((lftStick && lftTrg) || kbRec)) {
+				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && kbRec) {
 					tasStateNext |= TASState.Record;
 				} else if (!HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.Record) && kbDebug) {
 					tasStateNext |= TASState.OpenDebug;
