@@ -1,4 +1,5 @@
 ﻿using Game;
+using System.IO;
 using System.Reflection;
 using SmartInput;
 using System;
@@ -27,6 +28,9 @@ namespace OriTAS {
 		private static string currentInputLine, nextInputLine, extraInfo, savedExtraInfo;
 		private static Vector3 lastTargetPosition;
 		private static Vector3 oriPostion;
+		private static DateTime lastColorCheck = DateTime.MinValue;
+		private static bool customColor = false;
+		private static float red, green, blue, alpha;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
@@ -34,6 +38,39 @@ namespace OriTAS {
 		public static bool UpdateTAS() {
 			if (Characters.Sein != null) {
 				oriPostion = Characters.Sein.Position;
+
+				if (DateTime.Now > lastColorCheck.AddSeconds(2)) {
+					lastColorCheck = DateTime.Now;
+					bool found = false;
+					if (File.Exists("Color.txt")) {
+						string[] components = File.ReadAllText("Color.txt").Split(new char[] { ',' });
+						if (components != null && (components.Length == 3 || components.Length == 4)) {
+							float.TryParse(components[0], out red);
+							float.TryParse(components[1], out green);
+							float.TryParse(components[2], out blue);
+
+							if (components.Length == 4) {
+								float.TryParse(components[3], out alpha);
+							}
+							red /= 255f;
+							green /= 255f;
+							blue /= 255f;
+							alpha /= 255f;
+
+							found = true;
+							customColor = true;
+						}
+					}
+
+					if (!found && customColor) {
+						customColor = false;
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
+					}
+				}
+
+				if (customColor) {
+					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(red, green, blue, alpha);
+				}
 			} else {
 				oriPostion = Vector3.zero;
 			}
@@ -227,7 +264,7 @@ namespace OriTAS {
 			bool kbRerec = MoonInput.GetKey(KeyCode.Backspace) && (MoonInput.GetKey(KeyCode.LeftControl) || MoonInput.GetKey(KeyCode.RightControl));
 
 			if (rhtTrg || lftTrg || kbPlay || kbRec || kbStop || kbDebug || kbReload || kbRerec) {
-				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg) || kbPlay)) {
+				if (!HasFlag(tasState, TASState.Enable) && ((lftStick && rhtTrg && lftTrg) || kbPlay)) {
 					tasStateNext |= TASState.Enable;
 				} else if (!HasFlag(tasState, TASState.Rerecord) && kbRerec) {
 					tasStateNext |= TASState.Rerecord;
