@@ -41,18 +41,19 @@ namespace OriTAS {
 			if (Characters.Sein != null) {
 				oriPostion = Characters.Sein.Position;
 
-				if (DateTime.Now > lastColorCheck.AddSeconds(5)) {
+				if (DateTime.Now > lastColorCheck.AddSeconds(2)) {
 					lastColorCheck = DateTime.Now;
-					bool found = false;
+					bool found = colors.Count > 0;
 
 					if (File.Exists("Color.txt") && File.GetLastWriteTime("Color.txt") > lastFileWrite) {
+						found = false;
 						lastFileWrite = DateTime.Now;
 
 						string text = File.ReadAllText("Color.txt").ToLower();
 
 						string[] lines = text.Split(new char[] { '\n' });
 
-						if (lines[0].Trim().Equals("customrotation")) {
+						if (lines != null && lines.Length >= 1 && lines[0].Trim().Equals("customrotation")) {
 							colors.Clear();
 							float red = 0, green = 0, blue = 0, alpha = 0;
 							float frames, red2, green2, blue2, alpha2;
