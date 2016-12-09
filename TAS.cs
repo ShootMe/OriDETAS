@@ -31,9 +31,8 @@ namespace OriTAS {
 		private static Vector3 oriPostion;
 		private static DateTime lastColorCheck = DateTime.MinValue, lastFileWrite = DateTime.MinValue;
 		private static bool customColor = false, customRotation = false;
-		private static float red, green, blue, alpha;
-        private static List<Color> colors = new List<Color>();
-        private static int colorIndex = 0;
+		private static List<Color> colors = new List<Color>();
+		private static int colorIndex = 0;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
@@ -42,120 +41,104 @@ namespace OriTAS {
 			if (Characters.Sein != null) {
 				oriPostion = Characters.Sein.Position;
 
-                
-                if (DateTime.Now > lastColorCheck.AddSeconds(5))
-                {
-                    lastColorCheck = DateTime.Now;
-                    bool found = false;
-                    if (File.Exists("Color.txt") && File.GetLastWriteTime("Color.txt") > lastFileWrite)
-                    {
-                        lastFileWrite = DateTime.Now;
+				if (DateTime.Now > lastColorCheck.AddSeconds(5)) {
+					lastColorCheck = DateTime.Now;
+					bool found = false;
 
-                        string text = File.ReadAllText("Color.txt").ToLower();
+					if (File.Exists("Color.txt") && File.GetLastWriteTime("Color.txt") > lastFileWrite) {
+						lastFileWrite = DateTime.Now;
 
+						string text = File.ReadAllText("Color.txt").ToLower();
 
-                        string[] lines = text.Split(new char[] { '\n' });
+						string[] lines = text.Split(new char[] { '\n' });
 
-                        if (lines[0].Trim().Equals("customrotation"))
-                        {
-                            colors = new List<Color>();
-                            float frames, red2, green2, blue2, alpha2;
+						if (lines[0].Trim().Equals("customrotation")) {
+							colors.Clear();
+							float red = 0, green = 0, blue = 0, alpha = 0;
+							float frames, red2, green2, blue2, alpha2;
 
-                            for (int i = 1; i < lines.Length - 1; i++)
-                            {
-                                string[] components = lines[i].Split(new char[] { ',' });
-                                if (components != null && components.Length >= 4)
-                                {
-                                    float.TryParse(components[0], out red);
-                                    float.TryParse(components[1], out green);
-                                    float.TryParse(components[2], out blue);
-                                    float.TryParse(components[3], out alpha);
+							for (int i = 1; i < lines.Length - 1; i++) {
+								string[] components = lines[i].Split(new char[] { ',' });
+								if (components != null && components.Length >= 4) {
+									float.TryParse(components[0], out red);
+									float.TryParse(components[1], out green);
+									float.TryParse(components[2], out blue);
+									float.TryParse(components[3], out alpha);
 
-                                    red /= 511f;
-                                    green /= 511f;
-                                    blue /= 511f;
-                                    alpha /= 511f;
+									red /= 511f;
+									green /= 511f;
+									blue /= 511f;
+									alpha /= 511f;
 
-                                    colors.Add(new Color(red, green, blue, alpha));
-                                }
-                                
+									colors.Add(new Color(red, green, blue, alpha));
+								}
 
-                                components = lines[i + 1].Split(new char[] { ',' });
-                                if (components != null && components.Length >= 5)
-                                {
-                                    float.TryParse(components[0], out red2);
-                                    float.TryParse(components[1], out green2);
-                                    float.TryParse(components[2], out blue2);
-                                    float.TryParse(components[3], out alpha2);
-                                    float.TryParse(components[4], out frames);
+								components = lines[i + 1].Split(new char[] { ',' });
+								if (components != null && components.Length >= 5) {
+									float.TryParse(components[0], out red2);
+									float.TryParse(components[1], out green2);
+									float.TryParse(components[2], out blue2);
+									float.TryParse(components[3], out alpha2);
+									float.TryParse(components[4], out frames);
 
-                                    red2 /= 511f;
-                                    green2 /= 511f;
-                                    blue2 /= 511f;
-                                    alpha2 /= 511f;
+									red2 /= 511f;
+									green2 /= 511f;
+									blue2 /= 511f;
+									alpha2 /= 511f;
 
-                                    for (int j = 1; j <= (int)frames; j++)
-                                    {
-                                        colors.Add(new Color(red + (red2 - red) * (float)j / frames,
-                                            green + (green2 - green) * (float)j / frames,
-                                            blue + (blue2 - blue) * (float)j / frames,
-                                            alpha + (alpha2 - alpha) * (float)j / frames));
-                                    }
-                                }
-                            }
+									for (int j = 1; j <= (int)frames; j++) {
+										colors.Add(new Color(red + (red2 - red) * (float)j / frames,
+											green + (green2 - green) * (float)j / frames,
+											blue + (blue2 - blue) * (float)j / frames,
+											alpha + (alpha2 - alpha) * (float)j / frames));
+									}
+								}
+							}
 
-                            customColor = false;
-                            customRotation = true;
-                            found = true;
-                        }
-                        else
-                        {
-                            customRotation = false;
-                            string[] components = text.Split(new char[] { ',' });
+							customColor = false;
+							customRotation = true;
+							found = true;
+						} else {
+							colors.Clear();
+							customRotation = false;
+							string[] components = text.Split(new char[] { ',' });
 
-                            if (components != null)
-                            {
-                                if (components.Length == 3 || components.Length == 4)
-                                {
-                                    float.TryParse(components[0], out red);
-                                    float.TryParse(components[1], out green);
-                                    float.TryParse(components[2], out blue);
+							if (components != null) {
+								if (components.Length == 3 || components.Length == 4) {
+									float red = 0, green = 0, blue = 0, alpha = 0;
+									float.TryParse(components[0], out red);
+									float.TryParse(components[1], out green);
+									float.TryParse(components[2], out blue);
 
-                                    if (components.Length == 4)
-                                    {
-                                        float.TryParse(components[3], out alpha);
-                                    }
-                                    red /= 255f;
-                                    green /= 255f;
-                                    blue /= 255f;
-                                    alpha /= 255f;
+									if (components.Length == 4) {
+										float.TryParse(components[3], out alpha);
+									} else {
+										alpha = 255;
+									}
 
-                                    found = true;
-                                    customColor = true;
-                                }
-                            }
+									colors.Add(new Color(red / 511f, green / 511f, blue / 511f, alpha / 511f));
 
-                        }
+									found = true;
+									customColor = true;
+								}
+							}
+						}
+					}
 
-                    }
-                    if (!found && customColor)
-                    {
-                        customColor = false;
-                        Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
-                    }
-                }
+					if (!found && (customColor || customRotation)) {
+						customColor = false;
+						customRotation = false;
+						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
+					}
+				}
 
-                if (customRotation)
-                {
-                    colorIndex %= colors.Count;
-                    Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex++];
-                }
-
-                else if (customColor)
-                {
-                    Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(red, green, blue, alpha);
-                }
-                } else {
+				if (customRotation) {
+					colorIndex %= colors.Count;
+					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex++];
+				} else if (customColor) {
+					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[0];
+				}
+			} else {
 				oriPostion = Vector3.zero;
 			}
 
@@ -190,9 +173,6 @@ namespace OriTAS {
 				}
 			}
 			return false;
-		}
-        private static Color GetColor(int value) {
-			return new Color((float)((value >> 16) & 255) / 255f, (float)((value >> 8) & 255) / 255f, (float)(value & 255) / 255f, 0.5f);
 		}
 		private static void HandleFrameRates() {
 			if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
