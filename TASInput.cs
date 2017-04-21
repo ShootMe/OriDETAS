@@ -51,6 +51,7 @@ namespace OriTAS {
 		public float BlockPosY { get; set; }
 		public float EntityHP { get; set; }
 		public bool Spawn { get; set; }
+		public bool ResetDash { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -144,6 +145,7 @@ namespace OriTAS {
 						case "RESTORE": Restore = true; break;
 						case "TAS": TAS = true; break;
 						case "SPAWN": Spawn = true; break;
+						case "RESETDASH": ResetDash = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
@@ -274,6 +276,9 @@ namespace OriTAS {
 				if (index >= 0 && dist < 20) {
 					RespawningPlaceholder.All[index].Instantiate();
 				}
+			}
+			if (ResetDash && Characters.Sein != null) {
+				Characters.Sein.Abilities.Dash.ResetDashLimit();
 			}
 			if ((EntityPos || EntityHP >= 0) && initial && Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;

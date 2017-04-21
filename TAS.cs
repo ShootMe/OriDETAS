@@ -59,7 +59,7 @@ namespace OriTAS {
 							float frames, red2, green2, blue2, alpha2;
 
 							for (int i = 1; i < lines.Length - 1; i++) {
-								if (string.IsNullOrEmpty(lines[i])) { break; }
+								if (string.IsNullOrEmpty(lines[i]) || lines[i].Length < 6) { break; }
 
 								string[] components = lines[i].Split(new char[] { ',' });
 								if (components != null && components.Length >= 4) {
