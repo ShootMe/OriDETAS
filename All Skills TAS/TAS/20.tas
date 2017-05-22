@@ -233,16 +233,16 @@
 ### GET THROUGH SPIKES ###
 1,CJump,Dash,Left
 7
-71,Down
-1,Bash
-20,Angle,120
-5
-1,Dash,Right
-5
-1,Glide
+77,Down
+1,Jump
 
 1,CJump,Dash,Right
-8
+6
+2,Down
+1,Jump
+
+1,CJump,Dash,Right
+5
 25,Down
 1,Jump
 48,Right
@@ -259,7 +259,7 @@
 1,Jump
 
 1,CJump,Dash,Right
-11
+10
 1,Bash
 20,Angle,20
 14
