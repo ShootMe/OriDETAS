@@ -199,25 +199,19 @@
 
 ### GRENADE JUMP OVER TREE ###
 13,Glide,CJump,Left
-1,Glide,Angle,288,Grenade
+1,Glide,Angle,300,Grenade
 1,Left,Jump,Grenade
-68,Left,Jump
-25,Down
-1,Jump
+13,Left,Jump
+1,Left
+1,Left,Jump
+67,Left
 
 ### IN HORU FIELDS ###
-14,Left
-1,Fire,Left
-1,Left
-1,Fire,Left
-1,Left
-
-1,Dash,Left
-4,Left
-24,Down
+1,CJump,Dash,Left
+5,Left
+25,Down
 1,Jump
-55,Left
-5,Jump,Left
+50,Left
 
 ### FALLING SLIME ###
 1,CJump,Dash,Left

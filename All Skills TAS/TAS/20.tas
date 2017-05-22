@@ -654,9 +654,7 @@
 1,Glide
 
 1,CJump,Dash,Right
-11
-24,Down
-1,Jump
+13
 
 1,CJump,Dash,Right
 7
@@ -668,13 +666,12 @@
 6
 
 1,CJump,Dash,Right
-4
+5
 2,Down
 1,Jump
 
-1,CJump,Dash,Right
-1,Bash
-20,Angle,85
+1,CJump,Dash,Right,Bash
+20,Angle,80
 5,Glide
 
 1,CJump,Dash,Right
@@ -683,24 +680,25 @@
 1,Jump
 
 1,CJump,Dash,Right
-11
-25,Down
-1,Jump
-
-### BASH RHINO ###
 1,Right
-1,Dash,Right
 31,CJump,Right
 10,Jump,Right
 
+### BASH RHINO ###
+1,CJump,Dash,Right
+7
+2,Down
+1,Jump
 1,CJump,Dash,Right
 7
 1,Bash
-20,Angle,80
+20,Angle,87
 15,Glide
 
 1,Dash,Glide
-21,Glide
+10,Glide
+1
+1,Glide
 
 1,CJump,Dash,Right
 9
@@ -709,8 +707,13 @@
 
 ### BASH FROGGY ###
 1,CJump,Dash,Right,Bash
-20,Angle,70
+20,Angle,80
 2,Glide
+
+1,CJump,Dash,Right
+11
+2,Down
+1,Jump
 
 1,CJump,Dash,Right
 11
@@ -718,19 +721,16 @@
 1,Jump
 
 1,CJump,Dash,Right
-11
-2,Down
-1,Jump
+1
 
 ### BASH SLIME ###
-1,CJump,Dash,Right
 1,Bash
-20,Angle,120
+20,Angle,118
 9
 
 ### CDASH TO TELE ###
 1,CJump,Dash,Right
-11
+8
 2,Down
 1,Jump
 
@@ -745,8 +745,8 @@
 1,Jump
 7,Right
 1,Dash,Right
-31,CJump,Right
-50,Jump,Right
+38,CJump,Right
+38,Jump,Right
 
 1,CJump,Dash,Right
 11
@@ -757,17 +757,17 @@
 11
 25,Down
 1,Jump
-4,Right
+3,Right
 1,Dash,Right
 24,Right
 1,Dash,Right
 31,CJump,Right
 10,Jump,Right
-15,Jump
-13,Jump,Right
+13,Jump
+15,Jump,Right
 
 ### TELEPORT TO BRB ###
-1,CJump,Dash,Right
+1,CJump,Dash,Right,Pos,-449.568542,-3.178422
 9
 25,Down
 1,Jump

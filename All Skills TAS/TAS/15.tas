@@ -250,34 +250,34 @@
 24,Left
 1,Dash,Left
 12,Left
-9,Jump
-11
+28,Jump
+1
+20,Jump
 
 1,Bash
-20,Angle,345
-13
-
-1,Bash
-20,Angle,287
-60
+20,Angle,295
+50
 
 24,Jump
-43
-3,Left
+16
+1,Bash
+
+
+20,Angle,235
+14
+1,Left
+1,Dash,Left
+24,Left
+1,Dash,Left
+6,Left
 
 ### PAST WATER ###
-1,Dash,Left
-12,Left
-9,Jump
-52
-2,Left
+1,Bash
+20,Angle,270
+62
 
-1,Dash,Left
-12,Left
-28,Jump
-48
 1,Jump
-23
+34
 2,Left
 
 1,Dash,Left
@@ -308,10 +308,9 @@
 22
 24,Jump,Left
 15
-1,Down
-23
+24,Down
 1,Jump
-1
+2
 
 1,Bash
 20,Angle,185
@@ -326,14 +325,15 @@
 1,Bash
 20,Angle,340
 26,Left
-19,Jump,Left
+20,Jump,Left
 
 1,Bash
 20,Angle,90
 1,Bash
 20,Angle,260
 7
-2,Left
+1,Left,Pos,104.511574,-128.2135
+1,Left,Pos,104.093269,-128.006226
 1,Dash,Left
 9
 4,Jump
@@ -343,7 +343,7 @@
 
 2,Down
 1,Jump
-27,Down
+26,Down
 
 ### THROUGH THE DOOR ###
 1,Bash
@@ -419,7 +419,7 @@
 151
 
 1,Dash,Left
-23,Left
+24,Left
 1,Left,Fire
 
 ### CF GET CUTSCENE ###
