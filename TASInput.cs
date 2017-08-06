@@ -9,14 +9,12 @@ namespace OriTAS {
 		public bool Save { get; set; }
 		public bool DSave { get; set; }
 		public bool DLoad { get; set; }
-		public bool Attack { get; set; }
+		public bool Fire { get; set; }
 		public bool Action { get; set; }
 		public bool Bash { get; set; }
 		public bool Start { get; set; }
 		public bool Select { get; set; }
-		public bool Cancel { get; set; }
-		public bool LeftClick { get; set; }
-		public bool RightClick { get; set; }
+		public bool Esc { get; set; }
 		public float XAxis { get; set; }
 		public float YAxis { get; set; }
 		public float MouseX { get; set; }
@@ -55,6 +53,10 @@ namespace OriTAS {
 		public string Spawn { get; set; }
 		public float SpawnX { get; set; }
 		public float SpawnY { get; set; }
+		public bool Camera { get; set; }
+		public float CameraX { get; set; }
+		public float CameraY { get; set; }
+		public float CameraZ { get; set; }
 		public bool ResetDash { get; set; }
 
 		public TASInput() {
@@ -78,13 +80,13 @@ namespace OriTAS {
 			this.Copy = -1;
 			this.SkillTree = -1;
 			this.EntityHP = -1;
-			this.Cancel = Core.Input.Cancel.IsPressed;
+			this.Esc = Core.Input.Cancel.IsPressed;
 			this.Action = Core.Input.ActionButtonA.IsPressed;
 			this.Dash = Core.Input.RightShoulder.IsPressed;
 			this.Grenade = Core.Input.LeftShoulder.IsPressed;
 			this.Jump = Core.Input.Jump.IsPressed;
 			this.Save = Core.Input.SoulFlame.IsPressed;
-			this.Attack = Core.Input.SpiritFlame.IsPressed;
+			this.Fire = Core.Input.SpiritFlame.IsPressed;
 			this.Bash = Core.Input.Bash.IsPressed;
 			this.Start = Core.Input.Start.IsPressed;
 			this.Select = Core.Input.Select.IsPressed;
@@ -130,18 +132,16 @@ namespace OriTAS {
 					float temp;
 					switch (parameters[i].ToUpper().Trim()) {
 						case "JUMP": Jump = true; break;
-						case "ESC": Cancel = true; break;
+						case "ESC": Esc = true; break;
 						case "ACTION": Action = true; break;
 						case "DASH": Dash = true; break;
 						case "GRENADE": Grenade = true; break;
 						case "SAVE": Save = true; break;
 						case "GLIDE": Glide = true; break;
-						case "FIRE": Attack = true; break;
+						case "FIRE": Fire = true; break;
 						case "BASH": Bash = true; break;
 						case "START": Start = true; break;
 						case "SELECT": Select = true; break;
-						case "LCLICK": LeftClick = true; break;
-						case "RCLICK": RightClick = true; break;
 						case "CJUMP": ChargeJump = true; break;
 						case "LEFT": XAxis = -1; break;
 						case "RIGHT": XAxis = 1; break;
@@ -160,8 +160,16 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 3], out temp)) { this.SpawnY = temp; }
 							i += 3;
 							break;
+						case "CAMERA":
+							Camera = true;
+							if (float.TryParse(parameters[i + 1], out temp)) { this.CameraX = temp; }
+							if (float.TryParse(parameters[i + 2], out temp)) { this.CameraY = temp; }
+							if (float.TryParse(parameters[i + 3], out temp)) { this.CameraZ = temp; }
+							i += 3;
+							break;
 						case "RESETDASH": ResetDash = true; break;
 						case "RANDOM":
+						case "RNG":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
 							i += 1;
@@ -219,6 +227,7 @@ namespace OriTAS {
 							i += 2;
 							break;
 						case "POS":
+						case "POSITION":
 							Position = true;
 							if (float.TryParse(parameters[i + 1], out temp)) { this.PositionX = temp; }
 							if (float.TryParse(parameters[i + 2], out temp)) { this.PositionY = temp; }
@@ -231,12 +240,14 @@ namespace OriTAS {
 							i += 2;
 							break;
 						case "ENTITYPOS":
+						case "ENTITYPOSITION":
 							EntityPos = true;
 							if (float.TryParse(parameters[i + 1], out temp)) { this.EntityPosX = temp; }
 							if (float.TryParse(parameters[i + 2], out temp)) { this.EntityPosY = temp; }
 							i += 2;
 							break;
 						case "BLOCKPOS":
+						case "BLOCKPOSITION":
 							BlockPos = true;
 							if (float.TryParse(parameters[i + 1], out temp)) { this.BlockPosX = temp; }
 							if (float.TryParse(parameters[i + 2], out temp)) { this.BlockPosY = temp; }
@@ -386,6 +397,19 @@ namespace OriTAS {
 				Core.Input.CursorMoved = false;
 			}
 
+			if (Camera && Game.UI.Cameras.Current != null) {
+				Vector3 pos = new Vector3(CameraX, CameraY);
+				Core.Scenes.Manager.SetTargetPositions(pos);
+				Core.Scenes.Manager.EnableDisabledScenesAtPosition(false);
+				Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(pos);
+				Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
+				Vector3 seinPos = Characters.Sein.Position;
+				pos.x -= seinPos.x;
+				pos.y -= seinPos.y;
+				pos.z = CameraZ;
+				Game.UI.Cameras.Current.OffsetController.Offset = pos;
+			}
+
 			Core.Input.HorizontalAnalogLeft = XAxis;
 			Core.Input.Horizontal = XAxis;
 			Core.Input.VerticalAnalogLeft = YAxis;
@@ -400,11 +424,11 @@ namespace OriTAS {
 			Core.Input.AnyStart.Update(Jump || Start);
 			Core.Input.ZoomIn.Update(Glide);
 			Core.Input.ZoomOut.Update(ChargeJump);
-			Core.Input.LeftClick.Update(LeftClick);
-			Core.Input.RightClick.Update(RightClick);
+			Core.Input.LeftClick.Update(false);
+			Core.Input.RightClick.Update(false);
 
 			Core.Input.Jump.Update(Jump);
-			Core.Input.SpiritFlame.Update(Attack);
+			Core.Input.SpiritFlame.Update(Fire);
 			Core.Input.SoulFlame.Update(Save);
 			Core.Input.Bash.Update(Bash);
 			Core.Input.ChargeJump.Update(ChargeJump);
@@ -424,11 +448,11 @@ namespace OriTAS {
 			Core.Input.MenuPageLeft.Update(ChargeJump);
 			Core.Input.MenuPageRight.Update(Glide);
 			Core.Input.ActionButtonA.Update(Action);
-			Core.Input.Cancel.Update(Cancel);
-			Core.Input.Copy.Update(Attack);
+			Core.Input.Cancel.Update(Esc);
+			Core.Input.Copy.Update(Fire);
 			Core.Input.Delete.Update(Bash);
-			Core.Input.Focus.Update(Attack);
-			Core.Input.Filter.Update(Attack);
+			Core.Input.Focus.Update(Fire);
+			Core.Input.Filter.Update(Fire);
 			Core.Input.Legend.Update(Bash);
 		}
 		public static bool operator ==(TASInput one, TASInput two) {
@@ -439,8 +463,8 @@ namespace OriTAS {
 			} else if ((object)one == null && (object)two == null) {
 				return true;
 			}
-			return one.Jump == two.Jump && one.Save == two.Save && one.Attack == two.Attack && one.Bash == two.Bash &&
-				one.Action == two.Action && one.Cancel == two.Cancel && one.Dash == two.Dash && one.Grenade == two.Grenade &&
+			return one.Jump == two.Jump && one.Save == two.Save && one.Fire == two.Fire && one.Bash == two.Bash &&
+				one.Action == two.Action && one.Esc == two.Esc && one.Dash == two.Dash && one.Grenade == two.Grenade &&
 				one.Start == two.Start && one.Select == two.Select && one.UI == two.UI && one.XAxis == two.XAxis &&
 				one.YAxis == two.YAxis && one.MouseX == two.MouseX && one.MouseY == two.MouseY && one.Glide == two.Glide && one.ChargeJump == two.ChargeJump;
 		}
@@ -452,15 +476,15 @@ namespace OriTAS {
 			} else if ((object)one == null && (object)two == null) {
 				return false;
 			}
-			return one.Jump != two.Jump || one.Save != two.Save || one.Attack != two.Attack || one.Bash != two.Bash ||
-				one.Action != two.Action || one.Cancel != two.Cancel || one.Dash != two.Dash || one.Grenade != two.Grenade ||
+			return one.Jump != two.Jump || one.Save != two.Save || one.Fire != two.Fire || one.Bash != two.Bash ||
+				one.Action != two.Action || one.Esc != two.Esc || one.Dash != two.Dash || one.Grenade != two.Grenade ||
 				one.Start != two.Start || one.Select != two.Select || one.UI != two.UI || one.XAxis != two.XAxis ||
 				one.YAxis != two.YAxis || one.MouseX != two.MouseX || one.MouseY != two.MouseY || one.Glide != two.Glide || one.ChargeJump != two.ChargeJump;
 		}
 		public override string ToString() {
-			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Attack ? ",Fire" : "") + (Bash ? ",Bash" : "") +
+			return Frames.ToString().PadLeft(4, ' ') + (Jump ? ",Jump" : "") + (Save ? ",Save" : "") + (Fire ? ",Fire" : "") + (Bash ? ",Bash" : "") +
 				(ChargeJump ? ",CJump" : "") + (Glide ? ",Glide" : "") + (Start ? ",Start" : "") + (Select ? ",Select" : "") + (UI ? ",UI" : "") +
-				(Action ? ",Action" : "") + (Cancel ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
+				(Action ? ",Action" : "") + (Esc ? ",Esc" : "") + (Dash ? ",Dash" : "") + (Grenade ? ",Grenade" : "") +
 				Axis() + (DLoad ? ",DLoad" : "") + (DSave ? ",DSave" : "") + (SaveSlot >= 0 ? ",Slot," + (SaveSlot + 1) : "") +
 				(!Position ? "" : ",Pos," + PositionX.ToString("0.####") + "," + PositionY.ToString("0.####")) +
 				(!Speed ? "" : ",Speed," + SpeedX.ToString("0.####") + "," + SpeedY.ToString("0.####")) +
