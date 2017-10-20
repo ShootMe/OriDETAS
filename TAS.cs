@@ -41,106 +41,7 @@ namespace OriTAS {
 			if (Characters.Sein != null) {
 				oriPostion = Characters.Sein.Position;
 
-				if (DateTime.Now > lastColorCheck.AddSeconds(2)) {
-					lastColorCheck = DateTime.Now;
-					bool found = colors.Count > 0;
-
-					if (File.Exists("Color.txt") && File.GetLastWriteTime("Color.txt") > lastFileWrite) {
-						found = false;
-						lastFileWrite = DateTime.Now;
-
-						string text = File.ReadAllText("Color.txt").ToLower();
-
-						string[] lines = text.Split(new char[] { '\n' });
-
-						if (lines != null && lines.Length >= 1 && lines[0].Trim().Equals("customrotation")) {
-							colors.Clear();
-							float red = 0, green = 0, blue = 0, alpha = 0;
-							float frames, red2, green2, blue2, alpha2;
-
-							for (int i = 1; i < lines.Length - 1; i++) {
-								if (string.IsNullOrEmpty(lines[i]) || lines[i].Length < 6) { break; }
-
-								string[] components = lines[i].Split(new char[] { ',' });
-								if (components != null && components.Length >= 4) {
-									float.TryParse(components[0], out red);
-									float.TryParse(components[1], out green);
-									float.TryParse(components[2], out blue);
-									float.TryParse(components[3], out alpha);
-
-									red /= 511f;
-									green /= 511f;
-									blue /= 511f;
-									alpha /= 511f;
-
-									colors.Add(new Color(red, green, blue, alpha));
-								}
-
-								components = lines[i + 1].Split(new char[] { ',' });
-								if (components != null && components.Length >= 5) {
-									float.TryParse(components[0], out red2);
-									float.TryParse(components[1], out green2);
-									float.TryParse(components[2], out blue2);
-									float.TryParse(components[3], out alpha2);
-									float.TryParse(components[4], out frames);
-
-									red2 /= 511f;
-									green2 /= 511f;
-									blue2 /= 511f;
-									alpha2 /= 511f;
-
-									for (int j = 1; j <= (int)frames; j++) {
-										colors.Add(new Color(red + (red2 - red) * (float)j / frames,
-											green + (green2 - green) * (float)j / frames,
-											blue + (blue2 - blue) * (float)j / frames,
-											alpha + (alpha2 - alpha) * (float)j / frames));
-									}
-								}
-							}
-
-							customColor = false;
-							customRotation = true;
-							found = true;
-						} else {
-							colors.Clear();
-							customRotation = false;
-							string[] components = text.Split(new char[] { ',' });
-
-							if (components != null) {
-								if (components.Length == 3 || components.Length == 4) {
-									float red = 0, green = 0, blue = 0, alpha = 0;
-									float.TryParse(components[0], out red);
-									float.TryParse(components[1], out green);
-									float.TryParse(components[2], out blue);
-
-									if (components.Length == 4) {
-										float.TryParse(components[3], out alpha);
-									} else {
-										alpha = 255;
-									}
-
-									colors.Add(new Color(red / 511f, green / 511f, blue / 511f, alpha / 511f));
-
-									found = true;
-									customColor = true;
-								}
-							}
-						}
-					}
-
-					if (!found && (customColor || customRotation)) {
-						customColor = false;
-						customRotation = false;
-						Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
-					}
-				}
-
-				if (customRotation) {
-					colorIndex %= colors.Count;
-					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex++];
-				} else if (customColor) {
-					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[0];
-				}
+				UpdateColors();
 			} else {
 				oriPostion = Vector3.zero;
 			}
@@ -412,7 +313,109 @@ namespace OriTAS {
 				GUI.Label(new Rect(0f, 0f, 32, 18), "TAS", style);
 			}
 		}
-		public static void UpdateText() {
+		private static void UpdateColors() {
+			if (DateTime.Now <= lastColorCheck.AddSeconds(2)) {
+				lastColorCheck = DateTime.Now;
+				bool found = colors.Count > 0;
+
+				if (File.Exists("Color.txt") && File.GetLastWriteTime("Color.txt") > lastFileWrite) {
+					found = false;
+					lastFileWrite = DateTime.Now;
+
+					string text = File.ReadAllText("Color.txt").ToLower();
+
+					string[] lines = text.Split(new char[] { '\n' });
+
+					if (lines != null && lines.Length >= 1 && lines[0].Trim().Equals("customrotation")) {
+						colors.Clear();
+						float red = 0, green = 0, blue = 0, alpha = 0;
+						float frames, red2, green2, blue2, alpha2;
+
+						for (int i = 1; i < lines.Length - 1; i++) {
+							if (string.IsNullOrEmpty(lines[i]) || lines[i].Length < 6) { break; }
+
+							string[] components = lines[i].Split(new char[] { ',' });
+							if (components != null && components.Length >= 4) {
+								float.TryParse(components[0], out red);
+								float.TryParse(components[1], out green);
+								float.TryParse(components[2], out blue);
+								float.TryParse(components[3], out alpha);
+
+								red /= 511f;
+								green /= 511f;
+								blue /= 511f;
+								alpha /= 511f;
+
+								colors.Add(new Color(red, green, blue, alpha));
+							}
+
+							components = lines[i + 1].Split(new char[] { ',' });
+							if (components != null && components.Length >= 5) {
+								float.TryParse(components[0], out red2);
+								float.TryParse(components[1], out green2);
+								float.TryParse(components[2], out blue2);
+								float.TryParse(components[3], out alpha2);
+								float.TryParse(components[4], out frames);
+
+								red2 /= 511f;
+								green2 /= 511f;
+								blue2 /= 511f;
+								alpha2 /= 511f;
+
+								for (int j = 1; j <= (int)frames; j++) {
+									colors.Add(new Color(red + (red2 - red) * (float)j / frames,
+										green + (green2 - green) * (float)j / frames,
+										blue + (blue2 - blue) * (float)j / frames,
+										alpha + (alpha2 - alpha) * (float)j / frames));
+								}
+							}
+						}
+
+						customColor = false;
+						customRotation = true;
+						found = true;
+					} else {
+						colors.Clear();
+						customRotation = false;
+						string[] components = text.Split(new char[] { ',' });
+
+						if (components != null) {
+							if (components.Length == 3 || components.Length == 4) {
+								float red = 0, green = 0, blue = 0, alpha = 0;
+								float.TryParse(components[0], out red);
+								float.TryParse(components[1], out green);
+								float.TryParse(components[2], out blue);
+
+								if (components.Length == 4) {
+									float.TryParse(components[3], out alpha);
+								} else {
+									alpha = 255;
+								}
+
+								colors.Add(new Color(red / 511f, green / 511f, blue / 511f, alpha / 511f));
+
+								found = true;
+								customColor = true;
+							}
+						}
+					}
+				}
+
+				if (!found && (customColor || customRotation)) {
+					customColor = false;
+					customRotation = false;
+					Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = new Color(0.50196f, 0.50196f, 0.50196f, 0.5f);
+				}
+			}
+
+			if (customRotation) {
+				colorIndex %= colors.Count;
+				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[colorIndex++];
+			} else if (customColor) {
+				Characters.Sein.PlatformBehaviour.Visuals.SpriteRenderer.material.color = colors[0];
+			}
+		}
+		private static void UpdateText() {
 			string closest = ClosestTargetInfo();
 			if (HasFlag(tasState, TASState.Enable)) {
 				currentInputLine = player.ToString() + " RNG(" + FixedRandom.FixedUpdateIndex + ")";
@@ -422,7 +425,7 @@ namespace OriTAS {
 				nextInputLine = (string.IsNullOrEmpty(closest) ? "" : "[" + closest + "]");
 			}
 		}
-		public static string ClosestTargetInfo() {
+		private static string ClosestTargetInfo() {
 			SeinCharacter sein = Characters.Sein;
 			string info = string.Empty;
 			if (sein != null) {
@@ -491,7 +494,7 @@ namespace OriTAS {
 			lastTargetPosition = attackable.Position;
 			return info;
 		}
-		public static void UpdateExtraInfo() {
+		private static void UpdateExtraInfo() {
 			string temp = string.Empty;
 			if (Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
@@ -531,7 +534,7 @@ namespace OriTAS {
 			}
 			extraInfo = temp.Trim();
 		}
-		public static bool CanPickup(SeinCharacter sein) {
+		private static bool CanPickup(SeinCharacter sein) {
 			if (sein.Controller.CanMove && sein.PlatformBehaviour.PlatformMovement.IsOnGround) {
 				for (int i = 0; i < Items.Carryables.Count; i++) {
 					ICarryable carryable = Items.Carryables[i];

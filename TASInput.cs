@@ -53,10 +53,6 @@ namespace OriTAS {
 		public string Spawn { get; set; }
 		public float SpawnX { get; set; }
 		public float SpawnY { get; set; }
-		public bool Camera { get; set; }
-		public float CameraX { get; set; }
-		public float CameraY { get; set; }
-		public float CameraZ { get; set; }
 		public bool ResetDash { get; set; }
 
 		public TASInput() {
@@ -158,13 +154,6 @@ namespace OriTAS {
 							Spawn = parameters[i + 1];
 							if (float.TryParse(parameters[i + 2], out temp)) { this.SpawnX = temp; }
 							if (float.TryParse(parameters[i + 3], out temp)) { this.SpawnY = temp; }
-							i += 3;
-							break;
-						case "CAMERA":
-							Camera = true;
-							if (float.TryParse(parameters[i + 1], out temp)) { this.CameraX = temp; }
-							if (float.TryParse(parameters[i + 2], out temp)) { this.CameraY = temp; }
-							if (float.TryParse(parameters[i + 3], out temp)) { this.CameraZ = temp; }
 							i += 3;
 							break;
 						case "RESETDASH": ResetDash = true; break;
@@ -395,19 +384,6 @@ namespace OriTAS {
 			} else {
 				Core.Input.CursorPosition = new UnityEngine.Vector2(TASPlayer.LastMouseX, TASPlayer.LastMouseY);
 				Core.Input.CursorMoved = false;
-			}
-
-			if (Camera && Game.UI.Cameras.Current != null) {
-				Vector3 pos = new Vector3(CameraX, CameraY);
-				Core.Scenes.Manager.SetTargetPositions(pos);
-				Core.Scenes.Manager.EnableDisabledScenesAtPosition(false);
-				Game.UI.Cameras.Current.CameraTarget.SetTargetPosition(pos);
-				Game.UI.Cameras.Current.MoveCameraToTargetInstantly(true);
-				Vector3 seinPos = Characters.Sein.Position;
-				pos.x -= seinPos.x;
-				pos.y -= seinPos.y;
-				pos.z = CameraZ;
-				Game.UI.Cameras.Current.OffsetController.Offset = pos;
 			}
 
 			Core.Input.HorizontalAnalogLeft = XAxis;
