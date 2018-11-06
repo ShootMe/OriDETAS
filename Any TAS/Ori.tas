@@ -1,0 +1,24 @@
+1
+
+### Start to Wall Jump
+Read,TAS\01.tas
+Read,TAS\02.tas
+Read,TAS\03.tas
+
+### Wall Jump to Grotto Bridge
+Read,TAS\04.tas
+Read,TAS\05.tas
+
+### Grotto Bridge to Laser CS
+Read,TAS\06.tas
+
+### Laser CS to Swamp CS
+Read,TAS\07.tas
+
+### Swamp CS to Ginso Death
+Read,TAS\08.tas
+
+### End needs to be spliced
+#Read,TAS\09.tas
+
+1,TAS

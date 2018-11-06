@@ -4,31 +4,26 @@
 1,CJump,Dash,Left,Random,65537
 10,Left
 1,Bash
-20,Angle,330
-3
+20,Angle,300
+8
 
 1,Dash,Left
-5,Left
-1,Left,Fire
-1,Left
-1,Left,Fire
-1,Left
-1,Left,Fire
-10,Left
-4,Jump,Left
+20,Left
+1,Jump,Left
 
-1,Dash,Left
-3,Left
 24,Down
-40,Left
+42,Left
 1,Left,Fire
 1,Left
 1,Left,Fire
 1,Left
 1,Left,Fire
+1,Dash,Left
+4,Left
+1,Glide,Left
 
 1,CJump,Dash,Left
-10,Left
+7,Left
 1,Bash
 20,Angle,270
 4
@@ -39,9 +34,8 @@
 
 ### CHARGE JUMP ###
 1,CJump,Dash,Left
-3
+4
 1,Glide,Left
-1,Left
 1,Fire
 505
 
@@ -57,50 +51,31 @@
 8,Right
 2,Down,EntityPos,-660.32,410.05
 1,Bash
-20,Angle,40
-4
+20,Angle,50
+5
 
 1,Dash,Right
-5
-1,Glide
+12
+5,Jump
 
+### KILL SLIME ###
 1,CJump,Dash,Right
-8,Right
-2,Down
-1,Jump
-1,Right
+23,Right
 
-### HEAD UP WALL ###
-1,Jump
-12,Jump,Right
-1,Right
-7,Jump,Right
-1,Right
-
-1,Jump
-10,Jump,Right
-1,Right
-6,Jump,Right
-1,Right
-
-1,Jump
-8,Jump,Right
-1,Right
-7,Jump,Right
-
+### DASH TO FROG ###
 1,CJump,Dash,Right
-7,Right
-2,Down
+6,Right
+24,Down
 1,Jump
-
 1,CJump,Dash,Right
 5,Right
 1,Bash
 20,Angle,20
-5,Glide
+8,Glide
 
-1,Dash,Glide
-40,Glide
+1,Dash
+16
+18,Glide
 
 ### BACK THROUGH MAZE ###
 1,CJump,Dash,Right
@@ -109,7 +84,7 @@
 1,Jump
 
 1,CJump,Dash,Right
-9,Right
+8,Right
 1,Glide
 15,Glide
 5,Glide,Left
@@ -157,7 +132,6 @@
 25,Down
 1,Jump
 
-
 36,Right
 1,Left
 30
@@ -165,15 +139,6 @@
 55,Left
 1
 7,Right
-
-
-#90
-#1,Down
-#1,Down,Jump
-#7
-#25,Down
-#1,Jump
-#51
 
 ### HEADING OUT OF SORROW ###
 1,Down
@@ -209,10 +174,10 @@
 2,Right
 
 1,CJump,Dash,Right
-7,Right
+8,Right
 25,Down
 1,Jump
-112,Left
+113,Left
 
 ### HEAD INTO MISTY ###
 1,CJump,Dash,Left
@@ -223,11 +188,11 @@
 1,CJump,Dash,Left
 11,Left
 2,Down
-19,Jump,Left
+12,Jump,Left
 
 ### BASH SLIME ###
 1,CJump,Dash,Left
-8,Left
+10,Left
 1,Bash
 20,Angle,270
 16,Glide

@@ -124,13 +124,13 @@
 20
 17,Right
 
-1,CJump,Dash,Right
+1,CJump,Dash,Right,Random,56737
 8
 25,Down
 1,Jump
 1,Right
 
-1,CJump,Dash,Right
+1,CJump,Dash,Right,Random,41931
 11
 27,Down
 5
@@ -158,14 +158,14 @@
 25,Down
 1,Jump
 25,Right
-15,Left
+16,Left
 
 ### BASH FRONKEY ###
 1,CJump,Dash
 3
 1,Bash
 19,Angle,230
-1,Angle,0
+1,Angle,30
 6
 
 ### HEAD TO LIGHT GRENADE ###
@@ -173,14 +173,15 @@
 13,Left
 
 1,CJump,Dash,Left
-11
-1,Glide
+8
+2,Down
+1,Jump
 
 1,CJump,Dash,Left
 1
-7,CJump
-21,Jump,CJump
-4,CJump
+9,CJump
+17,Jump,CJump
+5,CJump
 20,Jump
 
 ### BASH BANELING ###

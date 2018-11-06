@@ -149,25 +149,17 @@
 
 1,CJump,Dash,Right
 6
-55,Down
+30,Down
 1,Jump
-
-1,CJump,Dash,Right
-2
-24,Down
-1,Jump
-
-1,CJump,Dash,Left
-4
-25,Down
-1,Jump
-4,CJump,Left
+28,Left,Fire
+3,CJump,Left,Fire
 
 ### GRENADE JUMP ###
-28,CJump,Right,Glide
-1,Glide,Angle,66,Grenade
-1,Right,Jump,Glide,Grenade
-28,Right,Jump,Glide
+28,CJump,Right,Glide,Fire
+1,Glide,Angle,66,Grenade,Fire
+1,Right,Jump,Glide,Grenade,Fire
+2,Right,Jump,Glide,Fire
+26,Right,Jump,Glide
 1,Right
 1,Right,Jump
 31
@@ -176,64 +168,61 @@
 10
 25,Down
 1,Jump
-30,Left
+31,Left
 
 1,CJump,Dash,Left
 4
 25,Down
 1,Jump
 4
-13,Right
-2,Glide,Right
-25,Right
+12,Right
+5,Glide,Right
+23,Right
 
 1,CJump,Dash,Right
 2
 50,Down
 
 ### WATER ###
-26,Angle,209,Jump
-28,Angle,103,Jump
-123,Angle,85,Jump
+20,Angle,209,Jump
+34,Angle,103,Jump
+109,Angle,85,Jump
 
 1,Bash
-20,Angle,56
-44,Angle,56,Jump
+20,Angle,60
+50,Angle,60,Jump
 
 1,Bash
-19,Angle,227
-1,Angle,5
+19,Angle,220
+1,Angle,35
 
-8,Up,Jump
+12,Up,Jump
 1,Up
 13,Jump
 1,Left
-4,Right,Jump
-1,Right,Dash
-8,Right
-1,Right,Glide
-18,Right
-38
+40,Right,Jump
+14,Right
 
 1,Bash
 19,Angle,260
 1,Angle,125
 1,Right,Dash
-14,Right
+18,Right
 
 1,Bash
 19,Angle,214.5
 1,Angle,90
 1,Right,Dash
-2,Right
+5,Right
 1,Right,Glide
 1,Right
 
 ### FINAL GRENADE JUMP ###
-1,Left,CJump,Dash,Glide
+1,Right,CJump,Dash,Glide
 10
-39,Left,CJump
-12,Right,Glide,CJump
+36,Left,CJump
+2,Right,Glide,CJump
+10,Right,Glide,CJump,Pos,147.158,553.4222
 8,Glide,Angle,47.5
 1,Glide,Angle,47.5,Grenade
 1,Right,Jump,Grenade
