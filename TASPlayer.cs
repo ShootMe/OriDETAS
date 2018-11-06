@@ -170,8 +170,12 @@ namespace OriTAS {
 						}
 					}
 				}
+                if (inputs[inputIndex].SpamAction)
+                {
+                    Core.Input.ActionButtonA.Update(!Core.Input.ActionButtonA.IsPressed);
+                }
 				gameFrame++;
-			}
+			} 
 		}
 		public void RecordPlayer() {
 			TASInput input = new TASInput(currentFrame);
