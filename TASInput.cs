@@ -41,6 +41,8 @@ namespace OriTAS {
 		public float EntityPosY { get; set; }
 		public int SaveSlot { get; set; }
 		public int XP { get; set; }
+		public float EN { get; set; }
+		public float HP { get; set; }
 		public int Random { get; set; }
 		public bool Restore { get; set; }
 		public int Copy { get; set; }
@@ -50,7 +52,10 @@ namespace OriTAS {
 		public float BlockPosX { get; set; }
 		public float BlockPosY { get; set; }
 		public float EntityHP { get; set; }
-		public bool Spawn { get; set; }
+		public string Spawn { get; set; }
+		public float SpawnX { get; set; }
+		public float SpawnY { get; set; }
+		public bool ResetDash { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -58,6 +63,8 @@ namespace OriTAS {
 			this.SaveSlot = -1;
 			this.Copy = -1;
 			this.XP = -1;
+			this.EN = -1;
+			this.HP = -1;
 			this.Random = -1;
 			this.SkillTree = -1;
 			this.EntityHP = -1;
@@ -65,6 +72,8 @@ namespace OriTAS {
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.XP = -1;
+			this.EN = -1;
+			this.HP = -1;
 			this.Random = -1;
 			this.Copy = -1;
 			this.SkillTree = -1;
@@ -106,6 +115,8 @@ namespace OriTAS {
 				this.MouseX = -1;
 				this.MouseY = -1;
 				this.XP = -1;
+				this.EN = -1;
+				this.HP = -1;
 				this.Random = -1;
 				this.Line1 = lineNum1;
 				this.Line2 = lineNum2;
@@ -143,7 +154,13 @@ namespace OriTAS {
 						case "DLOAD": DLoad = true; break;
 						case "RESTORE": Restore = true; break;
 						case "TAS": TAS = true; break;
-						case "SPAWN": Spawn = true; break;
+						case "SPAWN":
+							Spawn = parameters[i + 1];
+							if (float.TryParse(parameters[i + 2], out temp)) { this.SpawnX = temp; }
+							if (float.TryParse(parameters[i + 3], out temp)) { this.SpawnY = temp; }
+							i += 3;
+							break;
+						case "RESETDASH": ResetDash = true; break;
 						case "RANDOM":
 							int rngAmount = 0;
 							if (int.TryParse(parameters[i + 1], out rngAmount)) { this.Random = rngAmount; }
@@ -152,6 +169,14 @@ namespace OriTAS {
 						case "XP":
 							int xpAmount = 0;
 							if (int.TryParse(parameters[i + 1], out xpAmount)) { this.XP = xpAmount; }
+							i += 1;
+							break;
+						case "EN":
+							if (float.TryParse(parameters[i + 1], out temp)) { this.EN = temp; }
+							i += 1;
+							break;
+						case "HP":
+							if (float.TryParse(parameters[i + 1], out temp)) { this.HP = temp; }
 							i += 1;
 							break;
 						case "ENTITYHP":
@@ -260,20 +285,38 @@ namespace OriTAS {
 					transform.position = new Vector3(BlockPosX, BlockPosY);
 				}
 			}
-			if (Spawn && Characters.Sein != null) {
+			if (!string.IsNullOrEmpty(Spawn) && Characters.Sein != null) {
 				int index = -1;
 				float dist = float.MaxValue;
 				for (int i = 0; i < RespawningPlaceholder.All.Count; i++) {
-					float fdist = Vector3.Distance(RespawningPlaceholder.All[i].Position, Characters.Sein.Position);
-					if (fdist < dist) {
-						dist = fdist;
-						index = i;
+					RespawningPlaceholder rp = RespawningPlaceholder.All[i];
+					bool wasNull = false;
+					if (rp.CurrentEntity == null) {
+						rp.Spawn();
+						wasNull = true;
+					}
+					if (rp.CurrentEntity.GetType().Name.IndexOf(Spawn, StringComparison.OrdinalIgnoreCase) >= 0) {
+						float fdist = Vector3.Distance(rp.Position, Characters.Sein.Position);
+						if (fdist < dist) {
+							dist = fdist;
+							index = i;
+						}
+					}
+					if (wasNull) {
+						rp.DestroyCurrentInstance();
 					}
 				}
 
-				if (index >= 0 && dist < 20) {
-					RespawningPlaceholder.All[index].Instantiate();
+				if (index >= 0 && dist < 1000) {
+					RespawningPlaceholder rp = RespawningPlaceholder.All[index];
+					Vector3 old = rp.transform.position;
+					rp.transform.position = new Vector3(SpawnX, SpawnY, old.z);
+					rp.Spawn();
+					rp.transform.position = old;
 				}
+			}
+			if (ResetDash && initial && Characters.Sein != null) {
+				Characters.Sein.Abilities.Dash.ResetDashLimit();
 			}
 			if ((EntityPos || EntityHP >= 0) && initial && Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
@@ -303,6 +346,12 @@ namespace OriTAS {
 						attackable.Entity.DamageReciever.Health = EntityHP;
 					}
 				}
+			}
+			if (HP >= 0 && initial && Characters.Sein != null) {
+				Characters.Sein.Mortality.Health.SetAmount(HP);
+			}
+			if (EN >= 0 && initial && Characters.Sein != null) {
+				Characters.Sein.Energy.SetCurrent(EN);
 			}
 			if (Position && initial) {
 				SeinCharacter sein = Characters.Sein;
@@ -418,7 +467,7 @@ namespace OriTAS {
 				(XP >= 0 ? ",XP," + XP : "") + (Color ? ",Color" : "") + (Random >= 0 ? ",Random," + Random : "") +
 				(!EntityPos ? "" : ",EntityPos," + EntityPosX.ToString("0.####") + "," + EntityPosY.ToString("0.####")) +
 				(!BlockPos ? "" : ",BlockPos," + BlockPosX.ToString("0.####") + "," + BlockPosY.ToString("0.####")) +
-				(EntityHP < 0 ? "" : ",EntityHP," + EntityHP.ToString("0.##")) +
+				(EntityHP < 0 ? "" : ",EntityHP," + EntityHP.ToString("0.##")) + (HP >= 0 ? ",HP," + HP.ToString("0.#") : "") + (EN >= 0 ? ",EN," + EN.ToString("0.##") : "") +
 				(Restore ? ",Restore" : "") + (Copy >= 0 ? ",Copy," + (Copy + 1) : "") + (SkillTree >= 0 ? ",SkillTree," + SkillTree : "") +
 				(MouseX < 0 && MouseY < 0 ? "" : ",Mouse," + MouseX.ToString("0.####") + "," + MouseY.ToString("0.####"));
 		}

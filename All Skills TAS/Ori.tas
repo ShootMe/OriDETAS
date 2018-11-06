@@ -1,0 +1,88 @@
+65536
+
+#Wall Jump		11106 +    0 -  3:05.100
+#Dash			24135 +  360 -  6:48.250
+#Double Jump	30377 +  360 -  8:32.283
+#Enter Ginso	37640 + 1080 - 10:45.333
+#Bash			43664 + 1080 - 12:25.733
+#Stomp			54487 + 1260 - 15:29.116
+#Charge Flame	60307 + 1440 - 17:09.116
+#Glide			66205 + 1620 - 18:50.416
+#Charge Jump	70570 + 1800 - 20:06.166
+#Climb			74754 + 1980 - 21:18.900
+#Grenade		82111 + 2160 - 23:24.516
+#Enter Horu		85739 + 2160 - 24:24.983
+#End			91299 + 2340 - 26:00.649
+
+#Start to Sein - 4796
+Read,TAS\01.tas
+
+#Sein to Ghost Door - 2756,UI
+Read,TAS\02.tas
+
+#Ghost Door to Wall Jump - 3554
+Read,TAS\03.tas
+#Wall Jump to BRB  - 4747
+Read,TAS\04.tas
+
+#BRB to BRB Laser - 2712 + 180
+Read,TAS\05.tas
+
+#BRB Laser to Dash - 5570 + 180
+Read,TAS\06.tas
+#Dash to Double Jump - 6242
+Read,TAS\07.tas
+
+#Double Jump to Gumo Lever - 2638 + 360
+Read,TAS\08.tas
+
+#Gumo Lever to Ginso Cutscene - 4055 + 360
+Read,TAS\09.tas
+
+#Ginso Cutscene to Redirect Room - 2710
+#570 to Enter Ginso
+Read,TAS\10.tas
+
+#Redirect Room to Bash Ghost Door - 3618
+Read,TAS\11.tas
+
+#Bash Ghost Door to Miniboss Ghost Door - 3731
+#266 to Bash
+Read,TAS\12.tas
+
+#Miniboss Ghost Door to Stomp Door - 6319
+Read,TAS\13.tas
+
+#Stomp Door to Drainless - 2828 + 180
+#1039 to Stomp
+Read,TAS\14.tas
+
+#Drainless to Spirit Tree - 4837 + 180
+#4031 to Charge Flame
+Read,TAS\15.tas
+
+#Spirit Tree to Glide - 5092 + 180
+Read,TAS\16.tas
+#Glide to Charge Jump Door - 4017 + 180
+Read,TAS\17.tas
+
+#Charge Jump Door to Misty Torch - 3635
+#349 to Charge Jump
+Read,TAS\18.tas
+
+#Misty Torch to Climb - 898 + 180
+Read,TAS\19.tas
+#Climb to Glades Teleporter - 5581
+Read,TAS\20.tas
+#Glades Teleporter to Grenade CS - 1419
+Read,TAS\21.tas
+
+#Grenade CS to Horu - 4370 + 180
+#353 to Grenade
+#3981 to Horu
+Read,TAS\22.tas
+
+#Horu to End - 5171 + 180
+Read,TAS\23.tas
+
+1,TAS

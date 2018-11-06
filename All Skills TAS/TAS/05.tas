@@ -1,0 +1,174 @@
+### SAVE AND RELOAD ###
+1,Slot,2,Copy,6
+
+1,Start
+2,Mouse,0.5,0.4
+1,Action
+2,Mouse,0.5,0.54
+1,Action
+2
+1,Start
+1,Mouse,0.5,0.37
+13
+1,Action
+13
+1,Action,Random,2022
+
+### GO PAST SLOW ZONE ###
+198,Right,UI
+28,Right,Jump
+33,Right
+28,Right,Jump
+36,Right
+18,Right,Jump
+10,Right
+29,Right
+1,Right,Jump
+9,Right
+
+### WALL RUN ###
+29,Right,Jump
+15,Right
+3,Right,Jump
+65,Right
+1,Down
+1,Down,Jump
+17,Right
+39,Left
+28,Left,Jump
+47,Left
+1,Left,Jump
+27,Left
+
+### JUMP OVER LEDGE TO PLATFORM ###
+8,Left,Jump
+24,Left
+56,Right
+1,Down,Right
+1,Down,Jump,Right
+26,Right
+
+21,Left
+1,Left,Jump
+6,Left
+10
+66,Left
+1,Left,Fire
+1,Left
+1,Left,Fire
+1,Left
+1,Jump,Left
+23,Left
+4,Jump,Left
+1,Jump,Left,Fire
+1,Jump,Left,Random,3335
+1,Jump,Left,Fire
+12,Left,Jump
+12,Left
+
+### JUMP TO FIRST PLATFORM ###
+5,Left,Jump
+50,Left
+8,Left,Jump
+
+41,Left
+28,Left,Jump
+20,Left
+1,Jump
+7,Left,Jump
+26,Left
+
+28,Left,Jump
+12,Left
+1,Jump
+28,Left
+
+### JUMP TO ORB ###
+4,Left,Jump
+45,Left
+
+### PICK UP ORB ###
+1,Glide,UI
+33,Right
+1,Glide
+
+28
+25,Right
+28,Jump,Right,UI
+3,Right
+
+1,Jump
+1,Jump,Right
+27,Right
+7,Right,Jump
+41,Right
+8,Right,Jump
+55,Right
+16
+12,Right
+
+28,Right,Jump
+2,Right
+28,Right,Jump
+66,Right
+28,Right,Jump
+28,Right
+1,Down
+1,Down,Jump
+59
+83,Right
+2
+
+### PICK UP ORB #2 ###
+1,Glide
+69,Right
+14,Right,Jump
+32,Right
+
+### JUMP TO FIRST PEDESTAL ###
+20,Right,Jump
+48,Right
+
+### JUMP TO SECOND PEDESTAL ###
+15,Right,Jump
+47,Right
+
+### MIDDLE PLATFORM ###
+28,Right,Jump
+38,Right
+8,Right,Jump
+28,Right
+1,Right,Jump
+40,Right
+
+### THIRD PEDESTAL ###
+8,Right,Jump
+35,Right
+
+### FOURTH PEDESTAL ###
+28,Right,Jump
+29,Right
+
+### FIFTH PEDESTAL ###
+12,Right,Jump
+49,Right
+
+### JUMP TO RIGHT SIDE ###
+28,Right,Jump
+12,Right
+1,Right,Jump
+43,Right
+15,Right,Jump
+28,Right
+6,Right,Jump
+23,Right
+
+### BOUNCE PADS ###
+30,Left,Jump
+10,Left
+8,Left,Save
+
+8,Right,Save
+19,Right,Jump,Save
+30,Right,Save
+2,Save
