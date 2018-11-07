@@ -54,6 +54,7 @@ namespace OriTAS {
 		public float SpawnX { get; set; }
 		public float SpawnY { get; set; }
 		public bool ResetDash { get; set; }
+        public bool SpamAction { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -66,7 +67,8 @@ namespace OriTAS {
 			this.Random = -1;
 			this.SkillTree = -1;
 			this.EntityHP = -1;
-		}
+            this.SpamAction = false;
+        }
 		public TASInput(int frames) {
 			this.Frames = frames;
 			this.XP = -1;
@@ -105,7 +107,8 @@ namespace OriTAS {
 				this.MouseY = -1;
 			}
 			this.SaveSlot = -1;
-		}
+            this.SpamAction = false;
+        }
 		public TASInput(string line, int lineNum1, int lineNum2) {
 			try {
 				string[] parameters = line.Split(',');
@@ -123,6 +126,7 @@ namespace OriTAS {
 				this.Copy = -1;
 				this.SkillTree = -1;
 				this.EntityHP = -1;
+                this.SpamAction = false;
 				if (!int.TryParse(parameters[0], out frames)) { return; }
 				for (int i = 1; i < parameters.Length; i++) {
 					float temp;
@@ -242,6 +246,9 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.BlockPosY = temp; }
 							i += 2;
 							break;
+                        case "SPAMACTION":
+                            SpamAction = true;
+                            break;
 					}
 				}
 				Frames = frames;
