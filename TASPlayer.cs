@@ -170,10 +170,11 @@ namespace OriTAS {
 						}
 					}
 				}
-                if (inputs[inputIndex].SpamAction)
-                {
-                    Core.Input.ActionButtonA.Update(!Core.Input.ActionButtonA.IsPressed);
-                }
+				if (inputs[inputIndex].SpamAction)
+				{
+				    Core.Input.ActionButtonA.Update(!Core.Input.ActionButtonA.IsPressed);
+				    Core.Input.AnyStart.Update(!Core.Input.AnyStart.IsPressed);
+				}
 				gameFrame++;
 			} 
 		}
