@@ -170,13 +170,12 @@ namespace OriTAS {
 						}
 					}
 				}
-				if (inputs[inputIndex].SpamAction)
-				{
-				    Core.Input.ActionButtonA.Update(!Core.Input.ActionButtonA.IsPressed);
-				    Core.Input.AnyStart.Update(!Core.Input.AnyStart.IsPressed);
+				if (inputs[inputIndex].SpamAction) {
+					Core.Input.ActionButtonA.Update(!Core.Input.ActionButtonA.IsPressed);
+					Core.Input.AnyStart.Update(!Core.Input.AnyStart.IsPressed);
 				}
 				gameFrame++;
-			} 
+			}
 		}
 		public void RecordPlayer() {
 			TASInput input = new TASInput(currentFrame);
@@ -227,7 +226,7 @@ namespace OriTAS {
 						}
 
 						if (line.IndexOf("Read", System.StringComparison.OrdinalIgnoreCase) == 0 && line.Length > 5) {
-							if(!ReadFile(line.Substring(5), lines)) {
+							if (!ReadFile(line.Substring(5), lines)) {
 								return;
 							}
 						}
