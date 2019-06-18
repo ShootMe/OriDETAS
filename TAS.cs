@@ -20,22 +20,31 @@ namespace OriTAS {
 	}
 	public class TAS {
 		private static TASState tasStateNext, tasState;
-		private static string filePath = "Ori.tas";
-		private static TASPlayer player = new TASPlayer(filePath);
-		public static float deltaTime = 0.016666667f, timeScale = 1f;
-		public static int frameRate = 0;
+		private static string filePath;
+		private static TASPlayer player;
+		public static float deltaTime, timeScale;
+		public static int frameRate;
 		private static GUIStyle style;
 		private static char currentKeyPress;
 		private static string currentInputLine, nextInputLine, extraInfo, savedExtraInfo;
 		private static Vector3 lastTargetPosition;
 		private static Vector3 oriPostion;
-		private static DateTime lastColorCheck = DateTime.MinValue, lastFileWrite = DateTime.MinValue;
-		private static bool customColor = false, customRotation = false;
-		private static List<Color> colors = new List<Color>();
-		private static int colorIndex = 0;
+		private static DateTime lastColorCheck, lastFileWrite;
+		private static bool customColor, customRotation;
+		private static List<Color> colors;
+		private static int colorIndex;
 
 		static TAS() {
 			DebugMenuB.MakeDebugMenuExist();
+			filePath = "Ori.tas";
+			player = new TASPlayer(filePath);
+			deltaTime = 0.016666667f;
+			timeScale = 1f;
+			long lookHere = 0x123456789abcdef1;
+			currentInputLine = lookHere.ToString();
+			colors = new List<Color>();
+			lastColorCheck = DateTime.MinValue;
+			lastFileWrite = DateTime.MinValue;
 		}
 		public static bool UpdateTAS() {
 			if (Characters.Sein != null) {
