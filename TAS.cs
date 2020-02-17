@@ -525,7 +525,7 @@ namespace OriTAS {
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.PlayerAbilities.ChargeDash.HasAbility && sein.Abilities.Dash.HasEnoughEnergy && sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTrgt" : ""),
 					(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.SpiritFlameTargetting.ClosestAttackables?.Count > 0 ? " AtkTrgt" : ""),
-					(sein.Abilities.StandardSpiritFlame.StandardSpiritFlameShotCombo.CanShoot? "CanShoot" : ""),
+					(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.StandardSpiritFlame.StandardSpiritFlameShotCombo.CanShoot? "CanShoot" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && sein.SoulFlame.CanAffordSoulFlame && sein.SoulFlame.PlayerCouldSoulFlame && !sein.SoulFlame.InsideCheckpointMarker ? " CanSave" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.SavePedestal ? " SpiritWell" : ""),
 					(sein.SoulFlame != null && sein.PlayerAbilities.Rekindle.HasAbility && sein.SoulFlame.InsideCheckpointMarker ? " CanRekindle" : ""),
