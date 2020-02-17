@@ -92,7 +92,7 @@ namespace OriTAS {
 				float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 
 				if (player.FastForward) {
-					SetFrameRate(180);
+					SetFrameRate(660);
 				} else if (rsX <= -1.2) {
 					SetFrameRate(1);
 				} else if (rsX <= -1.1) {
@@ -118,21 +118,21 @@ namespace OriTAS {
 				} else if (rsX <= 0.2) {
 					SetFrameRate();
 				} else if (rsX <= 0.3) {
-					SetFrameRate(75);
-				} else if (rsX <= 0.4) {
-					SetFrameRate(90);
-				} else if (rsX <= 0.5) {
-					SetFrameRate(105);
-				} else if (rsX <= 0.6) {
 					SetFrameRate(120);
-				} else if (rsX <= 0.7) {
-					SetFrameRate(135);
-				} else if (rsX <= 0.8) {
-					SetFrameRate(150);
-				} else if (rsX <= 0.9) {
-					SetFrameRate(165);
-				} else {
+				} else if (rsX <= 0.4) {
 					SetFrameRate(180);
+				} else if (rsX <= 0.5) {
+					SetFrameRate(240);
+				} else if (rsX <= 0.6) {
+					SetFrameRate(320);
+				} else if (rsX <= 0.7) {
+					SetFrameRate(360);
+				} else if (rsX <= 0.8) {
+					SetFrameRate(420);
+				} else if (rsX <= 0.9) {
+					SetFrameRate(480);
+				} else {
+					SetFrameRate(540);
 				}
 			} else {
 				SetFrameRate();
@@ -525,6 +525,7 @@ namespace OriTAS {
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.Abilities.Dash.CanPerformNormalDash() ? " CanDash" : ""),
 					(CharacterState.IsActive(sein.Abilities.Dash) && sein.PlayerAbilities.ChargeDash.HasAbility && sein.Abilities.Dash.HasEnoughEnergy && sein.Abilities.Dash.FindClosestAttackable != null ? " CDashTrgt" : ""),
 					(CharacterState.IsActive(sein.Abilities.SpiritFlame) && sein.Abilities.SpiritFlameTargetting.ClosestAttackables?.Count > 0 ? " AtkTrgt" : ""),
+					(sein.Abilities.StandardSpiritFlame.StandardSpiritFlameShotCombo.CanShoot? "CanShoot" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.Safe && sein.SoulFlame.CanAffordSoulFlame && sein.SoulFlame.PlayerCouldSoulFlame && !sein.SoulFlame.InsideCheckpointMarker ? " CanSave" : ""),
 					(sein.SoulFlame != null && sein.SoulFlame.IsSafeToCastSoulFlame == SeinSoulFlame.SoulFlamePlacementSafety.SavePedestal ? " SpiritWell" : ""),
 					(sein.SoulFlame != null && sein.PlayerAbilities.Rekindle.HasAbility && sein.SoulFlame.InsideCheckpointMarker ? " CanRekindle" : ""),
