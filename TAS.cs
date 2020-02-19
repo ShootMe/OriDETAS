@@ -21,7 +21,7 @@ namespace OriTAS {
 	public class TAS {
 		private static TASState tasStateNext, tasState;
 		private static string filePath;
-		private static TASPlayer player;
+		public static TASPlayer player;
 		public static float deltaTime, timeScale;
 		public static int frameRate;
 		private static GUIStyle style;
@@ -92,8 +92,17 @@ namespace OriTAS {
 				float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 
 				if (player.FastForward) {
+
 					SetFrameRate(660);
-				} else if (rsX <= -1.2) {
+
+                    
+                    // During BreakQuick, cull everything gameplay related.
+                    Camera gpc = Game.UI.Cameras.Current.Camera;
+                    if (gpc != null)
+                    {
+                        gpc.cullingMask = 0;
+                    }
+                } else if (rsX <= -1.2) {
 					SetFrameRate(1);
 				} else if (rsX <= -1.1) {
 					SetFrameRate(2);
@@ -135,7 +144,14 @@ namespace OriTAS {
 					SetFrameRate(540);
 				}
 			} else {
-				SetFrameRate();
+                
+                Camera gpc = Game.UI.Cameras.Current.Camera;
+                if (gpc != null)
+                {
+                    // Default culling mask
+                    gpc.cullingMask = 2147483391;
+                }
+                SetFrameRate();
 			}
 		}
 		private static void ClearKeyPress(bool ignoreCheck = false) {
@@ -507,8 +523,15 @@ namespace OriTAS {
 			string temp = string.Empty;
 			if (Characters.Sein != null) {
 				SeinCharacter sein = Characters.Sein;
+                Ori oriChar = Characters.Ori;
 
-				temp = string.Concat((sein.IsOnGround ? "OnGround" : ""),
+                string seinStuff = string.Empty;
+
+                if (oriChar != null)
+                    seinStuff = string.Concat(string.Format("SeinPos: {0}, {1}  ,", oriChar.Position.x, oriChar.Position.y));
+
+				temp = string.Concat((seinStuff),
+                    (sein.IsOnGround ? "OnGround" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.IsOnCeiling ? " OnCeiling" : ""),
 					(sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : ""),

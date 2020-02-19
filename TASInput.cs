@@ -49,12 +49,19 @@ namespace OriTAS {
 		public bool BlockPos { get; set; }
 		public float BlockPosX { get; set; }
 		public float BlockPosY { get; set; }
+        public bool SeinPos { get; set; }
+        public float SeinPosX { get; set; }
+        public float SeinPosY { get; set; }
 		public float EntityHP { get; set; }
 		public string Spawn { get; set; }
 		public float SpawnX { get; set; }
 		public float SpawnY { get; set; }
 		public bool ResetDash { get; set; }
 		public bool SpamAction { get; set; }
+
+        public bool KBUp { get; set; }
+        public bool KBDown { get; set; }
+        public bool KBOverride { get; set; }
 
 		public TASInput() {
 			this.MouseX = -1;
@@ -232,6 +239,22 @@ namespace OriTAS {
 							if (float.TryParse(parameters[i + 2], out temp)) { this.SpeedY = temp; }
 							i += 2;
 							break;
+                        case "SEINPOS":
+                            SeinPos = true;
+                            if (float.TryParse(parameters[i + 1], out temp)) { this.SeinPosX = temp; }
+                            if (float.TryParse(parameters[i + 2], out temp)) { this.SeinPosY = temp; }
+
+                            i += 2;
+                            break;
+                        case "KBOVERRIDE":
+                            KBOverride = true;
+                            break;
+                        case "KBUP":
+                            KBUp = true;
+                            break;
+                        case "KBDOWN":
+                            KBDown = true;
+                            break;
 						case "ENTITYPOS":
 						case "ENTITYPOSITION":
 							EntityPos = true;
@@ -364,6 +387,13 @@ namespace OriTAS {
 				SeinCharacter sein = Characters.Sein;
 				sein.Position = new UnityEngine.Vector3(PositionX, PositionY);
 			}
+
+            if(SeinPos && initial)
+            {
+                Ori oriChar = Characters.Ori;
+                oriChar.Position = new UnityEngine.Vector3(SeinPosX, SeinPosY);
+            }
+
 			if (Speed && initial) {
 				SeinCharacter sein = Characters.Sein;
 				sein.Speed = new UnityEngine.Vector3(SpeedX, SpeedY);
