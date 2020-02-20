@@ -158,7 +158,7 @@ namespace OriTAS {
             if (cams != null && cams.Count > 0) {
                 for (int i = cams.Count - 1; i >= 0; i--) {
                     Camera cam = cams[i].Camera;
-                    if (newFrameRate >= 300 || timer.ElapsedMilliseconds <= 4) {
+                    if (!HasFlag(tasState, TASState.FrameStep) && (newFrameRate >= 300 || timer.ElapsedMilliseconds <= 4)) {
                         if (cam.enabled) {
                             hiddenCameras.Add(cam);
                             cam.enabled = false;
