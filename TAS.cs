@@ -1,12 +1,11 @@
 ﻿using Game;
-using System.IO;
-using System.Reflection;
-using System.Collections.Generic;
 using SmartInput;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using UnityEngine;
-using System.Diagnostics;
 namespace OriTAS {
     [Flags]
     public enum TASState {
@@ -34,7 +33,6 @@ namespace OriTAS {
         private static bool customColor, customRotation;
         private static List<Color> colors;
         private static int colorIndex;
-        private static Stopwatch timer;
         private static HashSet<Camera> hiddenCameras;
 
         static TAS() {
@@ -48,12 +46,9 @@ namespace OriTAS {
             colors = new List<Color>();
             lastColorCheck = DateTime.MinValue;
             lastFileWrite = DateTime.MinValue;
-            timer = new Stopwatch();
-            timer.Start();
             hiddenCameras = new HashSet<Camera>();
         }
         public static bool UpdateTAS() {
-            timer.Stop();
             if (Characters.Sein != null) {
                 oriPostion = Characters.Sein.Position;
 
@@ -67,9 +62,6 @@ namespace OriTAS {
             HandleFrameRates();
             CheckControls();
             FrameStepping();
-
-            timer.Reset();
-            timer.Start();
 
             if (SkillTreeManager.Instance != null && SkillTreeManager.Instance.NavigationManager.IsVisible) {
                 if (!player.HasChangedAlpha) {
@@ -128,19 +120,19 @@ namespace OriTAS {
                 } else if (rsX <= 0.2) {
                     SetFrameRate();
                 } else if (rsX <= 0.3) {
-                    SetFrameRate(120);
+                    SetFrameRate(90);
                 } else if (rsX <= 0.4) {
-                    SetFrameRate(180);
+                    SetFrameRate(120);
                 } else if (rsX <= 0.5) {
-                    SetFrameRate(240);
+                    SetFrameRate(150);
                 } else if (rsX <= 0.6) {
-                    SetFrameRate(320);
+                    SetFrameRate(180);
                 } else if (rsX <= 0.7) {
-                    SetFrameRate(360);
+                    SetFrameRate(210);
                 } else if (rsX <= 0.8) {
-                    SetFrameRate(420);
+                    SetFrameRate(240);
                 } else if (rsX <= 0.9) {
-                    SetFrameRate(480);
+                    SetFrameRate(270);
                 } else {
                     SetFrameRate(6000);
                 }
@@ -158,7 +150,7 @@ namespace OriTAS {
             if (cams != null && cams.Count > 0) {
                 for (int i = cams.Count - 1; i >= 0; i--) {
                     Camera cam = cams[i].Camera;
-                    if (!HasFlag(tasState, TASState.FrameStep) && (newFrameRate >= 300 || timer.ElapsedMilliseconds <= 4)) {
+                    if (!HasFlag(tasState, TASState.FrameStep) && newFrameRate >= 300) {
                         if (cam.enabled) {
                             hiddenCameras.Add(cam);
                             cam.enabled = false;
@@ -172,13 +164,13 @@ namespace OriTAS {
             if (frameRate == newFrameRate) { return; }
 
             frameRate = newFrameRate;
-            timeScale = (float)newFrameRate / 60f;
+            timeScale = 1f;
             Time.timeScale = timeScale;
-            Time.captureFramerate = newFrameRate;
+            Time.captureFramerate = 60;
             Application.targetFrameRate = newFrameRate;
             Time.fixedDeltaTime = 1f / 60f;
             Time.maximumDeltaTime = Time.fixedDeltaTime;
-            QualitySettings.vSyncCount = newFrameRate == 60 ? 1 : 0;
+            QualitySettings.vSyncCount = 0;// newFrameRate == 60 ? 1 : 0;
         }
         private static void FrameStepping() {
             char kp = currentKeyPress;
@@ -541,7 +533,7 @@ namespace OriTAS {
 
                 temp = string.Concat((seinStuff),
                     (sein.IsOnGround ? " Ground" : ""),
-                    (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " Wall" : ""),
+                    (sein.PlatformBehaviour.PlatformMovement.IsOnWall ? " OnWall" : ""),
                     (sein.PlatformBehaviour.PlatformMovement.IsOnCeiling ? " Ceiling" : ""),
                     (sein.PlatformBehaviour.PlatformMovement.Falling ? " Falling" : ""),
                     (sein.PlatformBehaviour.PlatformMovement.Jumping ? " Jumping" : ""),
