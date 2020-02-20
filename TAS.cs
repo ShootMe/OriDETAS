@@ -6,6 +6,7 @@ using SmartInput;
 using System;
 using System.Threading;
 using UnityEngine;
+using System.Diagnostics;
 namespace OriTAS {
     [Flags]
     public enum TASState {
@@ -33,6 +34,8 @@ namespace OriTAS {
         private static bool customColor, customRotation;
         private static List<Color> colors;
         private static int colorIndex;
+        private static Stopwatch timer;
+        private static HashSet<Camera> hiddenCameras;
 
         static TAS() {
             DebugMenuB.MakeDebugMenuExist();
@@ -45,8 +48,12 @@ namespace OriTAS {
             colors = new List<Color>();
             lastColorCheck = DateTime.MinValue;
             lastFileWrite = DateTime.MinValue;
+            timer = new Stopwatch();
+            timer.Start();
+            hiddenCameras = new HashSet<Camera>();
         }
         public static bool UpdateTAS() {
+            timer.Stop();
             if (Characters.Sein != null) {
                 oriPostion = Characters.Sein.Position;
 
@@ -60,6 +67,9 @@ namespace OriTAS {
             HandleFrameRates();
             CheckControls();
             FrameStepping();
+
+            timer.Reset();
+            timer.Start();
 
             if (SkillTreeManager.Instance != null && SkillTreeManager.Instance.NavigationManager.IsVisible) {
                 if (!player.HasChangedAlpha) {
@@ -91,8 +101,8 @@ namespace OriTAS {
             if (HasFlag(tasState, TASState.Enable) && !HasFlag(tasState, TASState.FrameStep) && !HasFlag(tasState, TASState.Record)) {
                 float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 
-                bool maxSpeed = player.FastForward;
-                if (maxSpeed) {
+                if (player.FastForward) {
+                    SetFrameRate(6000);
                 } else if (rsX <= -1.2) {
                     SetFrameRate(1);
                 } else if (rsX <= -1.1) {
@@ -132,24 +142,9 @@ namespace OriTAS {
                 } else if (rsX <= 0.9) {
                     SetFrameRate(480);
                 } else {
-                    maxSpeed = true;
-                }
-
-                if (maxSpeed) {
-                    SetFrameRate(660);
-
-                    // During BreakQuick, cull everything gameplay related.
-                    Camera gpc = Game.UI.Cameras.Current.Camera;
-                    if (gpc != null) {
-                        gpc.cullingMask = 0;
-                    }
+                    SetFrameRate(6000);
                 }
             } else {
-                Camera gpc = Game.UI.Cameras.Current.Camera;
-                if (gpc != null) {
-                    // Default culling mask
-                    gpc.cullingMask = 2147483391;
-                }
                 SetFrameRate();
             }
         }
@@ -159,6 +154,21 @@ namespace OriTAS {
             }
         }
         private static void SetFrameRate(int newFrameRate = 60) {
+            List<CameraController> cams = UI.Cameras.Manager.Cameras;
+            if (cams != null && cams.Count > 0) {
+                for (int i = cams.Count - 1; i >= 0; i--) {
+                    Camera cam = cams[i].Camera;
+                    if (newFrameRate >= 300 || timer.ElapsedMilliseconds <= 4) {
+                        if (cam.enabled) {
+                            hiddenCameras.Add(cam);
+                            cam.enabled = false;
+                        }
+                    } else if (hiddenCameras.Remove(cam)) {
+                        cam.enabled = true;
+                    }
+                }
+            }
+
             if (frameRate == newFrameRate) { return; }
 
             frameRate = newFrameRate;
