@@ -83,6 +83,7 @@ namespace OriTAS {
                     if (!InstantLoadScenesController.Instance.IsLoading && !GameController.Instance.IsLoadingGame && player.Break < 0) {
                         tasState |= TASState.FrameStep;
                         player.Break = 0;
+                        SetFrameRate(60);
                     }
                     return true;
                 }
@@ -145,12 +146,12 @@ namespace OriTAS {
                 currentKeyPress = '\0';
             }
         }
-        private static void SetFrameRate(int newFrameRate = 60) {
+        private static void EnableDisableCameras() {
             List<CameraController> cams = UI.Cameras.Manager.Cameras;
             if (cams != null && cams.Count > 0) {
                 for (int i = cams.Count - 1; i >= 0; i--) {
                     Camera cam = cams[i].Camera;
-                    if (!HasFlag(tasState, TASState.FrameStep) && newFrameRate >= 300) {
+                    if (!HasFlag(tasState, TASState.FrameStep) && frameRate >= 300) {
                         if (cam.enabled) {
                             hiddenCameras.Add(cam);
                             cam.enabled = false;
@@ -160,10 +161,14 @@ namespace OriTAS {
                     }
                 }
             }
-
-            if (frameRate == newFrameRate) { return; }
-
+        }
+        private static void SetFrameRate(int newFrameRate = 60) {
+            bool returnEarly = frameRate == newFrameRate;
             frameRate = newFrameRate;
+            EnableDisableCameras();
+
+            if (returnEarly) { return; }
+
             timeScale = 1f;
             Time.timeScale = timeScale;
             Time.captureFramerate = 60;
