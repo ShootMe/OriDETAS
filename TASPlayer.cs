@@ -7,9 +7,9 @@ namespace OriTAS {
         public static float LastMouseX, LastMouseY;
         public bool FastForward { get; set; }
         public int Break { get; set; }
-        private List<TASInput> inputs = new List<TASInput>();
-        private TASInput lastInput;
-        private int currentFrame, inputIndex, frameToNext, fixedRandom, gameFrame;
+        public List<TASInput> inputs = new List<TASInput>();
+        public TASInput lastInput;
+        public int currentFrame, inputIndex, frameToNext, fixedRandom, gameFrame;
         private string filePath;
         private int skillTreeAlpha = 100;
         public bool ShowTAS { get; set; } = true;

@@ -62,6 +62,10 @@ namespace OriTAS {
         public bool KBUp { get; set; }
         public bool KBDown { get; set; }
         public bool KBOverride { get; set; }
+        public bool AutoRotateFix { get; set; }
+        public float ARCurrentTime { get; set; }
+
+        public bool Slowdown { get; set; }
 
         public TASInput() {
             this.MouseX = -1;
@@ -74,9 +78,20 @@ namespace OriTAS {
             this.Random = -1;
             this.SkillTree = -1;
             this.EntityHP = -1;
+            this.KBDown = false;
+            this.KBUp = false;
             this.SpamAction = false;
+            this.Slowdown = false;
+            this.AutoRotateFix = false;
+            this.SeinPos = false;
         }
         public TASInput(int frames) {
+            this.KBDown = false;
+            this.KBUp = false;
+            this.SpamAction = false;
+            this.Slowdown = false;
+            this.AutoRotateFix = false;
+            this.SeinPos = false;
             this.Frames = frames;
             this.XP = -1;
             this.EN = -1;
@@ -120,6 +135,12 @@ namespace OriTAS {
             try {
                 string[] parameters = line.Split(',');
 
+                this.KBDown = false;
+                this.KBUp = false;
+                this.SpamAction = false;
+                this.Slowdown = false;
+                this.AutoRotateFix = false;
+                this.SeinPos = false;
                 this.MouseX = -1;
                 this.MouseY = -1;
                 this.XP = -1;
@@ -138,6 +159,7 @@ namespace OriTAS {
                 for (int i = 1; i < parameters.Length; i++) {
                     float temp;
                     switch (parameters[i].ToUpper().Trim()) {
+                        case "SLOW": Slowdown = true; break;
                         case "JUMP": Jump = true; break;
                         case "ESC": Esc = true; break;
                         case "ACTION": Action = true; break;
@@ -254,6 +276,12 @@ namespace OriTAS {
                             break;
                         case "KBDOWN":
                             KBDown = true;
+                            break;
+                        case "ARFIX":
+                            AutoRotateFix = true;
+
+                            if (float.TryParse(parameters[i + 1], out temp)) { this.ARCurrentTime = temp; }
+                            i += 1;
                             break;
                         case "ENTITYPOS":
                         case "ENTITYPOSITION":

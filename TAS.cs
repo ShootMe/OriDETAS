@@ -95,7 +95,12 @@ namespace OriTAS {
                 float rsX = XboxControllerInput.GetAxis(XboxControllerInput.Axis.RightStickX);
 
                 if (player.FastForward) {
-                    SetFrameRate(6000);
+                    // Disable BQ even if FF enabled because we want to let scenes load naturally first.
+                    if (player.lastInput.Slowdown) {
+                        SetFrameRate();
+                    } else {
+                        SetFrameRate(6000);
+                    }
                 } else if (rsX <= -1.2) {
                     SetFrameRate(1);
                 } else if (rsX <= -1.1) {
